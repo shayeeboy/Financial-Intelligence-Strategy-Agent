@@ -16,6 +16,7 @@ import { queryFinancialBehaviour } from './mcp/adapters/statcan.js';
 import { fetchHousingInsight } from './mcp/adapters/cmhc.js';
 import { fetchSeries } from './mcp/adapters/bankofcanada.js';
 import { compileStrategyBrief, ROOT } from './mcp/tools/compile_strategy_brief.js';
+import { pct, money, yoy, annualize, requiredIncome, baselineYears } from './lib/metrics.js';
 
 const RAW_DIR = path.join(ROOT, 'data', 'raw');
 const MEMORY_PATH = path.join(ROOT, 'memory.md');
@@ -27,19 +28,6 @@ const TARGET = {
   product: 'Newcomer Credit & Daily Banking',
   geography: 'ON — Toronto CMA',
   cma: 'Toronto',
-};
-
-const pct = (n) => (n == null ? 'n/a' : `${n.toFixed(2)}%`);
-const money = (n) => (n == null ? 'n/a' : `$${Number(n).toLocaleString('en-CA')}`);
-const yoy = (points) => {
-  // Year-over-year change from the two most comparable periods available.
-  if (!points || points.length < 2) return null;
-  const latest = points.at(-1);
-  // find a point ~1 year earlier by ref_period year
-  const ly = String(Number(latest.ref_period.slice(0, 4)) - 1);
-  const prior = points.find((p) => p.ref_period.startsWith(ly)) || points.at(-2);
-  if (!prior || prior.value == null || latest.value == null) return null;
-  return ((latest.value - prior.value) / prior.value) * 100;
 };
 
 async function main() {
@@ -66,16 +54,11 @@ async function main() {
   // --- Derived metrics -------------------------------------------------------
   const cpiYoY = yoy(cpi.trend);
   const rentYoY = yoy(rent2br.trend);
-  const annualRent = rent2br.latest?.value != null ? rent2br.latest.value * 12 : null;
-  const incomeToAfford = annualRent != null ? annualRent / 0.3 : null; // 30% shelter rule
+  const annualRent = annualize(rent2br.latest?.value ?? null);
+  const incomeToAfford = requiredIncome(annualRent); // 30% shelter rule
 
   // --- Confidence guardrail: flag series with < 3 years of baseline ----------
-  const baselineYears = (r) => {
-    const pts = r.trend || [];
-    if (pts.length < 2) return 0;
-    return Number(pts.at(-1).ref_period.slice(0, 4)) - Number(pts[0].ref_period.slice(0, 4));
-  };
-  const lowConf = [debt, credit, cpi, rent2br, vacancy].filter((r) => baselineYears(r) < 3);
+  const lowConf = [debt, credit, cpi, rent2br, vacancy].filter((r) => baselineYears(r.trend) < 3);
   const confidence = lowConf.length ? 'Low Confidence' : 'High';
   if (lowConf.length) {
     console.error(`[orchestrator] ⚠️ LOW CONFIDENCE — <3yr baseline: ${lowConf.map((r) => r.label).join('; ')}`);

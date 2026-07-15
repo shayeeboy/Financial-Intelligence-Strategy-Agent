@@ -9,7 +9,9 @@
   "scripts": {
     "mcp": "node src/mcp/server.js",
     "brief": "node src/orchestrator.js",
-    "smoke": "node scripts/smoke.js"
+    "check": "node --test scripts/check.js",
+    "smoke": "node scripts/smoke.js",
+    "test": "npm run check"
   },
   "engines": {
     "node": ">=18"

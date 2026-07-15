@@ -3,6 +3,7 @@ node_modules/
 .env.local
 *.log
 .DS_Store
-# Keep briefs + the master index, but ignore bulky raw snapshots by default.
-# Comment the next line out if you want raw provenance snapshots committed.
+# Ignore raw snapshots by default (regenerable), but keep the one that backs
+# the committed example brief so its provenance is inspectable in the repo.
 data/raw/*.json
+!data/raw/snapshot_gta_newcomer_credit_opportunity.json

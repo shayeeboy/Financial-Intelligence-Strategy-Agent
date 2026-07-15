@@ -1,0 +1,609 @@
+{
+  "run_at": "2026-07-15T01:35:52.976Z",
+  "target": {
+    "filename": "gta_newcomer_credit_opportunity.md",
+    "demographic": "Newcomers to Canada (0–5 yrs), Greater Toronto Area",
+    "product": "Newcomer Credit & Daily Banking",
+    "geography": "ON — Toronto CMA",
+    "cma": "Toronto"
+  },
+  "data": {
+    "debt": {
+      "source": "Statistics Canada — Web Data Service (WDS)",
+      "concept": "debt_to_disposable_income",
+      "label": "Household credit market debt to disposable income (%)",
+      "province": "National",
+      "table_id": "38100238",
+      "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=38100238",
+      "vector_id": 1038036698,
+      "latest": {
+        "ref_period": "2026-01-01",
+        "value": 179.55,
+        "release_time": "2026-06-12T08:30"
+      },
+      "trend": [
+        {
+          "ref_period": "2022-04-01",
+          "value": 187.68,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2022-07-01",
+          "value": 188.22,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2022-10-01",
+          "value": 183.86,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2023-01-01",
+          "value": 186.13,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2023-04-01",
+          "value": 183.81,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2023-07-01",
+          "value": 180.69,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2023-10-01",
+          "value": 179.93,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2024-01-01",
+          "value": 179.66,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2024-04-01",
+          "value": 176.77,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2024-07-01",
+          "value": 174.13,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2024-10-01",
+          "value": 174.78,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2025-01-01",
+          "value": 175.35,
+          "release_time": "2026-06-12T08:30"
+        },
+        {
+          "ref_period": "2025-04-01",
+          "value": 177.34,
+          "release_time": "2026-06-12T08:30"
+        },
+        {
+          "ref_period": "2025-07-01",
+          "value": 177.95,
+          "release_time": "2026-06-12T08:30"
+        },
+        {
+          "ref_period": "2025-10-01",
+          "value": 178.69,
+          "release_time": "2026-06-12T08:30"
+        },
+        {
+          "ref_period": "2026-01-01",
+          "value": 179.55,
+          "release_time": "2026-06-12T08:30"
+        }
+      ],
+      "n_periods": 16,
+      "retrieved_at": "2026-07-15T01:35:52.849Z"
+    },
+    "credit": {
+      "source": "Statistics Canada — Web Data Service (WDS)",
+      "concept": "consumer_credit_mortgage_to_income",
+      "label": "Consumer credit and mortgage liabilities to disposable income (%)",
+      "province": "National",
+      "table_id": "38100238",
+      "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=38100238",
+      "vector_id": 1038036699,
+      "latest": {
+        "ref_period": "2026-01-01",
+        "value": 171.15,
+        "release_time": "2026-06-12T08:30"
+      },
+      "trend": [
+        {
+          "ref_period": "2022-04-01",
+          "value": 178.97,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2022-07-01",
+          "value": 179.56,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2022-10-01",
+          "value": 175.36,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2023-01-01",
+          "value": 177.61,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2023-04-01",
+          "value": 175.41,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2023-07-01",
+          "value": 172.44,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2023-10-01",
+          "value": 171.76,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2024-01-01",
+          "value": 171.42,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2024-04-01",
+          "value": 168.61,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2024-07-01",
+          "value": 166.04,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2024-10-01",
+          "value": 166.61,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2025-01-01",
+          "value": 167.25,
+          "release_time": "2026-06-12T08:30"
+        },
+        {
+          "ref_period": "2025-04-01",
+          "value": 169.24,
+          "release_time": "2026-06-12T08:30"
+        },
+        {
+          "ref_period": "2025-07-01",
+          "value": 169.79,
+          "release_time": "2026-06-12T08:30"
+        },
+        {
+          "ref_period": "2025-10-01",
+          "value": 170.51,
+          "release_time": "2026-06-12T08:30"
+        },
+        {
+          "ref_period": "2026-01-01",
+          "value": 171.15,
+          "release_time": "2026-06-12T08:30"
+        }
+      ],
+      "n_periods": 16,
+      "retrieved_at": "2026-07-15T01:35:52.778Z"
+    },
+    "cpi": {
+      "source": "Statistics Canada — Web Data Service (WDS)",
+      "concept": "cpi_all_items",
+      "label": "Consumer Price Index, all-items (2002=100), Canada",
+      "province": "National",
+      "table_id": "18100004",
+      "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=18100004",
+      "vector_id": 41690973,
+      "latest": {
+        "ref_period": "2026-05-01",
+        "value": 169.6,
+        "release_time": "2026-06-22T08:30"
+      },
+      "trend": [
+        {
+          "ref_period": "2023-02-01",
+          "value": 154.5,
+          "release_time": "2023-03-21T08:30"
+        },
+        {
+          "ref_period": "2023-03-01",
+          "value": 155.3,
+          "release_time": "2023-04-18T08:30"
+        },
+        {
+          "ref_period": "2023-04-01",
+          "value": 156.4,
+          "release_time": "2023-06-27T08:30"
+        },
+        {
+          "ref_period": "2023-05-01",
+          "value": 157,
+          "release_time": "2023-06-27T08:30"
+        },
+        {
+          "ref_period": "2023-06-01",
+          "value": 157.2,
+          "release_time": "2023-07-18T08:30"
+        },
+        {
+          "ref_period": "2023-07-01",
+          "value": 158.1,
+          "release_time": "2023-08-15T08:30"
+        },
+        {
+          "ref_period": "2023-08-01",
+          "value": 158.7,
+          "release_time": "2023-09-19T08:30"
+        },
+        {
+          "ref_period": "2023-09-01",
+          "value": 158.5,
+          "release_time": "2023-10-17T08:30"
+        },
+        {
+          "ref_period": "2023-10-01",
+          "value": 158.6,
+          "release_time": "2023-11-21T08:30"
+        },
+        {
+          "ref_period": "2023-11-01",
+          "value": 158.8,
+          "release_time": "2023-12-19T08:30"
+        },
+        {
+          "ref_period": "2023-12-01",
+          "value": 158.3,
+          "release_time": "2024-01-16T08:30"
+        },
+        {
+          "ref_period": "2024-01-01",
+          "value": 158.3,
+          "release_time": "2024-02-20T08:30"
+        },
+        {
+          "ref_period": "2024-02-01",
+          "value": 158.8,
+          "release_time": "2024-03-19T08:30"
+        },
+        {
+          "ref_period": "2024-03-01",
+          "value": 159.8,
+          "release_time": "2024-04-16T08:30"
+        },
+        {
+          "ref_period": "2024-04-01",
+          "value": 160.6,
+          "release_time": "2024-06-25T08:30"
+        },
+        {
+          "ref_period": "2024-05-01",
+          "value": 161.5,
+          "release_time": "2024-06-25T08:30"
+        },
+        {
+          "ref_period": "2024-06-01",
+          "value": 161.4,
+          "release_time": "2024-07-16T08:30"
+        },
+        {
+          "ref_period": "2024-07-01",
+          "value": 162.1,
+          "release_time": "2024-08-20T08:30"
+        },
+        {
+          "ref_period": "2024-08-01",
+          "value": 161.8,
+          "release_time": "2024-09-17T08:30"
+        },
+        {
+          "ref_period": "2024-09-01",
+          "value": 161.1,
+          "release_time": "2024-10-15T08:30"
+        },
+        {
+          "ref_period": "2024-10-01",
+          "value": 161.8,
+          "release_time": "2024-11-19T08:30"
+        },
+        {
+          "ref_period": "2024-11-01",
+          "value": 161.8,
+          "release_time": "2024-12-17T08:30"
+        },
+        {
+          "ref_period": "2024-12-01",
+          "value": 161.2,
+          "release_time": "2025-01-21T08:30"
+        },
+        {
+          "ref_period": "2025-01-01",
+          "value": 161.3,
+          "release_time": "2025-02-18T08:30"
+        },
+        {
+          "ref_period": "2025-02-01",
+          "value": 163,
+          "release_time": "2025-03-18T08:30"
+        },
+        {
+          "ref_period": "2025-03-01",
+          "value": 163.5,
+          "release_time": "2025-04-15T08:30"
+        },
+        {
+          "ref_period": "2025-04-01",
+          "value": 163.4,
+          "release_time": "2025-05-20T08:30"
+        },
+        {
+          "ref_period": "2025-05-01",
+          "value": 164.3,
+          "release_time": "2025-06-24T08:30"
+        },
+        {
+          "ref_period": "2025-06-01",
+          "value": 164.4,
+          "release_time": "2025-07-15T08:30"
+        },
+        {
+          "ref_period": "2025-07-01",
+          "value": 164.9,
+          "release_time": "2025-08-19T08:30"
+        },
+        {
+          "ref_period": "2025-08-01",
+          "value": 164.8,
+          "release_time": "2025-09-16T08:30"
+        },
+        {
+          "ref_period": "2025-09-01",
+          "value": 164.9,
+          "release_time": "2025-10-21T08:30"
+        },
+        {
+          "ref_period": "2025-10-01",
+          "value": 165.3,
+          "release_time": "2025-11-17T08:30"
+        },
+        {
+          "ref_period": "2025-11-01",
+          "value": 165.4,
+          "release_time": "2025-12-15T08:30"
+        },
+        {
+          "ref_period": "2025-12-01",
+          "value": 165,
+          "release_time": "2026-01-19T08:30"
+        },
+        {
+          "ref_period": "2026-01-01",
+          "value": 165,
+          "release_time": "2026-02-17T08:30"
+        },
+        {
+          "ref_period": "2026-02-01",
+          "value": 165.9,
+          "release_time": "2026-03-16T08:30"
+        },
+        {
+          "ref_period": "2026-03-01",
+          "value": 167.4,
+          "release_time": "2026-04-20T08:30"
+        },
+        {
+          "ref_period": "2026-04-01",
+          "value": 168,
+          "release_time": "2026-05-19T08:30"
+        },
+        {
+          "ref_period": "2026-05-01",
+          "value": 169.6,
+          "release_time": "2026-06-22T08:30"
+        }
+      ],
+      "n_periods": 40,
+      "retrieved_at": "2026-07-15T01:35:52.832Z"
+    },
+    "rent2br": {
+      "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
+      "cma_zone": "Toronto",
+      "metric": "rental_affordability",
+      "structure_type": "Row and apartment structures of three units and over",
+      "unit_type": "Two bedroom units",
+      "value_label": "Average rent ($/month)",
+      "table_id": "34100133",
+      "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100133",
+      "hmip_reference": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research",
+      "coordinate": "125.3.3.0.0.0.0.0.0.0",
+      "resolved_dimensions": [
+        {
+          "dimension": "Geography",
+          "member": "Toronto, Ontario"
+        },
+        {
+          "dimension": "Type of structure",
+          "member": "Row and apartment structures of three units and over"
+        },
+        {
+          "dimension": "Type of unit",
+          "member": "Two bedroom units"
+        }
+      ],
+      "latest": {
+        "ref_period": "2025-01-01",
+        "value": 2045,
+        "release_time": "2025-12-17T08:30"
+      },
+      "trend": [
+        {
+          "ref_period": "2020-01-01",
+          "value": 1637,
+          "release_time": "2021-02-25T08:30"
+        },
+        {
+          "ref_period": "2021-01-01",
+          "value": 1680,
+          "release_time": "2022-02-21T08:30"
+        },
+        {
+          "ref_period": "2022-01-01",
+          "value": 1779,
+          "release_time": "2023-03-17T08:30"
+        },
+        {
+          "ref_period": "2023-01-01",
+          "value": 1958,
+          "release_time": "2024-06-06T08:30"
+        },
+        {
+          "ref_period": "2024-01-01",
+          "value": 1972,
+          "release_time": "2025-02-04T08:30"
+        },
+        {
+          "ref_period": "2025-01-01",
+          "value": 2045,
+          "release_time": "2025-12-17T08:30"
+        }
+      ],
+      "retrieved_at": "2026-07-15T01:35:52.975Z"
+    },
+    "vacancy": {
+      "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
+      "cma_zone": "Toronto",
+      "metric": "vacancy_rate",
+      "structure_type": "Row and apartment structures of three units and over",
+      "unit_type": "Total",
+      "value_label": "Vacancy rate (%)",
+      "table_id": "34100127",
+      "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100127",
+      "hmip_reference": "https://www.cmhc-schl.gc.ca/professionals/housing-markets-data-and-research",
+      "coordinate": "23.0.0.0.0.0.0.0.0.0",
+      "resolved_dimensions": [
+        {
+          "dimension": "Geography",
+          "member": "Toronto, Ontario"
+        }
+      ],
+      "latest": {
+        "ref_period": "2025-01-01",
+        "value": 3,
+        "release_time": "2025-12-17T08:30"
+      },
+      "trend": [
+        {
+          "ref_period": "2020-01-01",
+          "value": 3.4,
+          "release_time": "2021-02-25T08:30"
+        },
+        {
+          "ref_period": "2021-01-01",
+          "value": 4.6,
+          "release_time": "2022-02-21T08:30"
+        },
+        {
+          "ref_period": "2022-01-01",
+          "value": 1.6,
+          "release_time": "2023-03-17T08:30"
+        },
+        {
+          "ref_period": "2023-01-01",
+          "value": 1.4,
+          "release_time": "2024-06-06T08:30"
+        },
+        {
+          "ref_period": "2024-01-01",
+          "value": 2.5,
+          "release_time": "2025-02-04T08:30"
+        },
+        {
+          "ref_period": "2025-01-01",
+          "value": 3,
+          "release_time": "2025-12-17T08:30"
+        }
+      ],
+      "retrieved_at": "2026-07-15T01:35:52.952Z"
+    },
+    "policy": {
+      "source": "Bank of Canada — Valet API",
+      "series_id": "V39079",
+      "label": "Target for the overnight rate (%)",
+      "url": "https://www.bankofcanada.ca/valet/observations/V39079",
+      "latest": {
+        "date": "2026-07-10",
+        "value": 2.25
+      },
+      "observations": [
+        {
+          "date": "2026-07-13",
+          "value": 2.25
+        },
+        {
+          "date": "2026-07-10",
+          "value": 2.25
+        }
+      ],
+      "retrieved_at": "2026-07-15T01:35:52.174Z"
+    },
+    "prime": {
+      "source": "Bank of Canada — Valet API",
+      "series_id": "V80691311",
+      "label": "Chartered bank prime lending rate (%)",
+      "url": "https://www.bankofcanada.ca/valet/observations/V80691311",
+      "latest": {
+        "date": "2026-07-01",
+        "value": 4.45
+      },
+      "observations": [
+        {
+          "date": "2026-07-08",
+          "value": 4.45
+        },
+        {
+          "date": "2026-07-01",
+          "value": 4.45
+        }
+      ],
+      "retrieved_at": "2026-07-15T01:35:52.177Z"
+    },
+    "mtg5": {
+      "source": "Bank of Canada — Valet API",
+      "series_id": "V80691335",
+      "label": "Conventional 5-year mortgage rate (%)",
+      "url": "https://www.bankofcanada.ca/valet/observations/V80691335",
+      "latest": {
+        "date": "2026-07-01",
+        "value": 6.09
+      },
+      "observations": [
+        {
+          "date": "2026-07-08",
+          "value": 6.09
+        },
+        {
+          "date": "2026-07-01",
+          "value": 6.09
+        }
+      ],
+      "retrieved_at": "2026-07-15T01:35:52.177Z"
+    }
+  }
+}

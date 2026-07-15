@@ -28,6 +28,7 @@ product category. Generated and maintained by the Financial-Demographic-Strategi
  * @param {string} args.markdown_body       - full brief body (markdown)
  * @param {string} [args.geography='National']
  * @param {string} [args.confidence='High'] - 'High' | 'Low Confidence'
+ * @param {string} [args.briefsDir]  - output directory override (defaults to /data/briefs; used by tests).
  */
 export async function compileStrategyBrief(args) {
   const {
@@ -37,6 +38,7 @@ export async function compileStrategyBrief(args) {
     markdown_body,
     geography = 'National',
     confidence = 'High',
+    briefsDir = BRIEFS_DIR,
   } = args;
 
   for (const [k, v] of Object.entries({ filename, target_demographic, banking_product_focus, markdown_body })) {
@@ -46,14 +48,15 @@ export async function compileStrategyBrief(args) {
     throw new Error(`Invalid filename "${filename}". Use a safe kebab-case name ending in .md.`);
   }
 
-  await fs.mkdir(BRIEFS_DIR, { recursive: true });
-  const briefPath = path.join(BRIEFS_DIR, filename);
+  const indexPath = path.join(briefsDir, 'master_index.md');
+  await fs.mkdir(briefsDir, { recursive: true });
+  const briefPath = path.join(briefsDir, filename);
   await fs.writeFile(briefPath, ensureTrailingNewline(markdown_body), 'utf8');
 
   // Ensure the index exists with a header, then append the row.
   let index;
   try {
-    index = await fs.readFile(INDEX_PATH, 'utf8');
+    index = await fs.readFile(indexPath, 'utf8');
   } catch {
     index = INDEX_HEADER;
   }
@@ -71,11 +74,11 @@ export async function compileStrategyBrief(args) {
     .join('\n');
   if (!index.endsWith('\n')) index += '\n';
 
-  await fs.writeFile(INDEX_PATH, index + row, 'utf8');
+  await fs.writeFile(indexPath, index + row, 'utf8');
 
   return {
     written: path.relative(ROOT, briefPath).replace(/\\/g, '/'),
-    index: path.relative(ROOT, INDEX_PATH).replace(/\\/g, '/'),
+    index: path.relative(ROOT, indexPath).replace(/\\/g, '/'),
     bytes: Buffer.byteLength(markdown_body, 'utf8'),
   };
 }
