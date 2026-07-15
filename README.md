@@ -458,11 +458,13 @@ kind of brief) and what would make it genuinely production-grade.
 | R6 | **Trend & forecast-free deltas** | Add QoQ/YoY deltas and multi-year sparklines per indicator (still no forecasting) | every headline figure shows a directional delta with its own citation |
 | R7 | **More sources** | Add StatCan SFS (net worth), CRA/FCAC where public, provincial housing starts | coverage of assets *and* liabilities, not just leverage + shelter |
 | R8 | **Shared brief gallery (optional Neon)** | A thin serverless API + **Neon Postgres** to persist generated briefs and show a public "recently generated" gallery + usage stats | briefs saved with a shareable link; gallery + aggregate usage visible — the one feature that justifies a backend |
+| R9 | **Scheduled email delivery** *(planned — [full design](docs/EMAIL-DELIVERY-PLAN.md))* | Subscribe an email to a chosen brief; a **GitHub Actions cron** + **Neon** + Resend/Brevo emails it weekly/monthly with double opt-in & unsubscribe | opt-in → confirmed → delivered on schedule; **$0/mo** at portfolio scale (see cost analysis in the plan) |
 
 See [`docs/DATA-SOURCES.md`](docs/DATA-SOURCES.md) for the provenance reference and the
 step-by-step for adding an indicator (R1/R7). **On Neon:** generation itself needs no
-database (it's stateless client-side); a Neon-backed gallery (R8) is the natural place to
-add one if shared persistence becomes a goal.
+database (it's stateless client-side); the Neon-backed gallery (R8) and
+[scheduled email delivery (R9)](docs/EMAIL-DELIVERY-PLAN.md) are the features that would
+justify a backend — the latter is fully designed and costed at **$0/month**.
 
 [↑ Back to top](#executive-summary)
 
