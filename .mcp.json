@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "financial-intelligence-strategy-agent": {
+      "command": "node",
+      "args": ["src/mcp/server.js"]
+    }
+  }
+}

@@ -1,0 +1,22 @@
+{
+  "name": "financial-intelligence-strategy-agent",
+  "version": "0.1.0",
+  "description": "Autonomous BI agent for Canadian demographic shifts & consumer banking strategy. Live adapters for Statistics Canada (WDS), CMHC (via StatCan), and Bank of Canada (Valet).",
+  "type": "module",
+  "bin": {
+    "fisa-mcp": "src/mcp/server.js"
+  },
+  "scripts": {
+    "mcp": "node src/mcp/server.js",
+    "brief": "node src/orchestrator.js",
+    "smoke": "node scripts/smoke.js"
+  },
+  "engines": {
+    "node": ">=18"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "^1.0.4"
+  },
+  "author": "shayeeboy",
+  "license": "MIT"
+}

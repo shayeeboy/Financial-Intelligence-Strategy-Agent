@@ -1,0 +1,8 @@
+node_modules/
+.env
+.env.local
+*.log
+.DS_Store
+# Keep briefs + the master index, but ignore bulky raw snapshots by default.
+# Comment the next line out if you want raw provenance snapshots committed.
+data/raw/*.json
