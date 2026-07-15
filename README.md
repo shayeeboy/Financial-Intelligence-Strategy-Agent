@@ -4,12 +4,13 @@ An autonomous business-intelligence agent that turns **Canadian public demograph
 housing data** into executive **retail-banking strategy briefs**. It pulls live figures
 from Statistics Canada, CMHC, and the Bank of Canada, then synthesizes them into a
 structured brief that maps demographic and cost-of-living realities to specific banking
-product opportunities — served both as an [MCP](https://modelcontextprotocol.io) tool
-server and as a one-command CLI. Built as part of
+product opportunities — served three ways: a **hosted web generator**, an
+[MCP](https://modelcontextprotocol.io) tool server, and a one-command CLI. Built as part of
 [My AI Portfolio](https://github.com/shayeeboy) alongside the
 [AI-Native Team Diagnostic](https://github.com/shayeeboy/ai-native-diagnostic) and the
 [Enterprise RAG Assistant](https://github.com/shayeeboy/Enterprise-RAG-Assistant).
 
+[![Live demo](https://img.shields.io/badge/live%20demo-brief%20generator-4f46e5)](https://shayeeboy.github.io/Financial-Intelligence-Strategy-Agent/)
 [![CI](https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/actions/workflows/ci.yml)
 ![Node](https://img.shields.io/badge/node-%E2%89%A518-339933?logo=node.js&logoColor=white)
 ![Data](https://img.shields.io/badge/data-StatCan%20%C2%B7%20CMHC%20%C2%B7%20Bank%20of%20Canada-2563eb)
@@ -24,17 +25,24 @@ server and as a one-command CLI. Built as part of
 
 ## See it live
 
-**📄 [Read the live example brief → *GTA Newcomer Credit & Daily Banking*](https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/blob/main/data/briefs/gta_newcomer_credit_opportunity.md)**
+**🍁 [Open the brief generator → shayeeboy.github.io/Financial-Intelligence-Strategy-Agent](https://shayeeboy.github.io/Financial-Intelligence-Strategy-Agent/)**
 
-Every figure in that brief was pulled from a public API at generation time and
-snapshotted to [`data/raw/`](data/raw). The data endpoints are themselves live and
-key-free — you can hit them right now:
+Pick a **province, city, demographic, and product line**, click *Generate*, and a
+complete, sourced strategy brief is built **in your browser** from live data — no
+sign-up, no cost, no backend. There are 13 cities × 7 demographics × 6 product lines to
+choose from. ([web flow](#web-generator-github-pages))
+
+**📄 [Or read a pre-generated example → *GTA Newcomer Credit & Daily Banking*](https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/blob/main/data/briefs/gta_newcomer_credit_opportunity.md)**
+
+Every figure is pulled from a public API at generation time (the CLI run also snapshots
+it to [`data/raw/`](data/raw)). The endpoints are live and key-free — you can hit them
+right now:
 
 - **Bank of Canada** overnight target — [`valet/observations/V39079`](https://www.bankofcanada.ca/valet/observations/V39079/json?recent=3)
 - **Statistics Canada** household leverage (Table 38-10-0238) — [WDS `getDataFromVectorsAndLatestNPeriods`](https://www.statcan.gc.ca/en/developers/wds/user-guide)
 - **CMHC** rents (via StatCan Table 34-10-0133) — [`tv.action?pid=3410013301`](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410013301)
 
-Regenerate the whole brief yourself in one command: `npm install && npm run brief`.
+Prefer the CLI? `npm install && npm run brief` regenerates the example end-to-end.
 
 ---
 
@@ -51,22 +59,24 @@ last mile is manual, slow analyst work. This agent automates it: it ingests the 
 public data and emits a decision-ready strategy brief that maps each data point to a
 concrete banking product play.
 
-**User.** Primary (as built): a **strategy / product analyst at a Canadian bank or
-credit union** who needs a defensible, sourced starting point for a segment play —
-"should we build a newcomer credit product for the GTA, and what does the data say?" —
-in minutes instead of days. Secondary: an **AI/automation engineer** who wants the same
-capability as composable [MCP](https://modelcontextprotocol.io) tools they can call from
-Claude (or any MCP client) inside a larger workflow. The brief is written for a business
-reader; the tools are built for a technical one.
+**User.** Three access tiers for three users. (1) A **business user** — a strategy /
+product analyst at a Canadian bank or credit union — who opens the [hosted web
+generator](https://shayeeboy.github.io/Financial-Intelligence-Strategy-Agent/), picks a
+segment and city, and gets a defensible, sourced brief in seconds, no install. (2) An
+**AI/automation engineer** who calls the same capability as composable
+[MCP](https://modelcontextprotocol.io) tools from Claude (or any MCP client) inside a
+larger workflow. (3) A **developer/analyst** running the CLI headless in a pipeline. The
+brief is written for a business reader; the tools are built for a technical one.
 
 **Objective.** Build a production-shaped autonomous-agent pattern — **live tool-use over
 real public APIs → structured synthesis → cited, guard-railed output** — on a genuine,
-non-trivial domain (Canadian consumer banking strategy). The banking briefs are the
-deliverable; the transferable pattern is *"turn a set of authoritative live data sources
-into a trusted, sourced, decision-ready document, with the discipline of something meant
-to be relied on rather than demoed."* Every number is traceable to its source; the agent
-refuses to stray into forecasting or regulatory advice; and low-evidence outputs flag
-themselves rather than bluffing.
+non-trivial domain (Canadian consumer banking strategy), and make it **self-serve**: any
+of 13 cities × 7 demographics × 6 product lines generates a complete brief with no
+backend and no cost. The banking briefs are the deliverable; the transferable pattern is
+*"turn a set of authoritative live data sources into a trusted, sourced, decision-ready
+document, with the discipline of something meant to be relied on rather than demoed."*
+Every number is traceable to its source; the agent refuses to stray into forecasting or
+regulatory advice; and low-evidence outputs flag themselves rather than bluffing.
 
 **Success criteria.** Deliberately split into what is *mechanically verified* and what is
 *honestly not yet measured*:
@@ -79,7 +89,8 @@ themselves rather than bluffing.
 | 4 | **Structural completeness** | brief carries all 4 mandated sections + a *Financial Services Implication* in each | met on the live brief | manual + template |
 | 5 | **Confidence guardrail** | any series with < 3 yrs baseline is flagged *Low Confidence* in `memory.md` + console | enforced | `npm run check` (AC-M4) |
 | 6 | **Safety guardrail** | no rate forecasts / no legal-regulatory advice in output | enforced by prompt + explicit brief disclaimer | manual review |
-| 7 | **Deterministic core logic** | metric math, coordinate resolution, and file/matrix writes are unit-tested | **11/11 passing** | `npm run check` |
+| 7 | **Deterministic core logic** | metric math, coordinate resolution, and file/matrix writes are unit-tested | **17/17 passing** | `npm run check` |
+| 8 | **Self-serve web generation** | every one of 13 × 7 × 6 selections composes a complete, hole-free brief client-side | all 42 demographic×product combos verified; live in browser | `npm run check` (AC-W2), hosted demo |
 
 **Not yet measured (honest gaps).** The brief's **narrative reasoning** (e.g. "newcomers
 are thin-file, not low-capacity") is presented as qualitative segment analysis, **not**
@@ -91,6 +102,11 @@ cross-brief consistency, and analyst-usefulness aren't yet evaluated across a po
 briefs. See [Gaps & roadmap](#gaps-and-roadmap).
 
 **Key decisions (the trade-offs that shaped the build).**
+- **Fully client-side web app over a backend — so Neon wasn't needed.** All three
+  sources send `Access-Control-Allow-Origin: *`, so the browser calls them directly; the
+  generator is static on GitHub Pages with no server to host or keep warm and **$0**. A
+  database was offered but is only warranted for a *persistent shared gallery* of
+  community briefs (roadmap R8) — not for generation itself, so it was declined.
 - **CMHC sourced *through* Statistics Canada, not scraped from HMIP.** CMHC's portal has
   no stable public JSON API (it returns HTML); its Rental Market Survey is republished as
   StatCan cubes. Reading those cubes gives versioned, citable data instead of a brittle
@@ -115,19 +131,21 @@ briefs. See [Gaps & roadmap](#gaps-and-roadmap).
 
 ## How it works
 
-An autonomous agent with two entry points over one core: an **MCP server** (four
-live-data tools an analyst can call from Claude) and an **orchestrator** (runs the full
-Standard Operating Procedure headless and writes a finished brief).
+Three entry points over one synthesis pattern: a **web generator** (static, client-side,
+on GitHub Pages), an **MCP server** (four live-data tools an analyst can call from
+Claude), and an **orchestrator** (runs the full Standard Operating Procedure headless and
+writes a finished brief).
 
 | Layer | What it does | Where |
 |---|---|---|
-| [**Architecture**](#architecture) | Two entry points → agent core → adapters → three public APIs → outputs | `src/mcp`, `src/orchestrator.js` |
+| [**Architecture**](#architecture) | Entry points → agent core → adapters → three public APIs → outputs | `src/mcp`, `src/orchestrator.js` |
+| [**Web generator**](#web-generator-github-pages) | Static browser app: pick options → fetch APIs client-side → compose + render a brief | `web/` |
 | [**Orchestrator SOP**](#orchestrator-sop) | 6-step workflow: identify gaps → gather → derive → confidence check → synthesize → persist | `src/orchestrator.js` |
 | [**Adapters & tools**](#adapters-and-tools) | Normalize StatCan/CMHC/BoC into cited data; compile the brief + matrix | `src/mcp/adapters`, `src/mcp/tools` |
 | [**Run it**](#run-it) | `npm run brief`, `npm run mcp`, `npm run smoke`, `npm run check` | `package.json` |
-| [**Test cases**](#test-cases-and-acceptance-criteria) | 11 offline unit-acceptance tests + a live integration smoke | `scripts/check.js`, `scripts/smoke.js` |
+| [**Test cases**](#test-cases-and-acceptance-criteria) | 17 offline unit-acceptance tests + a live integration smoke | `scripts/check.js`, `scripts/smoke.js` |
 
-**Navigate:** [See it live](#see-it-live) · [Architecture](#architecture) · [Orchestrator SOP](#orchestrator-sop) · [Adapters & tools](#adapters-and-tools) · [MCP tools](#mcp-tools) · [Run it](#run-it) · [Test cases](#test-cases-and-acceptance-criteria) · [Repo structure](#repo-structure) · [Tools & services](#tools-and-services) · [Lessons learned](#lessons-learned) · [Gaps & roadmap](#gaps-and-roadmap)
+**Navigate:** [See it live](#see-it-live) · [Architecture](#architecture) · [Web generator](#web-generator-github-pages) · [Orchestrator SOP](#orchestrator-sop) · [Adapters & tools](#adapters-and-tools) · [MCP tools](#mcp-tools) · [Run it](#run-it) · [Test cases](#test-cases-and-acceptance-criteria) · [Repo structure](#repo-structure) · [Tools & services](#tools-and-services) · [Lessons learned](#lessons-learned) · [Gaps & roadmap](#gaps-and-roadmap)
 
 ---
 
@@ -152,6 +170,47 @@ snapshots, and a running-state log.
   Valet. All public, all key-free.
 - **Outputs** — [`data/briefs/`](data/briefs) (+ `master_index.md` matrix),
   [`data/raw/`](data/raw) snapshots, and [`memory.md`](memory.md).
+
+> The **web generator** is a fourth consumer, but it deliberately *bypasses* the Node
+> core: it's a static browser app that talks to the three public APIs directly
+> (client-side), so it needs no server. Its data flow is diagrammed below.
+
+[↑ Back to top](#executive-summary)
+
+---
+
+### Web generator (GitHub Pages)
+
+The [hosted generator](https://shayeeboy.github.io/Financial-Intelligence-Strategy-Agent/)
+is a **fully static, client-side** app — the CTA the business user actually touches. It
+runs entirely in the browser: no backend, no database, no build step, **$0**. This is
+possible because all three sources send `Access-Control-Allow-Origin: *`, so the page can
+`fetch()` them directly.
+
+![Web generator client-side data flow](assets/web-flow.svg)
+
+**Controls (the "any brief" matrix).** Province → filters City (13 CMAs); Rent basis
+(1/2/3-bedroom); Demographic group (7 cohorts); Brief type / product focus (6 lines) —
+**42 demographic×product combinations per city**.
+
+```
+Choose (province · city · bedroom · demographic · product)
+  → fetch() StatCan + CMHC(via StatCan) + BoC  in parallel, client-side (CORS-open)
+  → derive  YoY · annualized rent · 30%-rule income · confidence guardrail
+  → compose Markdown (same mandated hierarchy as the CLI)  → render to HTML
+  → Download .md  ·  Copy Markdown
+```
+
+**Files** ([`web/`](web)): `index.html` + `styles.css` (theme-aware, responsive);
+`js/catalog.js` (options + **precomputed CMHC coordinates**, so the browser skips the
+heavy metadata fetch); `js/sources.js` (browser data adapters); `js/compose.js` (pure
+brief composer); `js/markdown.js` (dependency-free renderer); `js/app.js` (DOM wiring).
+The composer, catalog, metrics, and renderer are **pure ES modules that also run in
+Node**, so they're unit-tested (AC-W1…W6) and kept in parity with the CLI's
+[`src/lib/metrics.js`](src/lib/metrics.js).
+
+Deployed by [`.github/workflows/pages.yml`](.github/workflows/pages.yml) (uploads `web/`
+as the Pages artifact on every push that touches it).
 
 [↑ Back to top](#executive-summary)
 
@@ -226,7 +285,7 @@ included:
 npm install
 
 npm run smoke     # live: verify all 8 data pulls against StatCan/CMHC/BoC
-npm run check     # offline: 11 unit-acceptance tests (node --test)
+npm run check     # offline: 17 unit-acceptance tests (node --test)
 npm run brief     # run the SOP → writes data/briefs/*.md + master_index.md + memory.md
 npm run mcp       # start the MCP server on stdio (for an MCP client)
 ```
@@ -258,9 +317,15 @@ API keys; `node --test`). Each test asserts one acceptance criterion:
 | `AC-B1` input safety | `compile_strategy_brief` rejects path-traversal/non-`.md` names and missing fields | ✅ |
 | `AC-B2` write + matrix | writing a brief creates the file **and** appends a correct `master_index.md` row | ✅ |
 | `AC-B3` idempotent matrix | re-compiling the same filename overwrites content and **de-duplicates** the matrix row | ✅ |
+| `AC-W1` web brief structure | `composeBrief` emits all 5 mandated sections + a *Financial Services Implication* in each | ✅ |
+| `AC-W2` combinatorial coverage | **all 42** demographic×product combos compose with no template holes (`undefined`/`NaN`) | ✅ |
+| `AC-W3` web confidence guardrail | a <3yr series flips the web brief to *Low Confidence* | ✅ |
+| `AC-W4` catalog integrity | every CMA has a province + valid 10-part rent/vacancy coordinates; demographics/products well-formed | ✅ |
+| `AC-W5` markdown renderer | headings, GFM tables, lists, bold, and links render to correct HTML | ✅ |
+| `AC-W6` no metrics drift | `web/js/metrics.js` outputs match `src/lib/metrics.js` for the same inputs | ✅ |
 
 ```
-ℹ tests 11   ℹ pass 11   ℹ fail 0
+ℹ tests 17   ℹ pass 17   ℹ fail 0
 ```
 
 **`npm run smoke`** — live integration acceptance against the real APIs (read-only):
@@ -289,8 +354,17 @@ Financial-Intelligence-Strategy-Agent/
 ├── README.md                     ← this file
 ├── package.json                  ← scripts: brief · mcp · check · smoke
 ├── .mcp.json                     ← wire the server into an MCP client
-├── assets/                       ← architecture.svg · workflow.svg
+├── assets/                       ← architecture.svg · workflow.svg · web-flow.svg
 ├── docs/DATA-SOURCES.md          ← provenance: tables, vectors, how to extend
+├── web/                          ← static client-side generator (GitHub Pages)
+│   ├── index.html  styles.css    ← theme-aware, responsive UI
+│   └── js/
+│       ├── catalog.js            ← options + precomputed CMHC coordinates
+│       ├── sources.js            ← browser data adapters (fetch the 3 APIs)
+│       ├── compose.js            ← pure brief composer (Node-testable)
+│       ├── markdown.js           ← dependency-free Markdown → HTML
+│       ├── metrics.js            ← pure helpers (parity with src/lib/metrics.js)
+│       └── app.js                ← DOM wiring, generate/download/copy
 ├── src/
 │   ├── orchestrator.js           ← runs the 6-step SOP → one brief
 │   ├── lib/
@@ -313,7 +387,9 @@ Financial-Intelligence-Strategy-Agent/
 │       ├── master_index.md       ← business-facing matrix (demographic × product)
 │       └── gta_newcomer_credit_opportunity.md   ← the live example brief
 ├── memory.md                     ← running-state log
-├── .github/workflows/ci.yml
+├── .github/workflows/
+│   ├── ci.yml                    ← check (required) + live smoke (non-blocking)
+│   └── pages.yml                 ← deploy web/ to GitHub Pages
 └── LICENSE
 ```
 
@@ -329,8 +405,11 @@ Financial-Intelligence-Strategy-Agent/
 | HTTP | `lib/http.js` (native `fetch`) | Timeout + retry/backoff + descriptive UA, no axios |
 | Output | Markdown briefs + `master_index.md` matrix | Business-readable, diff-able, renders on GitHub |
 | Provenance | `data/raw/*.json` snapshots | Every run is reproducible from its snapshot |
+| Web app | Vanilla ES modules (no framework, no build) | Static, browser-native `fetch`; deployable as plain files |
+| Web hosting | **GitHub Pages** (Actions deploy) | Static, free, no server — the CORS-open APIs make a backend unnecessary |
+| Database | **None required** (Neon optional) | Generation is stateless client-side; a DB is only needed for a shared brief gallery (roadmap R8) |
 | Testing | in-house (`check.js` units · `smoke.js` integration) via `node --test` | Deterministic acceptance + live data verification, zero test deps |
-| CI | GitHub Actions | `check` required, live `smoke` non-blocking |
+| CI | GitHub Actions | `check` required, live `smoke` non-blocking; `pages.yml` deploys the web app |
 
 ## Lessons learned
 
@@ -340,8 +419,12 @@ Financial-Intelligence-Strategy-Agent/
 | First-pass StatCan debt vectors returned `null` at 2018 | Placeholder vector IDs were wrong. **The smoke test caught it before it reached a brief** — I resolved the real vectors from `getCubeMetadata` (debt-to-income = `1038036698`, ~180%) and re-validated live. Validate curated IDs against the source, never trust a guessed vector. |
 | CMHC 2-bedroom rent came back as ~$1,491 (too low) | The table has **three** dimensions (geography × structure × bedroom); I'd supplied two selectors, so "Two bedroom" landed on the *structure* axis and the query silently returned bachelor units. Fixed by inspecting real cube metadata and mapping all three axes — **multi-dimensional cubes need every axis named, or you get a plausible-but-wrong number.** |
 | A `<3yr` "Low Confidence" flag fired on CPI (which has decades of history) | The guardrail measured the *requested* window, not *available* history — I'd only asked for 24 monthly points (2-yr span). Bumped the request to 40 so the baseline check is honest. **A data-quality guardrail must key off available history, not your page size.** |
-| The same metric/format logic was inline in the orchestrator | Extracted pure helpers to [`lib/metrics.js`](src/lib/metrics.js) so they're **unit-testable offline** — turning "looks right" into 11 asserted acceptance tests. |
+| The same metric/format logic was inline in the orchestrator | Extracted pure helpers to [`lib/metrics.js`](src/lib/metrics.js) so they're **unit-testable offline** — turning "looks right" into asserted acceptance tests. |
 | Writing tests would clobber the real `master_index.md` | Gave `compile_strategy_brief` an optional `briefsDir` so tests write to an isolated temp dir. **Design side-effecting functions to accept their output location** — testability for free. |
+| Hosting the generator seemed to require a backend (and maybe a database) | Checked first: all three APIs return `Access-Control-Allow-Origin: *`, so the browser can call them directly. **Test the actual CORS headers before assuming you need a server** — it collapsed the whole hosting problem to static files on GitHub Pages, $0, no Neon. |
+| CMHC rent needs a heavy `getCubeMetadata` fetch to resolve coordinates | Precomputed the CMA/bedroom coordinates once (Node) and baked them into `web/js/catalog.js`, so the browser only makes the small data call. **Move one-time resolution work out of the hot path.** |
+| Browser and Node could drift on the shared logic | Wrote the web modules as pure ES modules that import in Node too, and added `AC-W6` asserting `web/js/metrics.js` matches `src/lib/metrics.js`. **If you must duplicate, add a test that fails when the copies diverge.** |
+| Victoria's rent resolved to "Victoriaville, Quebec" | A substring match collided across provinces. Pinned the selector to the full `"Victoria, British Columbia"`. **Fuzzy geography matching needs a province-qualified string, verified against live members.** |
 
 ## Gaps and roadmap
 
@@ -356,9 +439,12 @@ kind of brief) and what would make it genuinely production-grade.
 - **No narrative fact-check.** Figures are sourced; the *prose* isn't automatically
   validated against data. A confidently-worded but unsupported sentence could slip
   through.
-- **Single template, single geography proven.** The SOP is hard-targeted at one
-  demographic/CMA. It's parameterized in the adapters but not yet driven by the
-  `master_index` gap analysis it reads.
+- **Autonomy vs. self-serve.** The web app now covers 13 cities × 42 demographic×product
+  combos on demand, but the *headless* orchestrator is still hard-targeted at one brief —
+  it doesn't yet pick its next brief from `master_index` coverage holes.
+- **No persistence.** Web generation is stateless — briefs aren't saved, and there's no
+  shared gallery of what others have generated (the one place a database would earn its
+  keep — see R8).
 
 **Roadmap (with measurable targets)**
 
@@ -371,9 +457,12 @@ kind of brief) and what would make it genuinely production-grade.
 | R5 | **Brief eval harness** | A rubric-scored set (completeness, sourcing, actionability) run over a batch of briefs | mean rubric score + variance across ≥ 20 briefs; regression-gated in CI |
 | R6 | **Trend & forecast-free deltas** | Add QoQ/YoY deltas and multi-year sparklines per indicator (still no forecasting) | every headline figure shows a directional delta with its own citation |
 | R7 | **More sources** | Add StatCan SFS (net worth), CRA/FCAC where public, provincial housing starts | coverage of assets *and* liabilities, not just leverage + shelter |
+| R8 | **Shared brief gallery (optional Neon)** | A thin serverless API + **Neon Postgres** to persist generated briefs and show a public "recently generated" gallery + usage stats | briefs saved with a shareable link; gallery + aggregate usage visible — the one feature that justifies a backend |
 
 See [`docs/DATA-SOURCES.md`](docs/DATA-SOURCES.md) for the provenance reference and the
-step-by-step for adding an indicator (R1/R7).
+step-by-step for adding an indicator (R1/R7). **On Neon:** generation itself needs no
+database (it's stateless client-side); a Neon-backed gallery (R8) is the natural place to
+add one if shared persistence becomes a goal.
 
 [↑ Back to top](#executive-summary)
 

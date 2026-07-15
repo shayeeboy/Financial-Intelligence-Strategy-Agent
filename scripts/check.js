@@ -146,3 +146,83 @@ test('AC-B3: re-compiling the same filename de-duplicates the matrix row', async
     await fs.rm(dir, { recursive: true, force: true });
   }
 });
+
+// ============================================================================
+// Web brief generator (browser modules under web/js) — pure logic, Node-testable
+// ============================================================================
+import { CMAS, PROVINCES, DEMOGRAPHICS, PRODUCTS, BEDROOMS } from '../web/js/catalog.js';
+import { composeBrief } from '../web/js/compose.js';
+import { renderMarkdown } from '../web/js/markdown.js';
+import * as webMetrics from '../web/js/metrics.js';
+
+// Deterministic mock series with ≥3yr baseline so confidence resolves High.
+const mkTrend = (v) => ({ latest: { ref_period: '2026-01-01', value: v }, points: [
+  { ref_period: '2022-01-01', value: v * 0.9 }, { ref_period: '2026-01-01', value: v } ] });
+const mkRate = (v) => ({ latest: { date: '2026-07-10', value: v }, points: [{ date: '2026-07-10', value: v }] });
+const MOCK = {
+  debt: mkTrend(179.55), credit: mkTrend(171.15), cpi: mkTrend(169.6),
+  rent: mkTrend(2045), vacancy: mkTrend(3),
+  policy: mkRate(2.25), prime: mkRate(4.45), mtg5: mkRate(6.09),
+};
+
+test('AC-W1: composeBrief emits all mandated sections + a Financial Services Implication in each', () => {
+  const { markdown, confidence } = composeBrief(
+    { cmaKey: 'toronto', bedroom: 'Two bedroom', demographicKey: 'newcomers', productKey: 'newcomer_credit' }, MOCK);
+  for (const h of ['## Executive Summary', '## Demographic Profile & Financial Status',
+    '## Structural Impediments & Lifestyle Choices', '## Product Innovation Opportunities', '## Sources & Methodology']) {
+    assert.ok(markdown.includes(h), `missing section: ${h}`);
+  }
+  assert.ok((markdown.match(/Financial Services Implication/g) || []).length >= 4, 'needs ≥4 implications');
+  assert.equal(confidence, 'High');
+});
+
+test('AC-W2: composeBrief works for every demographic × product combo, no template holes', () => {
+  let n = 0;
+  for (const demographicKey of Object.keys(DEMOGRAPHICS)) {
+    for (const productKey of Object.keys(PRODUCTS)) {
+      const { markdown } = composeBrief({ cmaKey: 'vancouver', bedroom: 'Two bedroom', demographicKey, productKey }, MOCK);
+      assert.ok(!/undefined|NaN|\[object/.test(markdown), `template hole in ${demographicKey}/${productKey}`);
+      assert.ok(markdown.includes('Financial Services Implication'));
+      n++;
+    }
+  }
+  assert.equal(n, Object.keys(DEMOGRAPHICS).length * Object.keys(PRODUCTS).length);
+});
+
+test('AC-W3: low-baseline series flip the web brief to Low Confidence', () => {
+  const thin = { ...MOCK, rent: { latest: { ref_period: '2026-01-01', value: 2045 },
+    points: [{ ref_period: '2025-01-01', value: 2000 }, { ref_period: '2026-01-01', value: 2045 }] } };
+  const { confidence } = composeBrief(
+    { cmaKey: 'toronto', bedroom: 'Two bedroom', demographicKey: 'genz', productKey: 'savings' }, thin);
+  assert.equal(confidence, 'Low Confidence');
+});
+
+test('AC-W4: catalog integrity — CMAs, demographics, products are well-formed', () => {
+  const provKeys = new Set(PROVINCES.map((p) => p.key));
+  for (const [k, c] of Object.entries(CMAS)) {
+    assert.ok(provKeys.has(c.province), `${k}: valid province`);
+    for (const b of BEDROOMS) assert.match(c.beds[b], /^\d+(\.\d+){9}$/, `${k}/${b}: 10-part coord`);
+    assert.match(c.vacancyCoord, /^\d+(\.\d+){9}$/, `${k}: vacancy coord`);
+  }
+  for (const d of Object.values(DEMOGRAPHICS)) assert.ok(d.label && d.profile && d.posture && d.impediments.length);
+  for (const p of Object.values(PRODUCTS)) assert.ok(p.label && p.category && p.opportunities.length >= 3);
+});
+
+test('AC-W5: markdown renderer handles headings, tables, lists, bold, links', () => {
+  const html = renderMarkdown('# T\n\n## S\n\n| A | B |\n| --- | --- |\n| 1 | 2 |\n\n- **x**\n\n[g](http://x)');
+  assert.match(html, /<h1>T<\/h1>/);
+  assert.match(html, /<table><thead><tr><th>A<\/th>/);
+  assert.match(html, /<td>1<\/td>/);
+  assert.match(html, /<li><strong>x<\/strong><\/li>/);
+  assert.match(html, /<a href="http:\/\/x"[^>]*>g<\/a>/);
+});
+
+test('AC-W6: web metrics match src/lib metrics (no drift)', () => {
+  assert.equal(webMetrics.pct(179.55), pct(179.55));
+  assert.equal(webMetrics.money(2045), money(2045));
+  assert.equal(webMetrics.annualize(2045), annualize(2045));
+  assert.equal(webMetrics.requiredIncome(24540), requiredIncome(24540));
+  const trend = [{ ref_period: '2025-01-01', value: 100 }, { ref_period: '2026-01-01', value: 110 }];
+  assert.equal(webMetrics.yoy(trend), yoy(trend));
+  assert.equal(webMetrics.baselineYears(trend), baselineYears(trend));
+});
