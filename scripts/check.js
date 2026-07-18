@@ -226,3 +226,75 @@ test('AC-W6: web metrics match src/lib metrics (no drift)', () => {
   assert.equal(webMetrics.yoy(trend), yoy(trend));
   assert.equal(webMetrics.baselineYears(trend), baselineYears(trend));
 });
+
+// ============================================================================
+// Scheduled email delivery (src/email/*) — pure logic + fetch-mocked send
+// ============================================================================
+import { validateSubscription, computeNextRun, describeSelection, FREQUENCIES } from '../src/email/subscription.js';
+import { buildConfirmEmail, buildBriefEmail } from '../src/email/template.js';
+import { sendEmail } from '../src/email/send.js';
+import * as emailDb from '../src/email/db.js'; // import-only: confirms the Neon driver resolves
+
+const VALID_SUB = { email: 'Analyst@Example.com', cma_key: 'toronto', bedroom: 'Two bedroom',
+  demographic: 'newcomers', product: 'newcomer_credit', frequency: 'weekly' };
+
+test('AC-E1: validateSubscription accepts valid input, rejects bad fields', () => {
+  const ok = validateSubscription(VALID_SUB);
+  assert.equal(ok.ok, true);
+  assert.equal(ok.value.email, 'analyst@example.com'); // normalized lower-case
+  assert.equal(validateSubscription({ ...VALID_SUB, email: 'nope' }).ok, false);
+  assert.equal(validateSubscription({ ...VALID_SUB, cma_key: 'atlantis' }).ok, false);
+  assert.equal(validateSubscription({ ...VALID_SUB, demographic: 'aliens' }).ok, false);
+  assert.equal(validateSubscription({ ...VALID_SUB, product: 'crypto' }).ok, false);
+  assert.equal(validateSubscription({ ...VALID_SUB, frequency: 'hourly' }).ok, false);
+});
+
+test('AC-E2: computeNextRun advances weekly/monthly and clamps month overflow', () => {
+  const base = new Date('2026-01-31T12:00:00Z');
+  assert.equal(computeNextRun('weekly', base).toISOString().slice(0, 10), '2026-02-07');
+  // Jan 31 + 1 month must not roll into March — clamp to end of Feb.
+  const m = computeNextRun('monthly', base);
+  assert.equal(m.getUTCMonth(), 1); // February (0-indexed)
+  assert.throws(() => computeNextRun('yearly', base));
+  assert.deepEqual(FREQUENCIES, ['weekly', 'monthly']);
+});
+
+test('AC-E3: buildConfirmEmail includes confirm + unsubscribe links and escapes', () => {
+  const label = describeSelection(VALID_SUB);
+  const e = buildConfirmEmail({ selectionLabel: label, confirmUrl: 'https://w/api/confirm?t=abc', unsubUrl: 'https://w/api/unsubscribe?t=xyz' });
+  assert.match(e.subject, /Confirm/);
+  assert.match(e.html, /api\/confirm\?t=abc/);
+  assert.match(e.html, /api\/unsubscribe\?t=xyz/);
+  assert.match(e.text, /Confirm: https:\/\/w\/api\/confirm/);
+});
+
+test('AC-E4: buildBriefEmail renders brief markdown with inline table styles + unsub', () => {
+  const md = '# Strategic Brief — Test\n\n## Executive Summary\n\n| A | B |\n| --- | --- |\n| 1 | 2 |\n';
+  const e = buildBriefEmail({ selectionLabel: 'x', briefMarkdown: md, unsubUrl: 'https://w/api/unsubscribe?t=z' });
+  assert.match(e.subject, /Strategic Brief — Test/);      // subject from H1
+  assert.match(e.html, /<table style="/);                  // inlined for email clients
+  assert.match(e.html, /api\/unsubscribe\?t=z/);           // unsubscribe present
+  assert.equal(e.unsubUrl, 'https://w/api/unsubscribe?t=z');
+});
+
+test('AC-E5: sendEmail posts to Resend with auth + one-click unsubscribe header', async () => {
+  const calls = [];
+  const orig = globalThis.fetch;
+  globalThis.fetch = async (url, init) => { calls.push({ url, init }); return { ok: true, json: async () => ({ id: 'eml_1' }) }; };
+  try {
+    const r = await sendEmail({ apiKey: 'rk_test', from: 'a@b', to: 'c@d', subject: 's', html: '<p>h</p>', unsubUrl: 'https://w/u' });
+    assert.equal(r.id, 'eml_1');
+    assert.equal(calls[0].url, 'https://api.resend.com/emails');
+    assert.match(calls[0].init.headers.Authorization, /Bearer rk_test/);
+    const body = JSON.parse(calls[0].init.body);
+    assert.equal(body.headers['List-Unsubscribe'], '<https://w/u>');
+    assert.equal(body.headers['List-Unsubscribe-Post'], 'List-Unsubscribe=One-Click');
+  } finally { globalThis.fetch = orig; }
+  await assert.rejects(() => sendEmail({ from: 'a', to: 'b', subject: 's', html: 'h' }), /missing Resend API key/);
+});
+
+test('AC-E6: db module exports the expected query helpers', () => {
+  for (const fn of ['client', 'insertPending', 'confirmByToken', 'unsubscribeByToken', 'dueSubscriptions', 'markSent', 'countRecentByEmail']) {
+    assert.equal(typeof emailDb[fn], 'function', `db.${fn} exported`);
+  }
+});

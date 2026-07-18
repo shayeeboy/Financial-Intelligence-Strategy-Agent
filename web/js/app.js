@@ -5,6 +5,7 @@ import { PROVINCES, CMAS, BEDROOMS, DEMOGRAPHICS, PRODUCTS } from './catalog.js'
 import { statcanVector, statcanCoord, bocSeries, VEC, BOC_ID, RENT_PID, VACANCY_PID } from './sources.js';
 import { composeBrief } from './compose.js';
 import { renderMarkdown } from './markdown.js';
+import { API_BASE } from './config.js';
 
 const $ = (id) => document.getElementById(id);
 const opt = (v, l) => { const o = document.createElement('option'); o.value = v; o.textContent = l; return o; };
@@ -95,6 +96,44 @@ async function copy() {
   catch { status('Copy failed — your browser blocked clipboard access.', 'warn'); }
 }
 
+// --- Subscribe (scheduled email delivery) -----------------------------------
+function subStatus(msg, kind) { const el = $('sub-status'); el.textContent = msg; el.className = `status ${kind || ''}`; }
+
+async function subscribe() {
+  const email = $('sub-email').value.trim();
+  if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return subStatus('Enter a valid email address.', 'warn');
+  if (!$('cma').value) return subStatus('Pick a city above first.', 'warn');
+
+  const payload = {
+    email,
+    cma_key: $('cma').value,
+    bedroom: $('bedroom').value,
+    demographic: $('demographic').value,
+    product: $('product').value,
+    frequency: $('sub-frequency').value,
+  };
+  const btn = $('subscribe-btn');
+  btn.disabled = true; btn.textContent = 'Subscribing…';
+  subStatus('Sending your confirmation email…', 'info');
+  try {
+    const res = await fetch(`${API_BASE.replace(/\/$/, '')}/api/subscribe`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(payload),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) { subStatus(data.message || 'Check your inbox to confirm your subscription.', 'ok'); $('sub-email').value = ''; }
+    else subStatus(data.error || `Subscription failed (${res.status}).`, 'warn');
+  } catch (e) {
+    subStatus(`Could not reach the subscription service: ${e.message}`, 'warn');
+  } finally {
+    btn.disabled = false; btn.textContent = 'Subscribe';
+  }
+}
+
+function initSubscribe() {
+  if (!API_BASE) { $('sub-form').hidden = true; $('sub-disabled').hidden = false; return; }
+  $('subscribe-btn').addEventListener('click', subscribe);
+}
+
 // --- UI helpers --------------------------------------------------------------
 function status(msg, kind) { const el = $('status'); el.textContent = msg; el.className = `status ${kind || ''}`; }
 function setBusy(b) { $('generate').disabled = b; $('generate').textContent = b ? 'Generating…' : 'Generate brief'; }
@@ -108,4 +147,5 @@ window.addEventListener('DOMContentLoaded', () => {
   $('generate').addEventListener('click', generate);
   $('download').addEventListener('click', download);
   $('copy').addEventListener('click', copy);
+  initSubscribe();
 });

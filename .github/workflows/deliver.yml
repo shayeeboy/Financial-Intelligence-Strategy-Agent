@@ -1,0 +1,28 @@
+name: Deliver scheduled briefs
+
+on:
+  schedule:
+    - cron: '0 12 * * *'      # daily 12:00 UTC; the job itself filters which subs are due
+  workflow_dispatch:           # manual trigger for testing
+
+# Prevent overlapping runs.
+concurrency:
+  group: deliver
+  cancel-in-progress: false
+
+jobs:
+  deliver:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+      - run: node scripts/deliver.js
+        env:
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          RESEND_API_KEY: ${{ secrets.RESEND_API_KEY }}
+          MAIL_FROM: ${{ vars.MAIL_FROM }}
+          PUBLIC_API_BASE: ${{ vars.PUBLIC_API_BASE }}

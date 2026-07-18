@@ -11,13 +11,21 @@
     "brief": "node src/orchestrator.js",
     "check": "node --test scripts/check.js",
     "smoke": "node scripts/smoke.js",
-    "test": "npm run check"
+    "test": "npm run check",
+    "deliver": "node scripts/deliver.js",
+    "migrate:email": "node scripts/migrate-email.js",
+    "worker:dev": "wrangler dev",
+    "worker:deploy": "wrangler deploy"
   },
   "engines": {
     "node": ">=18"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.0.4"
+    "@modelcontextprotocol/sdk": "^1.0.4",
+    "@neondatabase/serverless": "^0.10.4"
+  },
+  "devDependencies": {
+    "wrangler": "^3.90.0"
   },
   "author": "shayeeboy",
   "license": "MIT"

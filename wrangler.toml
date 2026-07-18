@@ -1,0 +1,13 @@
+# Cloudflare Worker — subscription endpoint for scheduled brief delivery.
+# Deploy:  npx wrangler deploy
+# Secrets (never commit): npx wrangler secret put DATABASE_URL
+#                         npx wrangler secret put RESEND_API_KEY
+name = "fisa-subscriptions"
+main = "server/index.js"
+compatibility_date = "2025-09-01"
+compatibility_flags = ["nodejs_compat"]
+
+# Non-secret vars — safe to commit. Set your real values before deploying.
+[vars]
+MAIL_FROM = "Canadian Banking Briefs <briefs@example.com>"      # ← your verified Resend domain sender
+ALLOWED_ORIGIN = "https://shayeeboy.github.io"                  # Pages origin allowed to POST

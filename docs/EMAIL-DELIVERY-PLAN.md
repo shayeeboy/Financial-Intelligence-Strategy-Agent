@@ -1,12 +1,18 @@
-# Scheduled Email Delivery — Design & Implementation Plan
+# Scheduled Email Delivery — Design & Deployment
 
-> **Status: PLANNED — not yet implemented.** This document is the build-ready
-> design for letting a user subscribe an email address to a chosen brief and
-> receive it on a schedule (daily / weekly / monthly). No code in this feature
-> is wired up yet; the current app remains fully static and $0.
+> **Status: IMPLEMENTED — pending your deployment.** All the code is written,
+> tested (`AC-E1…E6`), and committed. It is **not active** until you complete the
+> [Deployment runbook](#deployment-runbook) below (create Neon DB, deploy the
+> Cloudflare Worker, verify a Resend domain, set secrets). The public generator
+> stays fully static and $0; the subscribe panel shows a "not activated" note
+> until `web/js/config.js` points at your deployed Worker.
 
 Roadmap item **R9**. Companion to the [main README](../README.md) and
 [DATA-SOURCES.md](DATA-SOURCES.md).
+
+**What's in the repo now:** `sql/email_schema.sql` · `src/email/{subscription,template,send,db}.js`
+· `server/index.js` (Worker) + `wrangler.toml` · `scripts/deliver.js` + `scripts/migrate-email.js`
+· `.github/workflows/deliver.yml` · subscribe panel in `web/` (gated by `web/js/config.js`).
 
 ---
 
@@ -230,18 +236,62 @@ calls `/api/*` (never the DB or the mail API directly).
 
 ---
 
-## 10. Implementation checklist (when we build)
+## 10. Implementation status
 
-- [ ] `sql/email_schema.sql` + apply to Neon (`npm run migrate:email`)
-- [ ] Cloudflare Worker: `/api/subscribe|confirm|unsubscribe` + validation + rate limit
-- [ ] `web/`: subscribe panel (email, frequency), confirm/unsubscribe result pages
-- [ ] `scripts/deliver.js` reusing `web/js/compose.js` + `sources.js`
-- [ ] Email-safe HTML template (inline CSS) for the brief
-- [ ] `.github/workflows/deliver.yml` cron + secrets
-- [ ] Resend domain verification (DNS records)
-- [ ] Tests: payload validation, token lifecycle, `next_run` math, email HTML render,
-      unsubscribe idempotency → new `AC-E1…` acceptance criteria
-- [ ] README: promote R9 from planned → shipped; add to Success criteria + How it works
+- [x] `sql/email_schema.sql` + migration runner (`npm run migrate:email`)
+- [x] Cloudflare Worker: `/api/subscribe|confirm|unsubscribe` + validation + per-email rate limit + CORS
+- [x] `web/`: subscribe panel (email, frequency); Worker serves confirm/unsubscribe result pages
+- [x] `scripts/deliver.js` reusing `web/js/compose.js` + `sources.js`
+- [x] Email-safe HTML template (inline CSS) for the brief + confirmation
+- [x] `.github/workflows/deliver.yml` cron + secrets wiring
+- [x] Tests `AC-E1…E6`: validation, `next_run` math (+ overflow clamp), confirm/brief email
+      render, Resend send (auth + one-click unsubscribe header), db exports → **23/23 passing**
+- [ ] **Your deploy steps** — see the runbook below (Neon, Worker, Resend domain, secrets)
+- [ ] README: promote R9 planned → live once deployed
+
+---
+
+## Deployment runbook
+
+These steps need **your** accounts/credentials, so they're yours to run (I can't
+enter your credentials or deploy under your accounts). ~20–30 min end to end.
+
+**1. Neon database**
+```bash
+# create a Neon project, copy its connection string, then:
+DATABASE_URL='postgres://…neon…' npm run migrate:email     # creates the subscriptions table
+```
+
+**2. Resend + your domain**
+- Add your domain in Resend → add the SPF/DKIM/DMARC records it shows to your DNS → verify.
+- Create a Resend API key. Pick a from-address on the domain, e.g. `briefs@your-domain`.
+
+**3. Deploy the Cloudflare Worker**
+```bash
+# edit wrangler.toml [vars]: MAIL_FROM (your verified sender), ALLOWED_ORIGIN (your Pages origin)
+npx wrangler login
+npx wrangler secret put DATABASE_URL       # paste Neon string
+npx wrangler secret put RESEND_API_KEY     # paste Resend key
+npm run worker:deploy                       # prints the Worker URL, e.g. https://fisa-subscriptions.<acct>.workers.dev
+```
+
+**4. Point the web app at the Worker**
+- Set `API_BASE` in [`web/js/config.js`](../web/js/config.js) to the Worker URL, commit & push
+  (Pages redeploys). The subscribe panel goes live.
+
+**5. Enable the delivery cron (GitHub)**
+- Repo → Settings → Secrets and variables → Actions:
+  - **Secrets:** `DATABASE_URL`, `RESEND_API_KEY`
+  - **Variables:** `MAIL_FROM` (same sender), `PUBLIC_API_BASE` (the Worker URL)
+- The `Deliver scheduled briefs` workflow runs daily; trigger it once via **Run workflow** to test.
+
+**6. Verify end to end**
+- On the live site: enter your email, pick Weekly, Subscribe → confirmation email arrives →
+  click confirm → run the deliver workflow manually → the brief email arrives with a working
+  unsubscribe link.
+
+**Secrets never touch the repo** — they live only in Cloudflare secrets and GitHub Actions
+secrets. `wrangler.toml` holds only non-secret vars; `.dev.vars` (local) is gitignored.
 
 ## 11. Open decisions (for build time)
 

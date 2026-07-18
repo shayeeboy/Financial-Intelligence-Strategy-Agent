@@ -68,6 +68,37 @@
       <article id="brief" class="brief"></article>
     </section>
 
+    <section id="subscribe" class="card">
+      <h2>3 · Get it emailed on a schedule <span class="badge">optional</span></h2>
+      <p class="muted">Have the brief for your current selections above delivered automatically. Double opt-in — you confirm by email first, and every send has a one-click unsubscribe.</p>
+
+      <div id="sub-form">
+        <div class="grid">
+          <label>Your email
+            <input id="sub-email" type="email" inputmode="email" autocomplete="email" placeholder="you@example.com">
+            <span class="hint">We email a confirmation link first</span>
+          </label>
+          <label>Frequency
+            <select id="sub-frequency">
+              <option value="weekly">Weekly</option>
+              <option value="monthly">Monthly</option>
+            </select>
+            <span class="hint">Uses the city / demographic / product chosen above</span>
+          </label>
+        </div>
+        <div class="actions">
+          <button id="subscribe-btn" class="primary">Subscribe</button>
+          <p id="sub-status" class="status"></p>
+        </div>
+      </div>
+
+      <p id="sub-disabled" class="muted" hidden>
+        📬 Scheduled email delivery is <strong>built but not activated on this deployment</strong>
+        (it needs the Cloudflare Worker + Neon backend configured). See the
+        <a href="https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/blob/main/docs/EMAIL-DELIVERY-PLAN.md" target="_blank" rel="noopener">design &amp; deployment runbook</a>.
+      </p>
+    </section>
+
     <section class="card note">
       <h2>How this works</h2>
       <p>
