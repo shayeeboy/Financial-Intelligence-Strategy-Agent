@@ -32,10 +32,14 @@ complete, sourced strategy brief is built **in your browser** from live data —
 sign-up, no cost, no backend. There are 13 cities × 7 demographics × 6 product lines to
 choose from. ([web flow](#web-generator-github-pages))
 
-**📬 New — [scheduled email delivery is live](#gaps-and-roadmap) (R9):** subscribe an
-email to any brief and receive it **weekly or monthly**, generated fresh from live data.
-Double opt-in, one-click unsubscribe, delivered by a Cloudflare Worker + Neon + a daily
-GitHub Actions cron — **verified in production, $0/month**.
+**📬 [Scheduled email delivery is live](#gaps-and-roadmap) (R9):** subscribe an email to
+any brief and receive it **weekly or monthly**, generated fresh from live data. Double
+opt-in, one-click unsubscribe, via a Cloudflare Worker + Neon + a daily GitHub Actions
+cron — **verified in production, $0/month**.
+
+**🖼️ [Community gallery is live](#gaps-and-roadmap) (R8):** share a generated brief to a
+public "recently generated" feed, browse what others built, and click any entry to
+regenerate it with today's data — same Worker + Neon, still $0.
 
 **📄 [Or read a pre-generated example → *GTA Newcomer Credit & Daily Banking*](https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/blob/main/data/briefs/gta_newcomer_credit_opportunity.md)**
 
@@ -482,15 +486,15 @@ kind of brief) and what would make it genuinely production-grade.
 | R5 | **Brief eval harness** | A rubric-scored set (completeness, sourcing, actionability) run over a batch of briefs | mean rubric score + variance across ≥ 20 briefs; regression-gated in CI |
 | R6 | **Trend & forecast-free deltas** | Add QoQ/YoY deltas and multi-year sparklines per indicator (still no forecasting) | every headline figure shows a directional delta with its own citation |
 | R7 | **More sources** | Add StatCan SFS (net worth), CRA/FCAC where public, provincial housing starts | coverage of assets *and* liabilities, not just leverage + shelter |
-| **R8 — built; 2-cmd deploy** | **Shared brief gallery** *(reuses the R9 Worker + Neon)* | "Add to gallery" saves a generated brief's selection; a **Community gallery** shows recent entries (click to regenerate) + usage stats (total, top city/product). Added a `briefs` table + `POST/GET /api/briefs` to the **existing** Worker — no new infra. `AC-G1…G3` tested; UI verified. Activate: `npm run migrate:gallery` + `npm run worker:deploy` | recent-briefs feed + aggregate stats live; click-to-regenerate — **still $0** |
+| **R8 ✅ SHIPPED** | **Shared brief gallery** *(reuses the R9 Worker + Neon)* — live 2026-07-19 | "Add to gallery" saves a generated brief's selection; a **Community gallery** shows recent entries (click to reload + regenerate) + usage stats (total, top city/product). A `briefs` table + `POST/GET /api/briefs` on the **existing** Worker — no new infra, still **$0**. `AC-G1…G3` tested | recent-briefs feed + aggregate stats — **verified in production** |
 | **R9 ✅ SHIPPED** | **Scheduled email delivery** — *live & verified end-to-end ([design + runbook](docs/EMAIL-DELIVERY-PLAN.md))* | Subscribe an email to a chosen brief on the site; a **Cloudflare Worker** + **Neon** store it (double opt-in), and a **GitHub Actions cron** generates a fresh brief and sends it weekly/monthly via **Resend** with one-click unsubscribe. Deployed 2026-07-19; `AC-E1…E6` tested | opt-in → confirmed → delivered on schedule — **verified in production at $0/mo** |
 
 See [`docs/DATA-SOURCES.md`](docs/DATA-SOURCES.md) for the provenance reference and the
 step-by-step for adding an indicator (R1/R7). **On Neon:** brief *generation* still needs
 no database (it's stateless client-side). A backend arrived with **R9 (scheduled email
 delivery)** — a Cloudflare Worker + Neon Postgres, **now deployed and live** at
-**$0/month**. Because that infrastructure exists, the shared gallery (**R8**) is no longer
-blocked on standing up a backend — it can reuse the same Worker + Neon.
+**$0/month**. The shared gallery (**R8**) reuses that same Worker + Neon and is **also now
+deployed and live** — one backend, two features, no extra cost.
 
 [↑ Back to top](#executive-summary)
 
