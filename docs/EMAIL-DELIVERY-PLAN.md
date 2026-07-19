@@ -1,11 +1,13 @@
 # Scheduled Email Delivery — Design & Deployment
 
-> **Status: IMPLEMENTED — pending your deployment.** All the code is written,
-> tested (`AC-E1…E6`), and committed. It is **not active** until you complete the
-> [Deployment runbook](#deployment-runbook) below (create Neon DB, deploy the
-> Cloudflare Worker, verify a Resend domain, set secrets). The public generator
-> stays fully static and $0; the subscribe panel shows a "not activated" note
-> until `web/js/config.js` points at your deployed Worker.
+> **Status: 🟢 LIVE — deployed & verified end-to-end (2026-07-19).** Subscribe →
+> confirm → scheduled delivery all working in production: the Cloudflare Worker
+> (`https://fisa-subscriptions.shayzone.workers.dev`) stores sign-ups in Neon with
+> double opt-in, and the daily GitHub Actions cron generates each brief and sends it
+> via Resend from `agentbriefs@shayzone.ca`. Running at **$0/month**. The
+> [Deployment runbook](#deployment-runbook) below documents exactly how it was set up
+> (useful for redeploying or as a template). *Known follow-up: new-domain emails
+> currently land in spam — tune DKIM/DMARC (see runbook step 2) to fix inbox placement.*
 
 Roadmap item **R9**. Companion to the [main README](../README.md) and
 [DATA-SOURCES.md](DATA-SOURCES.md).
@@ -246,8 +248,9 @@ calls `/api/*` (never the DB or the mail API directly).
 - [x] `.github/workflows/deliver.yml` cron + secrets wiring
 - [x] Tests `AC-E1…E6`: validation, `next_run` math (+ overflow clamp), confirm/brief email
       render, Resend send (auth + one-click unsubscribe header), db exports → **23/23 passing**
-- [ ] **Your deploy steps** — see the runbook below (Neon, Worker, Resend domain, secrets)
-- [ ] README: promote R9 planned → live once deployed
+- [x] **Deploy** (2026-07-19) — Neon migrated, Worker deployed to `fisa-subscriptions.shayzone.workers.dev`, Resend domain `shayzone.ca`, GitHub secrets/vars set, cron verified (1 due → 1 sent)
+- [x] README: R9 promoted to **SHIPPED / live**
+- [ ] *Follow-up:* deliverability tuning (DKIM/DMARC) so emails reach the inbox, not spam
 
 ---
 

@@ -32,6 +32,11 @@ complete, sourced strategy brief is built **in your browser** from live data —
 sign-up, no cost, no backend. There are 13 cities × 7 demographics × 6 product lines to
 choose from. ([web flow](#web-generator-github-pages))
 
+**📬 New — [scheduled email delivery is live](#gaps-and-roadmap) (R9):** subscribe an
+email to any brief and receive it **weekly or monthly**, generated fresh from live data.
+Double opt-in, one-click unsubscribe, delivered by a Cloudflare Worker + Neon + a daily
+GitHub Actions cron — **verified in production, $0/month**.
+
 **📄 [Or read a pre-generated example → *GTA Newcomer Credit & Daily Banking*](https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/blob/main/data/briefs/gta_newcomer_credit_opportunity.md)**
 
 Every figure is pulled from a public API at generation time (the CLI run also snapshots
@@ -470,13 +475,13 @@ kind of brief) and what would make it genuinely production-grade.
 | R6 | **Trend & forecast-free deltas** | Add QoQ/YoY deltas and multi-year sparklines per indicator (still no forecasting) | every headline figure shows a directional delta with its own citation |
 | R7 | **More sources** | Add StatCan SFS (net worth), CRA/FCAC where public, provincial housing starts | coverage of assets *and* liabilities, not just leverage + shelter |
 | R8 | **Shared brief gallery (optional Neon)** | A thin serverless API + **Neon Postgres** to persist generated briefs and show a public "recently generated" gallery + usage stats | briefs saved with a shareable link; gallery + aggregate usage visible — the one feature that justifies a backend |
-| R9 | **Scheduled email delivery** — *built; deploy-pending ([runbook](docs/EMAIL-DELIVERY-PLAN.md#deployment-runbook))* | Subscribe an email to a chosen brief; **Cloudflare Worker** + **Neon** + **GitHub Actions cron** + Resend email it weekly/monthly with double opt-in & unsubscribe. Code + `AC-E1…E6` tests are in the repo; needs your Neon/Cloudflare/Resend accounts to activate | opt-in → confirmed → delivered on schedule; **$0/mo** at portfolio scale |
+| **R9 ✅ SHIPPED** | **Scheduled email delivery** — *live & verified end-to-end ([design + runbook](docs/EMAIL-DELIVERY-PLAN.md))* | Subscribe an email to a chosen brief on the site; a **Cloudflare Worker** + **Neon** store it (double opt-in), and a **GitHub Actions cron** generates a fresh brief and sends it weekly/monthly via **Resend** with one-click unsubscribe. Deployed 2026-07-19; `AC-E1…E6` tested | opt-in → confirmed → delivered on schedule — **verified in production at $0/mo** |
 
 See [`docs/DATA-SOURCES.md`](docs/DATA-SOURCES.md) for the provenance reference and the
 step-by-step for adding an indicator (R1/R7). **On Neon:** generation itself needs no
-database (it's stateless client-side); the Neon-backed gallery (R8) and
-[scheduled email delivery (R9)](docs/EMAIL-DELIVERY-PLAN.md) are the features that would
-justify a backend — the latter is fully designed and costed at **$0/month**.
+database (it's stateless client-side); the shared gallery (R8) and **scheduled email
+delivery (R9)** are the features that justify a backend — **R9 is now deployed and live**
+(Cloudflare Worker + Neon + Actions cron), running at **$0/month**.
 
 [↑ Back to top](#executive-summary)
 
