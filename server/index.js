@@ -1,5 +1,6 @@
-// Cloudflare Worker — subscription endpoint for scheduled brief delivery.
+// Cloudflare Worker — subscriptions (R9) + shared brief gallery (R8).
 // Routes:  POST /api/subscribe   GET /api/confirm?t=  GET /api/unsubscribe?t=
+//          POST /api/briefs      GET /api/briefs        GET /api/health
 //
 // Secrets/vars (wrangler.toml [vars] + `wrangler secret put`):
 //   DATABASE_URL     Neon connection string          (secret)
@@ -11,8 +12,11 @@ import { client, insertPending, confirmByToken, unsubscribeByToken, countRecentB
 import { validateSubscription, computeNextRun, describeSelection } from '../src/email/subscription.js';
 import { buildConfirmEmail } from '../src/email/template.js';
 import { sendEmail } from '../src/email/send.js';
+import { validateGalleryEntry, briefLabel } from '../src/gallery/validate.js';
+import { insertBrief, recentBriefs, galleryStats, countRecentByIpHash } from '../src/gallery/db.js';
 
 const MAX_PER_EMAIL_PER_HOUR = 5;
+const MAX_GALLERY_PER_IP_PER_HOUR = 30;
 
 export default {
   async fetch(request, env) {
@@ -31,6 +35,12 @@ export default {
       if (url.pathname === '/api/unsubscribe' && request.method === 'GET') {
         return await handleUnsubscribe(env, url);
       }
+      if (url.pathname === '/api/briefs' && request.method === 'POST') {
+        return await handleSaveBrief(request, env, cors);
+      }
+      if (url.pathname === '/api/briefs' && request.method === 'GET') {
+        return await handleListBriefs(request, env, url, cors);
+      }
       if (url.pathname === '/api/health') {
         return json({ ok: true }, 200, cors);
       }
@@ -40,6 +50,39 @@ export default {
     }
   },
 };
+
+// --- Gallery (R8) ----------------------------------------------------------
+async function handleSaveBrief(request, env, cors) {
+  const body = await request.json().catch(() => ({}));
+  const v = validateGalleryEntry(body);
+  if (!v.ok) return json({ error: v.error }, 400, cors);
+
+  const sql = client(env.DATABASE_URL);
+  const ipHash = await hashIp(request.headers.get('CF-Connecting-IP') || '');
+  if ((await countRecentByIpHash(sql, ipHash)) >= MAX_GALLERY_PER_IP_PER_HOUR) {
+    return json({ error: 'Too many gallery saves recently. Try again later.' }, 429, cors);
+  }
+  const row = await insertBrief(sql, v.value, ipHash);
+  return json({ ok: true, id: row.id, label: briefLabel(v.value) }, 201, cors);
+}
+
+async function handleListBriefs(request, env, url, cors) {
+  const sql = client(env.DATABASE_URL);
+  const [items, stats] = await Promise.all([
+    recentBriefs(sql, url.searchParams.get('limit') || 24),
+    galleryStats(sql),
+  ]);
+  const withLabel = items.map((it) => ({ ...it, label: briefLabel(it) }));
+  return json({ items: withLabel, stats }, 200, cors);
+}
+
+// Privacy-preserving IP hash for rate-limiting only (not reversible, no raw IP stored).
+async function hashIp(ip) {
+  if (!ip) return null;
+  const data = new TextEncoder().encode('fisa-gallery-salt:' + ip);
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  return [...new Uint8Array(buf)].map((b) => b.toString(16).padStart(2, '0')).join('').slice(0, 32);
+}
 
 async function handleSubscribe(request, env, url, cors) {
   const body = await request.json().catch(() => ({}));

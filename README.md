@@ -94,7 +94,7 @@ regulatory advice; and low-evidence outputs flag themselves rather than bluffing
 | 4 | **Structural completeness** | brief carries all 4 mandated sections + a *Financial Services Implication* in each | met on the live brief | manual + template |
 | 5 | **Confidence guardrail** | any series with < 3 yrs baseline is flagged *Low Confidence* in `memory.md` + console | enforced | `npm run check` (AC-M4) |
 | 6 | **Safety guardrail** | no rate forecasts / no legal-regulatory advice in output | enforced by prompt + explicit brief disclaimer | manual review |
-| 7 | **Deterministic core logic** | metric math, coordinate resolution, and file/matrix writes are unit-tested | **23/23 passing** | `npm run check` |
+| 7 | **Deterministic core logic** | metric math, coordinate resolution, and file/matrix writes are unit-tested | **26/26 passing** | `npm run check` |
 | 8 | **Self-serve web generation** | every one of 13 × 7 × 6 selections composes a complete, hole-free brief client-side | all 42 demographic×product combos verified; live in browser | `npm run check` (AC-W2), hosted demo |
 
 **Not yet measured (honest gaps).** The brief's **narrative reasoning** (e.g. "newcomers
@@ -150,7 +150,7 @@ writes a finished brief).
 | [**Orchestrator SOP**](#orchestrator-sop) | 6-step workflow: identify gaps → gather → derive → confidence check → synthesize → persist | `src/orchestrator.js` |
 | [**Adapters & tools**](#adapters-and-tools) | Normalize StatCan/CMHC/BoC into cited data; compile the brief + matrix | `src/mcp/adapters`, `src/mcp/tools` |
 | [**Run it**](#run-it) | `npm run brief`, `npm run mcp`, `npm run smoke`, `npm run check` | `package.json` |
-| [**Test cases**](#test-cases-and-acceptance-criteria) | 23 offline unit-acceptance tests + a live integration smoke | `scripts/check.js`, `scripts/smoke.js` |
+| [**Test cases**](#test-cases-and-acceptance-criteria) | 26 offline unit-acceptance tests + a live integration smoke | `scripts/check.js`, `scripts/smoke.js` |
 
 **Navigate:** [See it live](#see-it-live) · [Architecture](#architecture) · [Web generator](#web-generator-github-pages) · [Orchestrator SOP](#orchestrator-sop) · [Adapters & tools](#adapters-and-tools) · [MCP tools](#mcp-tools) · [Run it](#run-it) · [Test cases](#test-cases-and-acceptance-criteria) · [Repo structure](#repo-structure) · [Tools & services](#tools-and-services) · [Lessons learned](#lessons-learned) · [Gaps & roadmap](#gaps-and-roadmap)
 
@@ -292,7 +292,7 @@ included:
 npm install
 
 npm run smoke     # live: verify all 8 data pulls against StatCan/CMHC/BoC
-npm run check     # offline: 23 unit-acceptance tests (node --test)
+npm run check     # offline: 26 unit-acceptance tests (node --test)
 npm run brief     # run the SOP → writes data/briefs/*.md + master_index.md + memory.md
 npm run mcp       # start the MCP server on stdio (for an MCP client)
 ```
@@ -336,9 +336,12 @@ API keys; `node --test`). Each test asserts one acceptance criterion:
 | `AC-E4` brief email | renders the brief Markdown with **inline** table styles + unsubscribe link | ✅ |
 | `AC-E5` send contract | posts to Resend with `Bearer` auth + one-click `List-Unsubscribe` header; throws w/o key | ✅ |
 | `AC-E6` db surface | the Neon query module exports all expected helpers (driver resolves) | ✅ |
+| `AC-G1` gallery validation | valid gallery entry accepted; bad city/demographic/product/bedroom rejected | ✅ |
+| `AC-G2` gallery label + sanitize | unknown `confidence` is dropped (not fatal); `briefLabel` is human-readable | ✅ |
+| `AC-G3` gallery db surface | the gallery query module exports all expected helpers | ✅ |
 
 ```
-ℹ tests 23   ℹ pass 23   ℹ fail 0
+ℹ tests 26   ℹ pass 26   ℹ fail 0
 ```
 
 **`npm run smoke`** — live integration acceptance against the real APIs (read-only):
@@ -377,27 +380,30 @@ Financial-Intelligence-Strategy-Agent/
 │       ├── compose.js            ← pure brief composer (Node-testable)
 │       ├── markdown.js           ← dependency-free Markdown → HTML
 │       ├── metrics.js            ← pure helpers (parity with src/lib/metrics.js)
-│       ├── config.js            ← API_BASE for email subscriptions (empty until deployed)
-│       └── app.js                ← DOM wiring, generate/download/copy/subscribe
+│       ├── config.js            ← API_BASE for the Worker (email + gallery); empty until deployed
+│       └── app.js                ← DOM wiring: generate/download/copy/subscribe/gallery
 ├── src/
 │   ├── orchestrator.js           ← runs the 6-step SOP → one brief
-│   ├── lib/{http.js, metrics.js} ← fetch+retry · pure derived-figure helpers
+│   ├── lib/{http.js, metrics.js, apply-schema.js} ← fetch+retry · figures · Neon migrator
 │   ├── email/                    ← R9 scheduled delivery — shared by Worker + cron
 │   │   ├── subscription.js       ← validation + next-run schedule (pure)
 │   │   ├── template.js           ← confirm + brief email HTML (pure)
 │   │   ├── send.js               ← Resend send via fetch (runtime-agnostic)
 │   │   └── db.js                 ← Neon queries (@neondatabase/serverless)
+│   ├── gallery/                  ← R8 shared brief gallery — shared by Worker + tests
+│   │   ├── validate.js           ← entry validation + human label (pure)
+│   │   └── db.js                 ← Neon queries (insert/recent/stats/rate-limit)
 │   └── mcp/
 │       ├── server.js             ← MCP server (stdio) exposing the 4 tools
 │       ├── adapters/{statcan,cmhc,bankofcanada}.js
 │       └── tools/compile_strategy_brief.js
-├── server/index.js               ← Cloudflare Worker: /api/subscribe|confirm|unsubscribe
+├── server/index.js               ← Cloudflare Worker: /api/subscribe|confirm|unsubscribe + /api/briefs (gallery)
 ├── wrangler.toml                 ← Worker config (non-secret vars only)
-├── sql/email_schema.sql          ← subscriptions table (Neon)
+├── sql/{email_schema.sql, gallery_schema.sql}   ← subscriptions · briefs tables (Neon)
 ├── scripts/
 │   ├── check.js  smoke.js        ← offline acceptance · live integration
 │   ├── deliver.js                ← cron job: generate + email due subscriptions
-│   └── migrate-email.js          ← apply the email schema to Neon
+│   └── migrate-email.js  migrate-gallery.js     ← apply each schema to Neon
 ├── data/
 │   ├── raw/                      ← per-run JSON provenance snapshots (gitignored)
 │   └── briefs/{master_index.md, gta_newcomer_credit_opportunity.md}
@@ -476,7 +482,7 @@ kind of brief) and what would make it genuinely production-grade.
 | R5 | **Brief eval harness** | A rubric-scored set (completeness, sourcing, actionability) run over a batch of briefs | mean rubric score + variance across ≥ 20 briefs; regression-gated in CI |
 | R6 | **Trend & forecast-free deltas** | Add QoQ/YoY deltas and multi-year sparklines per indicator (still no forecasting) | every headline figure shows a directional delta with its own citation |
 | R7 | **More sources** | Add StatCan SFS (net worth), CRA/FCAC where public, provincial housing starts | coverage of assets *and* liabilities, not just leverage + shelter |
-| R8 | **Shared brief gallery** *(now unblocked — Neon + Worker already live from R9)* | Persist generated briefs and show a public "recently generated" gallery + usage stats. The R9 Cloudflare Worker + Neon can be **reused** — add a `briefs` table + `/api/briefs` route, no new infrastructure | briefs saved with a shareable link; gallery + aggregate usage visible |
+| **R8 — built; 2-cmd deploy** | **Shared brief gallery** *(reuses the R9 Worker + Neon)* | "Add to gallery" saves a generated brief's selection; a **Community gallery** shows recent entries (click to regenerate) + usage stats (total, top city/product). Added a `briefs` table + `POST/GET /api/briefs` to the **existing** Worker — no new infra. `AC-G1…G3` tested; UI verified. Activate: `npm run migrate:gallery` + `npm run worker:deploy` | recent-briefs feed + aggregate stats live; click-to-regenerate — **still $0** |
 | **R9 ✅ SHIPPED** | **Scheduled email delivery** — *live & verified end-to-end ([design + runbook](docs/EMAIL-DELIVERY-PLAN.md))* | Subscribe an email to a chosen brief on the site; a **Cloudflare Worker** + **Neon** store it (double opt-in), and a **GitHub Actions cron** generates a fresh brief and sends it weekly/monthly via **Resend** with one-click unsubscribe. Deployed 2026-07-19; `AC-E1…E6` tested | opt-in → confirmed → delivered on schedule — **verified in production at $0/mo** |
 
 See [`docs/DATA-SOURCES.md`](docs/DATA-SOURCES.md) for the provenance reference and the

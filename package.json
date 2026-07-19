@@ -14,6 +14,7 @@
     "test": "npm run check",
     "deliver": "node scripts/deliver.js",
     "migrate:email": "node scripts/migrate-email.js",
+    "migrate:gallery": "node scripts/migrate-gallery.js",
     "worker:dev": "wrangler dev",
     "worker:deploy": "wrangler deploy"
   },

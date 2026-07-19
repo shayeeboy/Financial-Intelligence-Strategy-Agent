@@ -61,11 +61,13 @@
       <div class="output-bar">
         <h2>2 · Your brief <span id="confidence" class="badge">—</span></h2>
         <div class="output-actions">
+          <button id="add-gallery" hidden>📌 Add to gallery</button>
           <button id="copy">Copy Markdown</button>
           <button id="download" class="primary">Download .md</button>
         </div>
       </div>
       <article id="brief" class="brief"></article>
+      <p id="gallery-add-status" class="status"></p>
     </section>
 
     <section id="subscribe" class="card">
@@ -97,6 +99,15 @@
         (it needs the Cloudflare Worker + Neon backend configured). See the
         <a href="https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/blob/main/docs/EMAIL-DELIVERY-PLAN.md" target="_blank" rel="noopener">design &amp; deployment runbook</a>.
       </p>
+    </section>
+
+    <section id="gallery" class="card" hidden>
+      <div class="output-bar">
+        <h2>4 · Community gallery <span class="badge">recently generated</span></h2>
+        <p id="gallery-stats" class="muted" style="margin:0"></p>
+      </div>
+      <p class="muted">Briefs others have shared. Click any one to load its selections and regenerate it with today's live data.</p>
+      <div id="gallery-list" class="gallery-list"></div>
     </section>
 
     <section class="card note">

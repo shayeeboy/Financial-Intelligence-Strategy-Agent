@@ -90,5 +90,16 @@ button:disabled { opacity: .6; cursor: progress; }
 .brief a { text-decoration: none; }
 .brief a:hover { text-decoration: underline; }
 
+.gallery-list { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-top: 14px; }
+@media (max-width: 620px) { .gallery-list { grid-template-columns: 1fr; } }
+.gallery-item {
+  display: flex; flex-direction: column; gap: 4px; align-items: flex-start; text-align: left;
+  padding: 12px 14px; border: 1px solid var(--line); border-radius: 10px;
+  background: var(--bg); color: var(--ink); cursor: pointer; font: inherit; width: 100%;
+}
+.gallery-item:hover { border-color: var(--brand); }
+.gi-label { font-weight: 600; font-size: 13.5px; }
+.gi-meta { font-size: 12px; color: var(--muted); }
+
 footer { padding: 24px 0 48px; text-align: center; font-size: 14px; color: var(--muted); }
 footer p { margin: 4px 0; }

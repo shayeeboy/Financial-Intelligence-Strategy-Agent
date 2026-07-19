@@ -49,6 +49,8 @@ async function gatherData(sel) {
 
 // --- Generate flow -----------------------------------------------------------
 let lastMarkdown = '';
+let lastSelection = null;
+let lastConfidence = null;
 
 async function generate() {
   const sel = {
@@ -65,10 +67,14 @@ async function generate() {
     const data = await gatherData(sel);
     const { markdown, confidence } = composeBrief(sel, data);
     lastMarkdown = markdown;
+    lastSelection = sel;
+    lastConfidence = confidence;
     $('brief').innerHTML = renderMarkdown(markdown);
     $('output').hidden = false;
     $('confidence').textContent = confidence;
     $('confidence').className = 'badge ' + (confidence === 'High' ? 'ok' : 'warn');
+    if (API_BASE) { $('add-gallery').hidden = false; $('add-gallery').disabled = false; $('add-gallery').textContent = '📌 Add to gallery'; }
+    galleryAddStatus('');
     status(`Generated from live data · confidence: ${confidence}`, 'ok');
     $('output').scrollIntoView({ behavior: 'smooth', block: 'start' });
   } catch (e) {
@@ -134,6 +140,81 @@ function initSubscribe() {
   $('subscribe-btn').addEventListener('click', subscribe);
 }
 
+// --- Community gallery (R8) --------------------------------------------------
+const api = (path) => `${API_BASE.replace(/\/$/, '')}${path}`;
+function galleryAddStatus(msg, kind) { const el = $('gallery-add-status'); if (el) { el.textContent = msg || ''; el.className = `status ${kind || ''}`; } }
+const timeAgo = (iso) => {
+  const s = Math.max(1, Math.floor((Date.now() - new Date(iso).getTime()) / 1000));
+  if (s < 60) return `${s}s ago`;
+  const m = Math.floor(s / 60); if (m < 60) return `${m}m ago`;
+  const h = Math.floor(m / 60); if (h < 24) return `${h}h ago`;
+  return `${Math.floor(h / 24)}d ago`;
+};
+
+async function addToGallery() {
+  if (!lastSelection) return;
+  const btn = $('add-gallery');
+  btn.disabled = true; btn.textContent = 'Adding…';
+  try {
+    const res = await fetch(api('/api/briefs'), {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        cma_key: lastSelection.cmaKey, bedroom: lastSelection.bedroom,
+        demographic: lastSelection.demographicKey, product: lastSelection.productKey,
+        confidence: lastConfidence,
+      }),
+    });
+    const data = await res.json().catch(() => ({}));
+    if (res.ok) { galleryAddStatus('Shared to the community gallery ✓', 'ok'); btn.textContent = '✓ Added'; loadGallery(); }
+    else { galleryAddStatus(data.error || `Couldn't add (${res.status}).`, 'warn'); btn.disabled = false; btn.textContent = '📌 Add to gallery'; }
+  } catch (e) {
+    galleryAddStatus(`Couldn't reach the gallery service: ${e.message}`, 'warn');
+    btn.disabled = false; btn.textContent = '📌 Add to gallery';
+  }
+}
+
+async function loadGallery() {
+  if (!API_BASE) return;
+  try {
+    const res = await fetch(api('/api/briefs?limit=24'));
+    if (!res.ok) return; // routes not deployed yet → leave gallery hidden
+    const { items, stats } = await res.json();
+    if (!items || !items.length) return;
+    const catLabel = (o) => `${CMAS[o.cma_key]?.label ?? o.cma_key}`;
+    $('gallery-stats').textContent =
+      `${stats.total} generated · top city: ${stats.top_city ? (CMAS[stats.top_city]?.label ?? stats.top_city) : '—'}` +
+      `${stats.top_product ? ` · top product: ${PRODUCTS[stats.top_product]?.label ?? stats.top_product}` : ''}`;
+    const list = $('gallery-list');
+    list.innerHTML = '';
+    for (const it of items) {
+      const card = document.createElement('button');
+      card.type = 'button';
+      card.className = 'gallery-item';
+      card.innerHTML = `<span class="gi-label">${it.label}</span>` +
+        `<span class="gi-meta">${it.confidence ? it.confidence + ' · ' : ''}${timeAgo(it.created_at)}</span>`;
+      card.addEventListener('click', () => applyGallerySelection(it));
+      list.appendChild(card);
+    }
+    $('gallery').hidden = false;
+  } catch { /* network/CORS — keep gallery hidden */ }
+}
+
+function applyGallerySelection(it) {
+  $('province').value = ''; fillCmas('');
+  $('cma').value = it.cma_key;
+  $('bedroom').value = it.bedroom;
+  $('demographic').value = it.demographic;
+  $('product').value = it.product;
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  generate();
+}
+
+function initGallery() {
+  if (!API_BASE) return;
+  $('add-gallery').addEventListener('click', addToGallery);
+  loadGallery();
+}
+
 // --- UI helpers --------------------------------------------------------------
 function status(msg, kind) { const el = $('status'); el.textContent = msg; el.className = `status ${kind || ''}`; }
 function setBusy(b) { $('generate').disabled = b; $('generate').textContent = b ? 'Generating…' : 'Generate brief'; }
@@ -148,4 +229,5 @@ window.addEventListener('DOMContentLoaded', () => {
   $('download').addEventListener('click', download);
   $('copy').addEventListener('click', copy);
   initSubscribe();
+  initGallery();
 });

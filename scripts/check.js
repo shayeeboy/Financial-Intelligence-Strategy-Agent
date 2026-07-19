@@ -298,3 +298,34 @@ test('AC-E6: db module exports the expected query helpers', () => {
     assert.equal(typeof emailDb[fn], 'function', `db.${fn} exported`);
   }
 });
+
+// ============================================================================
+// Shared brief gallery (R8) — src/gallery/*
+// ============================================================================
+import { validateGalleryEntry, briefLabel } from '../src/gallery/validate.js';
+import * as galleryDb from '../src/gallery/db.js';
+
+const VALID_ENTRY = { cma_key: 'toronto', bedroom: 'Two bedroom', demographic: 'millennials', product: 'mortgages', confidence: 'High' };
+
+test('AC-G1: validateGalleryEntry accepts valid entries, rejects bad selections', () => {
+  const ok = validateGalleryEntry(VALID_ENTRY);
+  assert.equal(ok.ok, true);
+  assert.equal(ok.value.product, 'mortgages');
+  assert.equal(validateGalleryEntry({ ...VALID_ENTRY, cma_key: 'atlantis' }).ok, false);
+  assert.equal(validateGalleryEntry({ ...VALID_ENTRY, demographic: 'aliens' }).ok, false);
+  assert.equal(validateGalleryEntry({ ...VALID_ENTRY, product: 'crypto' }).ok, false);
+  assert.equal(validateGalleryEntry({ ...VALID_ENTRY, bedroom: 'Five bedroom' }).ok, false);
+});
+
+test('AC-G2: unknown confidence is dropped, not rejected; briefLabel is readable', () => {
+  const r = validateGalleryEntry({ ...VALID_ENTRY, confidence: 'bogus' });
+  assert.equal(r.ok, true);
+  assert.equal(r.value.confidence, null);            // sanitized, not fatal
+  assert.match(briefLabel(VALID_ENTRY), /Mortgages & Home Ownership · Millennials \(27–42\) · Toronto/);
+});
+
+test('AC-G3: gallery db module exports the expected helpers', () => {
+  for (const fn of ['insertBrief', 'recentBriefs', 'galleryStats', 'countRecentByIpHash']) {
+    assert.equal(typeof galleryDb[fn], 'function', `gallery db.${fn} exported`);
+  }
+});
