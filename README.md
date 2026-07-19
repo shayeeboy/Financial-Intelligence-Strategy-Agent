@@ -107,11 +107,13 @@ cross-brief consistency, and analyst-usefulness aren't yet evaluated across a po
 briefs. See [Gaps & roadmap](#gaps-and-roadmap).
 
 **Key decisions (the trade-offs that shaped the build).**
-- **Fully client-side web app over a backend — so Neon wasn't needed.** All three
-  sources send `Access-Control-Allow-Origin: *`, so the browser calls them directly; the
-  generator is static on GitHub Pages with no server to host or keep warm and **$0**. A
-  database was offered but is only warranted for a *persistent shared gallery* of
-  community briefs (roadmap R8) — not for generation itself, so it was declined.
+- **Generation stays fully client-side — no backend on the hot path.** All three sources
+  send `Access-Control-Allow-Origin: *`, so the browser calls them directly; the generator
+  is static on GitHub Pages with no server to host or keep warm and **$0**. Generation
+  *still* needs no database. A backend was added **only** for the feature that genuinely
+  needs one — scheduled **email delivery** (R9): a Cloudflare Worker + Neon Postgres,
+  introduced deliberately and late, not as a default. (That same Neon + Worker now also
+  unblocks the shared-gallery idea, R8.)
 - **CMHC sourced *through* Statistics Canada, not scraped from HMIP.** CMHC's portal has
   no stable public JSON API (it returns HTML); its Rental Market Survey is republished as
   StatCan cubes. Reading those cubes gives versioned, citable data instead of a brittle
@@ -438,7 +440,7 @@ Financial-Intelligence-Strategy-Agent/
 | A `<3yr` "Low Confidence" flag fired on CPI (which has decades of history) | The guardrail measured the *requested* window, not *available* history — I'd only asked for 24 monthly points (2-yr span). Bumped the request to 40 so the baseline check is honest. **A data-quality guardrail must key off available history, not your page size.** |
 | The same metric/format logic was inline in the orchestrator | Extracted pure helpers to [`lib/metrics.js`](src/lib/metrics.js) so they're **unit-testable offline** — turning "looks right" into asserted acceptance tests. |
 | Writing tests would clobber the real `master_index.md` | Gave `compile_strategy_brief` an optional `briefsDir` so tests write to an isolated temp dir. **Design side-effecting functions to accept their output location** — testability for free. |
-| Hosting the generator seemed to require a backend (and maybe a database) | Checked first: all three APIs return `Access-Control-Allow-Origin: *`, so the browser can call them directly. **Test the actual CORS headers before assuming you need a server** — it collapsed the whole hosting problem to static files on GitHub Pages, $0, no Neon. |
+| Hosting the generator seemed to require a backend (and maybe a database) | Checked first: all three APIs return `Access-Control-Allow-Origin: *`, so the browser can call them directly. **Test the actual CORS headers before assuming you need a server** — it collapsed the *generator's* hosting to static files on GitHub Pages at $0 (a backend + Neon came later, only for R9 email delivery). |
 | CMHC rent needs a heavy `getCubeMetadata` fetch to resolve coordinates | Precomputed the CMA/bedroom coordinates once (Node) and baked them into `web/js/catalog.js`, so the browser only makes the small data call. **Move one-time resolution work out of the hot path.** |
 | Browser and Node could drift on the shared logic | Wrote the web modules as pure ES modules that import in Node too, and added `AC-W6` asserting `web/js/metrics.js` matches `src/lib/metrics.js`. **If you must duplicate, add a test that fails when the copies diverge.** |
 | Victoria's rent resolved to "Victoriaville, Quebec" | A substring match collided across provinces. Pinned the selector to the full `"Victoria, British Columbia"`. **Fuzzy geography matching needs a province-qualified string, verified against live members.** |
@@ -474,14 +476,15 @@ kind of brief) and what would make it genuinely production-grade.
 | R5 | **Brief eval harness** | A rubric-scored set (completeness, sourcing, actionability) run over a batch of briefs | mean rubric score + variance across ≥ 20 briefs; regression-gated in CI |
 | R6 | **Trend & forecast-free deltas** | Add QoQ/YoY deltas and multi-year sparklines per indicator (still no forecasting) | every headline figure shows a directional delta with its own citation |
 | R7 | **More sources** | Add StatCan SFS (net worth), CRA/FCAC where public, provincial housing starts | coverage of assets *and* liabilities, not just leverage + shelter |
-| R8 | **Shared brief gallery (optional Neon)** | A thin serverless API + **Neon Postgres** to persist generated briefs and show a public "recently generated" gallery + usage stats | briefs saved with a shareable link; gallery + aggregate usage visible — the one feature that justifies a backend |
+| R8 | **Shared brief gallery** *(now unblocked — Neon + Worker already live from R9)* | Persist generated briefs and show a public "recently generated" gallery + usage stats. The R9 Cloudflare Worker + Neon can be **reused** — add a `briefs` table + `/api/briefs` route, no new infrastructure | briefs saved with a shareable link; gallery + aggregate usage visible |
 | **R9 ✅ SHIPPED** | **Scheduled email delivery** — *live & verified end-to-end ([design + runbook](docs/EMAIL-DELIVERY-PLAN.md))* | Subscribe an email to a chosen brief on the site; a **Cloudflare Worker** + **Neon** store it (double opt-in), and a **GitHub Actions cron** generates a fresh brief and sends it weekly/monthly via **Resend** with one-click unsubscribe. Deployed 2026-07-19; `AC-E1…E6` tested | opt-in → confirmed → delivered on schedule — **verified in production at $0/mo** |
 
 See [`docs/DATA-SOURCES.md`](docs/DATA-SOURCES.md) for the provenance reference and the
-step-by-step for adding an indicator (R1/R7). **On Neon:** generation itself needs no
-database (it's stateless client-side); the shared gallery (R8) and **scheduled email
-delivery (R9)** are the features that justify a backend — **R9 is now deployed and live**
-(Cloudflare Worker + Neon + Actions cron), running at **$0/month**.
+step-by-step for adding an indicator (R1/R7). **On Neon:** brief *generation* still needs
+no database (it's stateless client-side). A backend arrived with **R9 (scheduled email
+delivery)** — a Cloudflare Worker + Neon Postgres, **now deployed and live** at
+**$0/month**. Because that infrastructure exists, the shared gallery (**R8**) is no longer
+blocked on standing up a backend — it can reuse the same Worker + Neon.
 
 [↑ Back to top](#executive-summary)
 

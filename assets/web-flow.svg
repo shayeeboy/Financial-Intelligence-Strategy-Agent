@@ -77,5 +77,5 @@
   <text x="50" y="352" font-size="12" fill="#475569">• All three sources send permissive CORS headers, so the browser can call them directly — no proxy, no server.</text>
   <text x="50" y="374" font-size="12" fill="#475569">• CMHC coordinates are precomputed into web/js/catalog.js, so the browser skips the heavy metadata fetch.</text>
   <text x="50" y="396" font-size="12" fill="#475569">• Same compose logic as the Node orchestrator; parity is guarded by unit tests (AC-W1…W6).</text>
-  <text x="50" y="418" font-size="12" fill="#475569">• A persistent gallery of shared briefs is the one feature that would need a backend + Neon — see roadmap R8 (optional).</text>
+  <text x="50" y="418" font-size="12" fill="#475569">• Scheduled email delivery (R9) added a Cloudflare Worker + Neon; a shared-brief gallery (R8) can now reuse them.</text>
 </svg>
