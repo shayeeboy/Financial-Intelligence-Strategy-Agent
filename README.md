@@ -480,7 +480,8 @@ gallery live) and what would make it genuinely production-grade.
 saved to a public community gallery, [R8, shipped](#gaps-and-roadmap); and **off-site
 delivery** via scheduled email, [R9, shipped](#gaps-and-roadmap).)*
 
-**Roadmap (with measurable targets)**
+**Roadmap (with measurable targets).** Convention: when an item ships it's marked
+**✅ SHIPPED** with its **go-live date** (`— live YYYY-MM-DD`) next to the item name.
 
 | # | Item | Concept | How we'd measure "better" |
 |---|---|---|---|
@@ -492,7 +493,7 @@ delivery** via scheduled email, [R9, shipped](#gaps-and-roadmap).)*
 | R6 | **Trend & forecast-free deltas** | Add QoQ/YoY deltas and multi-year sparklines per indicator (still no forecasting) | every headline figure shows a directional delta with its own citation |
 | R7 | **More sources** | Add StatCan SFS (net worth), CRA/FCAC where public, provincial housing starts | coverage of assets *and* liabilities, not just leverage + shelter |
 | **R8 ✅ SHIPPED** | **Shared brief gallery** *(reuses the R9 Worker + Neon)* — live 2026-07-19 | "Add to gallery" saves a generated brief's selection; a **Community gallery** shows recent entries (click to reload + regenerate) + usage stats (total, top city/product). A `briefs` table + `POST/GET /api/briefs` on the **existing** Worker — no new infra, still **$0**. `AC-G1…G3` tested | recent-briefs feed + aggregate stats — **verified in production** |
-| **R9 ✅ SHIPPED** | **Scheduled email delivery** — *live & verified end-to-end ([design + runbook](docs/EMAIL-DELIVERY-PLAN.md))* | Subscribe an email to a chosen brief on the site; a **Cloudflare Worker** + **Neon** store it (double opt-in), and a **GitHub Actions cron** generates a fresh brief and sends it weekly/monthly via **Resend** with one-click unsubscribe. Deployed 2026-07-19; `AC-E1…E6` tested | opt-in → confirmed → delivered on schedule — **verified in production at $0/mo** |
+| **R9 ✅ SHIPPED** | **Scheduled email delivery** *([design + runbook](docs/EMAIL-DELIVERY-PLAN.md))* — live 2026-07-19 | Subscribe an email to a chosen brief on the site; a **Cloudflare Worker** + **Neon** store it (double opt-in), and a **GitHub Actions cron** generates a fresh brief and sends it weekly/monthly via **Resend** with one-click unsubscribe. `AC-E1…E6` tested | opt-in → confirmed → delivered on schedule — **verified in production at $0/mo** |
 
 See [`docs/DATA-SOURCES.md`](docs/DATA-SOURCES.md) for the provenance reference and the
 step-by-step for adding an indicator (R1/R7). **On Neon:** brief *generation* still needs
