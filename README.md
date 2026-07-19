@@ -106,9 +106,10 @@ are thin-file, not low-capacity") is presented as qualitative segment analysis, 
 auto-validated against cohort micro-data — there is no automated fact-check of the prose.
 Figures are **national or metro-level proxies**, not newcomer-*specific* cohort series
 (StatCan has those; wiring verified cohort vectors is roadmap item R1). CMHC data is
-**annual**, so intra-year shifts aren't captured. And this is **one brief** — throughput,
-cross-brief consistency, and analyst-usefulness aren't yet evaluated across a portfolio of
-briefs. See [Gaps & roadmap](#gaps-and-roadmap).
+**annual**, so intra-year shifts aren't captured. And while the app now generates many
+briefs on demand, their **quality isn't systematically evaluated** — cross-brief
+consistency and analyst-usefulness need a rubric/eval harness (roadmap item R5). See
+[Gaps & roadmap](#gaps-and-roadmap).
 
 **Key decisions (the trade-offs that shaped the build).**
 - **Generation stays fully client-side — no backend on the hot path.** All three sources
@@ -193,10 +194,12 @@ snapshots, and a running-state log.
 ### Web generator (GitHub Pages)
 
 The [hosted generator](https://shayeeboy.github.io/Financial-Intelligence-Strategy-Agent/)
-is a **fully static, client-side** app — the CTA the business user actually touches. It
-runs entirely in the browser: no backend, no database, no build step, **$0**. This is
-possible because all three sources send `Access-Control-Allow-Origin: *`, so the page can
-`fetch()` them directly.
+is a **fully static, client-side** app — the CTA the business user actually touches.
+*Generating* a brief runs entirely in the browser: no backend, no database, no build step,
+**$0** — possible because all three sources send `Access-Control-Allow-Origin: *`, so the
+page can `fetch()` them directly. (The optional **email delivery** (R9) and **community
+gallery** (R8) on the same page do use a small Cloudflare Worker + Neon — see
+[Gaps & roadmap](#gaps-and-roadmap).)
 
 ![Web generator client-side data flow](assets/web-flow.svg)
 
@@ -432,8 +435,8 @@ Financial-Intelligence-Strategy-Agent/
 | Output | Markdown briefs + `master_index.md` matrix | Business-readable, diff-able, renders on GitHub |
 | Provenance | `data/raw/*.json` snapshots | Every run is reproducible from its snapshot |
 | Web app | Vanilla ES modules (no framework, no build) | Static, browser-native `fetch`; deployable as plain files |
-| Web hosting | **GitHub Pages** (Actions deploy) | Static, free, no server — the CORS-open APIs make a backend unnecessary |
-| Database | Not needed for generation; **Neon Postgres** for R9 email subscriptions | Generation is stateless client-side; the DB only stores email subscriptions (`@neondatabase/serverless` runs in Worker + Node) |
+| Web hosting | **GitHub Pages** (Actions deploy) | Static, free — the CORS-open APIs make a backend unnecessary *for generation* (email/gallery use the Worker below) |
+| Database | Not needed for generation; **Neon Postgres** for R9 subscriptions + R8 gallery | Generation is stateless client-side; the DB stores email subscriptions **and** saved gallery briefs (`@neondatabase/serverless` runs in Worker + Node) |
 | Subscription API | **Cloudflare Worker** (`server/index.js`) — R9 | Serverless `/api/subscribe\|confirm\|unsubscribe`; free tier; secrets never in client |
 | Email send | **Resend** via `fetch` (Brevo/SES swappable) — R9 | One-file provider seam; one-click `List-Unsubscribe`; $0 at portfolio scale |
 | Delivery cron | **GitHub Actions** schedule (`deliver.yml`) — R9 | Unlimited on public repos; reuses the web composer to build each brief |
@@ -457,8 +460,9 @@ Financial-Intelligence-Strategy-Agent/
 
 ## Gaps and roadmap
 
-Honest about what this is (a solid, live-data, well-tested agent that produces *one*
-kind of brief) and what would make it genuinely production-grade.
+Honest about what this is (a solid, live-data, well-tested agent generating briefs across
+13 cities × 42 demographic×product combos, with scheduled email delivery and a community
+gallery live) and what would make it genuinely production-grade.
 
 **Qualitative gaps**
 - **Cohort specificity.** The brief targets "GTA newcomers" but is backed by *national*
@@ -470,10 +474,11 @@ kind of brief) and what would make it genuinely production-grade.
   through.
 - **Autonomy vs. self-serve.** The web app now covers 13 cities × 42 demographic×product
   combos on demand, but the *headless* orchestrator is still hard-targeted at one brief —
-  it doesn't yet pick its next brief from `master_index` coverage holes.
-- **No persistence.** Web generation is stateless — briefs aren't saved, and there's no
-  shared gallery of what others have generated (the one place a database would earn its
-  keep — see R8).
+  it doesn't yet pick its next brief from `master_index` coverage holes (R2).
+
+*(Resolved since the first cut: **persistence + a shared gallery** — briefs can now be
+saved to a public community gallery, [R8, shipped](#gaps-and-roadmap); and **off-site
+delivery** via scheduled email, [R9, shipped](#gaps-and-roadmap).)*
 
 **Roadmap (with measurable targets)**
 

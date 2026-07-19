@@ -113,13 +113,18 @@
     <section class="card note">
       <h2>How this works</h2>
       <p>
-        This page is fully static — hosted on GitHub Pages with no server. When you click
-        <em>Generate</em>, your browser calls three public, key-free APIs directly (all send
-        <code>Access-Control-Allow-Origin: *</code>): the
+        This page is statically hosted on GitHub Pages. When you click
+        <em>Generate</em>, your browser calls three public, key-free APIs directly — no
+        server involved (all send <code>Access-Control-Allow-Origin: *</code>): the
         <a href="https://www.statcan.gc.ca/en/developers/wds/user-guide" target="_blank" rel="noopener">Statistics Canada WDS</a>,
         CMHC's Rental Market Survey (republished as StatCan cubes), and the
         <a href="https://www.bankofcanada.ca/valet/docs" target="_blank" rel="noopener">Bank of Canada Valet API</a>.
         The same logic runs headless in the repo's Node orchestrator and MCP server.
+      </p>
+      <p class="muted">
+        Only the optional <strong>email delivery</strong> and <strong>community gallery</strong>
+        use a backend — a small Cloudflare Worker + Neon database. Generating and reading
+        briefs never touches a server.
       </p>
       <p class="muted">
         Household leverage and CPI are national; rent and vacancy are city-specific. The

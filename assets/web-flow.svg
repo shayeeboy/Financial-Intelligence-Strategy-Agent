@@ -1,7 +1,7 @@
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 980 470" font-family="-apple-system,Segoe UI,Roboto,Helvetica,Arial,sans-serif">
   <rect x="0" y="0" width="980" height="470" rx="14" fill="#ffffff" stroke="#e2e8f0" stroke-width="2"/>
   <text x="32" y="46" font-size="23" font-weight="700" fill="#0f172a">Web Generator — client-side data flow (GitHub Pages)</text>
-  <text x="32" y="70" font-size="14" fill="#64748b">No backend, no database, $0. The static page calls three public CORS-open APIs directly and composes the brief in the browser.</text>
+  <text x="32" y="70" font-size="14" fill="#64748b">Generation runs fully client-side — no backend, no database, $0. The page calls three public CORS-open APIs and composes the brief in the browser.</text>
 
   <defs>
     <marker id="wa" markerWidth="10" markerHeight="10" refX="7.5" refY="5" orient="auto"><path d="M0,0 L10,5 L0,10 z" fill="#4f46e5"/></marker>
