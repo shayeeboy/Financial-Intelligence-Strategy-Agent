@@ -419,7 +419,11 @@ Financial-Intelligence-Strategy-Agent/
 │   ├── ci.yml                    ← check (required) + live smoke (non-blocking)
 │   ├── pages.yml                 ← deploy web/ to GitHub Pages
 │   └── deliver.yml               ← daily cron → scripts/deliver.js
-└── LICENSE
+├── LICENSE
+└── .git_prompts/                 ← reverse-engineered reproducibility prompts (see its README)
+    ├── phases/                   ← one prompt per historical dev phase (01-05)
+    ├── sessions/                 ← one prompt per going-forward work session
+    └── MASTER_REVERSE_ENGINEER_PROMPT.md   ← git-ignored (sensitive, local only)
 ```
 
 ## Tools and services

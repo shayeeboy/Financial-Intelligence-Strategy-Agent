@@ -10,3 +10,6 @@ node_modules/
 # the committed example brief so its provenance is inspectable in the repo.
 data/raw/*.json
 !data/raw/snapshot_gta_newcomer_credit_opportunity.json
+
+# Sensitive meta-prompt — kept local, never cloned/forked (see .git_prompts/README.md)
+.git_prompts/MASTER_REVERSE_ENGINEER_PROMPT.md
