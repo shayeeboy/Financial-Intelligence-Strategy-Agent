@@ -7,8 +7,9 @@ structured brief that maps demographic and cost-of-living realities to specific 
 product opportunities — served three ways: a **hosted web generator**, an
 [MCP](https://modelcontextprotocol.io) tool server, and a one-command CLI. Built as part of
 [My AI Portfolio](https://github.com/shayeeboy) alongside the
-[AI-Native Team Diagnostic](https://github.com/shayeeboy/ai-native-diagnostic) and the
-[Enterprise RAG Assistant](https://github.com/shayeeboy/Enterprise-RAG-Assistant).
+[AI-Native Team Diagnostic](https://github.com/shayeeboy/ai-native-diagnostic), the
+[Enterprise RAG Assistant](https://github.com/shayeeboy/Enterprise-RAG-Assistant), and the
+[AI Product & Leadership Studio](https://shayeeboy.github.io/AI-Product-Leadership-Studio/).
 
 [![Live demo](https://img.shields.io/badge/live%20demo-brief%20generator-4f46e5)](https://shayeeboy.github.io/Financial-Intelligence-Strategy-Agent/)
 [![CI](https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/actions/workflows/ci.yml)
