@@ -11,6 +11,7 @@
     "brief": "node src/orchestrator.js",
     "check": "node --test scripts/check.js",
     "smoke": "node scripts/smoke.js",
+    "studio:snapshot": "node scripts/studio-snapshot.js",
     "test": "npm run check",
     "deliver": "node scripts/deliver.js",
     "migrate:email": "node scripts/migrate-email.js",

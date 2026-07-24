@@ -1,0 +1,264 @@
+{
+  "productId": "financial-intelligence",
+  "target": {
+    "filename": "gta_newcomer_credit_opportunity.md",
+    "demographic": "Newcomers to Canada (0–5 yrs), Greater Toronto Area",
+    "product": "Newcomer Credit & Daily Banking",
+    "geography": "ON — Toronto CMA",
+    "cma": "Toronto"
+  },
+  "runAt": "2026-07-15T01:35:52.976Z",
+  "lastUpdated": "2026-07-15T01:35:52.976Z",
+  "provenance": "live: Statistics Canada WDS · CMHC (via StatCan) · Bank of Canada Valet — from committed provenance snapshot",
+  "indicators": [
+    {
+      "key": "debt",
+      "label": "Household credit market debt to disposable income (%)",
+      "value": 179.55,
+      "unit": "%",
+      "source": "Statistics Canada — Web Data Service (WDS)",
+      "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=38100238",
+      "refPeriod": "2026-01-01",
+      "trend": [
+        {
+          "period": "2024-04-01",
+          "value": 176.77
+        },
+        {
+          "period": "2024-07-01",
+          "value": 174.13
+        },
+        {
+          "period": "2024-10-01",
+          "value": 174.78
+        },
+        {
+          "period": "2025-01-01",
+          "value": 175.35
+        },
+        {
+          "period": "2025-04-01",
+          "value": 177.34
+        },
+        {
+          "period": "2025-07-01",
+          "value": 177.95
+        },
+        {
+          "period": "2025-10-01",
+          "value": 178.69
+        },
+        {
+          "period": "2026-01-01",
+          "value": 179.55
+        }
+      ]
+    },
+    {
+      "key": "credit",
+      "label": "Consumer credit and mortgage liabilities to disposable income (%)",
+      "value": 171.15,
+      "unit": "%",
+      "source": "Statistics Canada — Web Data Service (WDS)",
+      "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=38100238",
+      "refPeriod": "2026-01-01",
+      "trend": [
+        {
+          "period": "2024-04-01",
+          "value": 168.61
+        },
+        {
+          "period": "2024-07-01",
+          "value": 166.04
+        },
+        {
+          "period": "2024-10-01",
+          "value": 166.61
+        },
+        {
+          "period": "2025-01-01",
+          "value": 167.25
+        },
+        {
+          "period": "2025-04-01",
+          "value": 169.24
+        },
+        {
+          "period": "2025-07-01",
+          "value": 169.79
+        },
+        {
+          "period": "2025-10-01",
+          "value": 170.51
+        },
+        {
+          "period": "2026-01-01",
+          "value": 171.15
+        }
+      ]
+    },
+    {
+      "key": "cpi",
+      "label": "Consumer Price Index, all-items (2002=100), Canada",
+      "value": 169.6,
+      "unit": "index",
+      "source": "Statistics Canada — Web Data Service (WDS)",
+      "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=18100004",
+      "refPeriod": "2026-05-01",
+      "trend": [
+        {
+          "period": "2025-10-01",
+          "value": 165.3
+        },
+        {
+          "period": "2025-11-01",
+          "value": 165.4
+        },
+        {
+          "period": "2025-12-01",
+          "value": 165
+        },
+        {
+          "period": "2026-01-01",
+          "value": 165
+        },
+        {
+          "period": "2026-02-01",
+          "value": 165.9
+        },
+        {
+          "period": "2026-03-01",
+          "value": 167.4
+        },
+        {
+          "period": "2026-04-01",
+          "value": 168
+        },
+        {
+          "period": "2026-05-01",
+          "value": 169.6
+        }
+      ]
+    },
+    {
+      "key": "rent2br",
+      "label": "rent2br",
+      "value": 2045,
+      "unit": "CAD/mo",
+      "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
+      "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100133",
+      "refPeriod": "2025-01-01",
+      "trend": [
+        {
+          "period": "2020-01-01",
+          "value": 1637
+        },
+        {
+          "period": "2021-01-01",
+          "value": 1680
+        },
+        {
+          "period": "2022-01-01",
+          "value": 1779
+        },
+        {
+          "period": "2023-01-01",
+          "value": 1958
+        },
+        {
+          "period": "2024-01-01",
+          "value": 1972
+        },
+        {
+          "period": "2025-01-01",
+          "value": 2045
+        }
+      ]
+    },
+    {
+      "key": "vacancy",
+      "label": "vacancy",
+      "value": 3,
+      "unit": "%",
+      "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
+      "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100127",
+      "refPeriod": "2025-01-01",
+      "trend": [
+        {
+          "period": "2020-01-01",
+          "value": 3.4
+        },
+        {
+          "period": "2021-01-01",
+          "value": 4.6
+        },
+        {
+          "period": "2022-01-01",
+          "value": 1.6
+        },
+        {
+          "period": "2023-01-01",
+          "value": 1.4
+        },
+        {
+          "period": "2024-01-01",
+          "value": 2.5
+        },
+        {
+          "period": "2025-01-01",
+          "value": 3
+        }
+      ]
+    },
+    {
+      "key": "policy",
+      "label": "Target for the overnight rate (%)",
+      "value": 2.25,
+      "unit": "%",
+      "source": "Bank of Canada — Valet API",
+      "sourceUrl": "",
+      "refPeriod": "2026-07-10",
+      "trend": []
+    },
+    {
+      "key": "prime",
+      "label": "Chartered bank prime lending rate (%)",
+      "value": 4.45,
+      "unit": "%",
+      "source": "Bank of Canada — Valet API",
+      "sourceUrl": "",
+      "refPeriod": "2026-07-01",
+      "trend": []
+    },
+    {
+      "key": "mtg5",
+      "label": "Conventional 5-year mortgage rate (%)",
+      "value": 6.09,
+      "unit": "%",
+      "source": "Bank of Canada — Valet API",
+      "sourceUrl": "",
+      "refPeriod": "2026-07-01",
+      "trend": []
+    }
+  ],
+  "executiveSummary": "Canadian households remain among the most leveraged in the G7: credit-market debt sat at **179.55% of disposable income** as of 2026-01-01, with consumer-credit-plus-mortgage liabilities at **171.15%**. Against that backdrop, GTA shelter costs are the binding constraint on newcomer financial bandwidth — an average two-bedroom apartment in the Toronto CMA runs **$2,045/month** (2025-01-01), or roughly **$24,540/year**. On the standard 30%-of-income affordability rule, a household would need about **$82,000/year in gross income** to carry that unit alone — well above what most households earn in their first years in Canada.",
+  "strategicRecommendations": [
+    "Secured / credit-builder card with graduation logic.",
+    "Rent-reporting credit formation.",
+    "No-minimum chequing with transparent FX and low-cost digital remittances.",
+    "High-yield savings for shelter/settlement buffers.",
+    "Newcomer mortgage readiness track.",
+    "Statistics Canada — Web Data Service (WDS):"
+  ],
+  "decisionTraces": [
+    {
+      "step": "Segment selection",
+      "rationale": "Newcomers to Canada (0–5 yrs), Greater Toronto Area — widest debt-service-ratio gap vs. product coverage."
+    },
+    {
+      "step": "Data vintage",
+      "rationale": "Live pull from StatCan / CMHC / Bank of Canada; snapshot 2026-07-15T01:35:52.976Z."
+    }
+  ],
+  "briefUrl": "https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/blob/main/data/briefs/gta_newcomer_credit_opportunity.md"
+}
