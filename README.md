@@ -203,6 +203,14 @@ gallery** (R8) on the same page do use a small Cloudflare Worker + Neon — see
 
 ![Web generator client-side data flow](assets/web-flow.svg)
 
+**Studio snapshot (auto-refreshed).** `npm run studio:snapshot` emits a compact,
+machine-readable [`web/studio-snapshot.json`](web/studio-snapshot.json) of the agent's real
+output for the [AI Product & Leadership Studio](https://github.com/shayeeboy/AI-Product-Leadership-Studio)
+to consume live (served from Pages with `Access-Control-Allow-Origin: *`). A daily workflow
+([`refresh-snapshot.yml`](.github/workflows/refresh-snapshot.yml)) re-pulls the live
+indicators, regenerates the snapshot and deploys Pages — no secrets, since the sources are
+keyless — so the Studio always sees the latest figures.
+
 **Controls (the "any brief" matrix).** Province → filters City (13 CMAs); Rent basis
 (1/2/3-bedroom); Demographic group (7 cohorts); Brief type / product focus (6 lines) —
 **42 demographic×product combinations per city**.

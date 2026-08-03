@@ -1,0 +1,72 @@
+name: Refresh Studio snapshot
+
+# Keeps the live Studio snapshot tracking the latest source data (R9).
+# Daily it re-pulls the real StatCan / CMHC / Bank of Canada indicators via the
+# orchestrator, regenerates web/studio-snapshot.json, commits any change for
+# provenance, and deploys web/ to Pages *inline* — so the refresh reaches the
+# live URL the Studio fetches:
+#   https://shayeeboy.github.io/Financial-Intelligence-Strategy-Agent/studio-snapshot.json
+#
+# The deploy is done here (not by triggering pages.yml) because a push made with
+# the default GITHUB_TOKEN does not trigger other workflows. The snapshot script
+# is a pure transform of the committed provenance data, so when the upstream
+# figures are unchanged the file is byte-identical and nothing is committed.
+on:
+  schedule:
+    - cron: "0 11 * * *"   # daily 11:00 UTC, ahead of the 12:00 brief delivery
+  workflow_dispatch:
+
+# No secrets required — the StatCan / CMHC / BoC adapters are keyless public APIs.
+permissions:
+  contents: write
+  pages: write
+  id-token: write
+
+# Serialize with pages.yml so the two never deploy Pages at once.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  refresh:
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+      - run: npm ci
+
+      # Re-pull live indicators → data/raw + brief. Tolerate a transient upstream
+      # outage: if a source is briefly down we still republish the last-good data.
+      - name: Refresh live source data
+        run: npm run brief
+        continue-on-error: true
+
+      # Deterministic transform of the (possibly refreshed) provenance data.
+      - name: Regenerate Studio snapshot
+        run: npm run studio:snapshot
+
+      - name: Commit refreshed data if changed
+        run: |
+          if git diff --quiet; then
+            echo "No source-data change — nothing to commit."
+          else
+            git config user.name "github-actions[bot]"
+            git config user.email "github-actions[bot]@users.noreply.github.com"
+            git add -A
+            git commit -m "chore: refresh Studio snapshot from live source data"
+            git push
+          fi
+
+      # Publish web/ to Pages regardless (idempotent) so the live URL is current.
+      - uses: actions/configure-pages@v5
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: web
+      - id: deployment
+        uses: actions/deploy-pages@v4
