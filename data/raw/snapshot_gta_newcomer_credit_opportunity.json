@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-07-15T01:35:52.976Z",
+  "run_at": "2026-08-03T13:41:26.779Z",
   "target": {
     "filename": "gta_newcomer_credit_opportunity.md",
     "demographic": "Newcomers to Canada (0–5 yrs), Greater Toronto Area",
@@ -104,7 +104,7 @@
         }
       ],
       "n_periods": 16,
-      "retrieved_at": "2026-07-15T01:35:52.849Z"
+      "retrieved_at": "2026-08-03T13:41:26.638Z"
     },
     "credit": {
       "source": "Statistics Canada — Web Data Service (WDS)",
@@ -202,7 +202,7 @@
         }
       ],
       "n_periods": 16,
-      "retrieved_at": "2026-07-15T01:35:52.778Z"
+      "retrieved_at": "2026-08-03T13:41:26.690Z"
     },
     "cpi": {
       "source": "Statistics Canada — Web Data Service (WDS)",
@@ -213,16 +213,11 @@
       "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=18100004",
       "vector_id": 41690973,
       "latest": {
-        "ref_period": "2026-05-01",
-        "value": 169.6,
-        "release_time": "2026-06-22T08:30"
+        "ref_period": "2026-06-01",
+        "value": 169,
+        "release_time": "2026-07-20T08:30"
       },
       "trend": [
-        {
-          "ref_period": "2023-02-01",
-          "value": 154.5,
-          "release_time": "2023-03-21T08:30"
-        },
         {
           "ref_period": "2023-03-01",
           "value": 155.3,
@@ -417,10 +412,15 @@
           "ref_period": "2026-05-01",
           "value": 169.6,
           "release_time": "2026-06-22T08:30"
+        },
+        {
+          "ref_period": "2026-06-01",
+          "value": 169,
+          "release_time": "2026-07-20T08:30"
         }
       ],
       "n_periods": 40,
-      "retrieved_at": "2026-07-15T01:35:52.832Z"
+      "retrieved_at": "2026-08-03T13:41:26.731Z"
     },
     "rent2br": {
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
@@ -484,7 +484,7 @@
           "release_time": "2025-12-17T08:30"
         }
       ],
-      "retrieved_at": "2026-07-15T01:35:52.975Z"
+      "retrieved_at": "2026-08-03T13:41:26.779Z"
     },
     "vacancy": {
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
@@ -540,7 +540,7 @@
           "release_time": "2025-12-17T08:30"
         }
       ],
-      "retrieved_at": "2026-07-15T01:35:52.952Z"
+      "retrieved_at": "2026-08-03T13:41:26.713Z"
     },
     "policy": {
       "source": "Bank of Canada — Valet API",
@@ -548,20 +548,20 @@
       "label": "Target for the overnight rate (%)",
       "url": "https://www.bankofcanada.ca/valet/observations/V39079",
       "latest": {
-        "date": "2026-07-10",
+        "date": "2026-07-30",
         "value": 2.25
       },
       "observations": [
         {
-          "date": "2026-07-13",
+          "date": "2026-07-31",
           "value": 2.25
         },
         {
-          "date": "2026-07-10",
+          "date": "2026-07-30",
           "value": 2.25
         }
       ],
-      "retrieved_at": "2026-07-15T01:35:52.174Z"
+      "retrieved_at": "2026-08-03T13:41:26.223Z"
     },
     "prime": {
       "source": "Bank of Canada — Valet API",
@@ -569,20 +569,20 @@
       "label": "Chartered bank prime lending rate (%)",
       "url": "https://www.bankofcanada.ca/valet/observations/V80691311",
       "latest": {
-        "date": "2026-07-01",
+        "date": "2026-07-22",
         "value": 4.45
       },
       "observations": [
         {
-          "date": "2026-07-08",
+          "date": "2026-07-29",
           "value": 4.45
         },
         {
-          "date": "2026-07-01",
+          "date": "2026-07-22",
           "value": 4.45
         }
       ],
-      "retrieved_at": "2026-07-15T01:35:52.177Z"
+      "retrieved_at": "2026-08-03T13:41:26.231Z"
     },
     "mtg5": {
       "source": "Bank of Canada — Valet API",
@@ -590,20 +590,20 @@
       "label": "Conventional 5-year mortgage rate (%)",
       "url": "https://www.bankofcanada.ca/valet/observations/V80691335",
       "latest": {
-        "date": "2026-07-01",
+        "date": "2026-07-22",
         "value": 6.09
       },
       "observations": [
         {
-          "date": "2026-07-08",
+          "date": "2026-07-29",
           "value": 6.09
         },
         {
-          "date": "2026-07-01",
+          "date": "2026-07-22",
           "value": 6.09
         }
       ],
-      "retrieved_at": "2026-07-15T01:35:52.177Z"
+      "retrieved_at": "2026-08-03T13:41:26.304Z"
     }
   }
 }
