@@ -2,7 +2,7 @@
 
 **Demographic Group:** Newcomers to Canada (0–5 years since landing), Greater Toronto Area (Toronto CMA)
 **Financial Product Category:** Newcomer Credit (secured cards, credit-builder lines) & Daily Banking (chequing, digital remittances)
-**Prepared:** 2026-08-03 · **Confidence:** High · **Data vintage:** live pull from StatCan WDS, CMHC (via StatCan) & Bank of Canada Valet
+**Prepared:** 2026-08-04 · **Confidence:** High · **Data vintage:** live pull from StatCan WDS, CMHC (via StatCan) & Bank of Canada Valet
 
 > **Guardrail note:** This brief reports empirical trend realities only. It contains no interest-rate forecasts, no market-crash predictions, and no legal, compliance, or FINTRAC/Bank Act regulatory advice. Product ideas are strategic, not regulatory guarantees.
 
@@ -12,7 +12,7 @@
 
 Canadian households remain among the most leveraged in the G7: credit-market debt sat at **179.55% of disposable income** as of 2026-01-01, with consumer-credit-plus-mortgage liabilities at **171.15%**. Against that backdrop, GTA shelter costs are the binding constraint on newcomer financial bandwidth — an average two-bedroom apartment in the Toronto CMA runs **$2,045/month** (2025-01-01), or roughly **$24,540/year**. On the standard 30%-of-income affordability rule, a household would need about **$82,000/year in gross income** to carry that unit alone — well above what most households earn in their first years in Canada.
 
-With the Bank of Canada overnight target at **2.25%** and the chartered-bank prime rate at **4.45%** (2026-07-30), borrowing is meaningfully cheaper than at the 2023–24 peak, yet newcomers are structurally excluded from mainstream credit by **thin or absent domestic credit files** — not by capacity to pay. This is the core commercial opportunity: products that manufacture credit history, price on cash-flow rather than bureau score, and reduce the cost of moving money across borders.
+With the Bank of Canada overnight target at **2.25%** and the chartered-bank prime rate at **4.45%** (2026-07-31), borrowing is meaningfully cheaper than at the 2023–24 peak, yet newcomers are structurally excluded from mainstream credit by **thin or absent domestic credit files** — not by capacity to pay. This is the core commercial opportunity: products that manufacture credit history, price on cash-flow rather than bureau score, and reduce the cost of moving money across borders.
 
 **Financial Services Implication:** The GTA newcomer segment is a high-lifetime-value, under-served acquisition pool. The institution that solves *first-file credit formation* and *low-friction remittance* captures the primary banking relationship at the moment of highest switching propensity — landing.
 
@@ -27,7 +27,7 @@ With the Bank of Canada overnight target at **2.25%** and the chartered-bank pri
 | CPI, all-items (YoY) | **4.8%** | 2026-06-01 | [Statistics Canada — Web Data Service (WDS)](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=18100004) |
 | Toronto CMA — avg 2-bedroom rent | **$2,045/mo** (3.7% YoY) | 2025-01-01 | [CMHC Rental Market Survey (via Statistics Canada WDS)](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100133) |
 | Toronto CMA — rental vacancy rate | **3.00%** | 2025-01-01 | [CMHC Rental Market Survey (via Statistics Canada WDS)](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100127) |
-| Bank of Canada overnight target | **2.25%** | 2026-07-30 | [Bank of Canada — Valet API](https://www.bankofcanada.ca/valet/observations/V39079) |
+| Bank of Canada overnight target | **2.25%** | 2026-07-31 | [Bank of Canada — Valet API](https://www.bankofcanada.ca/valet/observations/V39079) |
 | Chartered-bank prime rate | **4.45%** | 2026-07-22 | [Bank of Canada — Valet API](https://www.bankofcanada.ca/valet/observations/V80691311) |
 | Conventional 5-year mortgage rate | **6.09%** | 2026-07-22 | [Bank of Canada — Valet API](https://www.bankofcanada.ca/valet/observations/V80691335) |
 
