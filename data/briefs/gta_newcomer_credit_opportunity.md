@@ -2,7 +2,7 @@
 
 **Demographic Group:** Newcomers to Canada (0–5 years since landing), Greater Toronto Area (Toronto CMA)
 **Financial Product Category:** Newcomer Credit (secured cards, credit-builder lines) & Daily Banking (chequing, digital remittances)
-**Prepared:** 2026-08-06 · **Confidence:** High · **Data vintage:** live pull from StatCan WDS, CMHC (via StatCan) & Bank of Canada Valet
+**Prepared:** 2026-08-07 · **Confidence:** High · **Data vintage:** live pull from StatCan WDS, CMHC (via StatCan) & Bank of Canada Valet
 
 > **Guardrail note:** This brief reports empirical trend realities only. It contains no interest-rate forecasts, no market-crash predictions, and no legal, compliance, or FINTRAC/Bank Act regulatory advice. Product ideas are strategic, not regulatory guarantees.
 
@@ -28,7 +28,7 @@ With the Bank of Canada overnight target at **2.25%** and the chartered-bank pri
 | Toronto CMA — avg 2-bedroom rent | **$2,045/mo** (3.7% YoY) | 2025-01-01 | [CMHC Rental Market Survey (via Statistics Canada WDS)](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100133) |
 | Toronto CMA — rental vacancy rate | **3.00%** | 2025-01-01 | [CMHC Rental Market Survey (via Statistics Canada WDS)](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100127) |
 | Bank of Canada overnight target | **2.25%** | 2026-08-04 | [Bank of Canada — Valet API](https://www.bankofcanada.ca/valet/observations/V39079) |
-| Chartered-bank prime rate | **4.45%** | 2026-07-22 | [Bank of Canada — Valet API](https://www.bankofcanada.ca/valet/observations/V80691311) |
+| Chartered-bank prime rate | **4.45%** | 2026-07-29 | [Bank of Canada — Valet API](https://www.bankofcanada.ca/valet/observations/V80691311) |
 | Conventional 5-year mortgage rate | **6.09%** | 2026-07-29 | [Bank of Canada — Valet API](https://www.bankofcanada.ca/valet/observations/V80691335) |
 
 **Reading the data.** National household leverage near **179.55%** shows the incumbent customer base has little unused borrowing headroom — growth must come from *new* relationships, and newcomers are the largest such inflow into the GTA. Newcomers typically arrive with strong human capital but **no domestic bureau footprint**, so they cannot access the prime-priced chequing, card, and credit products that the leverage figures above are built on.
