@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-08-08T11:28:53.620Z",
+  "run_at": "2026-08-09T11:28:53.399Z",
   "target": {
     "filename": "gta_newcomer_credit_opportunity.md",
     "demographic": "Newcomers to Canada (0–5 yrs), Greater Toronto Area",
@@ -104,7 +104,7 @@
         }
       ],
       "n_periods": 16,
-      "retrieved_at": "2026-08-08T11:28:53.620Z"
+      "retrieved_at": "2026-08-09T11:28:53.317Z"
     },
     "credit": {
       "source": "Statistics Canada — Web Data Service (WDS)",
@@ -202,7 +202,7 @@
         }
       ],
       "n_periods": 16,
-      "retrieved_at": "2026-08-08T11:28:53.590Z"
+      "retrieved_at": "2026-08-09T11:28:53.296Z"
     },
     "cpi": {
       "source": "Statistics Canada — Web Data Service (WDS)",
@@ -420,7 +420,7 @@
         }
       ],
       "n_periods": 40,
-      "retrieved_at": "2026-08-08T11:28:53.395Z"
+      "retrieved_at": "2026-08-09T11:28:53.241Z"
     },
     "rent2br": {
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
@@ -484,7 +484,7 @@
           "release_time": "2025-12-17T08:30"
         }
       ],
-      "retrieved_at": "2026-08-08T11:28:53.507Z"
+      "retrieved_at": "2026-08-09T11:28:53.399Z"
     },
     "vacancy": {
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
@@ -540,7 +540,7 @@
           "release_time": "2025-12-17T08:30"
         }
       ],
-      "retrieved_at": "2026-08-08T11:28:53.553Z"
+      "retrieved_at": "2026-08-09T11:28:53.365Z"
     },
     "policy": {
       "source": "Bank of Canada — Valet API",
@@ -561,7 +561,7 @@
           "value": 2.25
         }
       ],
-      "retrieved_at": "2026-08-08T11:28:52.952Z"
+      "retrieved_at": "2026-08-09T11:28:52.607Z"
     },
     "prime": {
       "source": "Bank of Canada — Valet API",
@@ -582,7 +582,7 @@
           "value": 4.45
         }
       ],
-      "retrieved_at": "2026-08-08T11:28:53.068Z"
+      "retrieved_at": "2026-08-09T11:28:52.622Z"
     },
     "mtg5": {
       "source": "Bank of Canada — Valet API",
@@ -603,7 +603,7 @@
           "value": 6.09
         }
       ],
-      "retrieved_at": "2026-08-08T11:28:52.998Z"
+      "retrieved_at": "2026-08-09T11:28:52.578Z"
     }
   }
 }
