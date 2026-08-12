@@ -7,8 +7,8 @@
     "geography": "ON — Toronto CMA",
     "cma": "Toronto"
   },
-  "runAt": "2026-08-11T11:43:25.301Z",
-  "lastUpdated": "2026-08-11T11:43:25.301Z",
+  "runAt": "2026-08-12T11:45:59.868Z",
+  "lastUpdated": "2026-08-12T11:45:59.868Z",
   "provenance": "live: Statistics Canada WDS · CMHC (via StatCan) · Bank of Canada Valet — from committed provenance snapshot",
   "indicators": [
     {
@@ -217,7 +217,7 @@
       "unit": "%",
       "source": "Bank of Canada — Valet API",
       "sourceUrl": "",
-      "refPeriod": "2026-08-06",
+      "refPeriod": "2026-08-07",
       "trend": []
     },
     {
@@ -257,7 +257,7 @@
     },
     {
       "step": "Data vintage",
-      "rationale": "Live pull from StatCan / CMHC / Bank of Canada; snapshot 2026-08-11T11:43:25.301Z."
+      "rationale": "Live pull from StatCan / CMHC / Bank of Canada; snapshot 2026-08-12T11:45:59.868Z."
     }
   ],
   "briefUrl": "https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/blob/main/data/briefs/gta_newcomer_credit_opportunity.md"
