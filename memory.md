@@ -1,13 +1,13 @@
 # Financial-Demographic-Strategist — Running State Log
 
-Last Execution: 2026-08-14 11:42 UTC
+Last Execution: 2026-08-15 11:20 UTC
 
 ## Active Ingestion Vectors
 - [x] StatCan Table 38-10-0238: Household credit-market debt to disposable income → 179.55% @ 2026-01-01
 - [x] StatCan Table 18-10-0004: CPI all-items → 169 @ 2026-06-01
 - [x] CMHC Table 34-10-0133 (via StatCan): Toronto avg 2BR rent → $2,045 @ 2025-01-01
 - [x] CMHC Table 34-10-0127 (via StatCan): Toronto vacancy → 3.00% @ 2025-01-01
-- [x] Bank of Canada Valet: overnight target → 2.25% @ 2026-08-11
+- [x] Bank of Canada Valet: overnight target → 2.25% @ 2026-08-12
 
 ## Strategy Briefs Generated
 - /data/briefs/gta_newcomer_credit_opportunity.md (Product: Newcomer Credit & Daily Banking) — Confidence: High
