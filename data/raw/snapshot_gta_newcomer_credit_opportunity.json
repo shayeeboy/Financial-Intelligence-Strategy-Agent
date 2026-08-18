@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-08-16T11:19:39.205Z",
+  "run_at": "2026-08-18T11:25:39.692Z",
   "target": {
     "filename": "gta_newcomer_credit_opportunity.md",
     "demographic": "Newcomers to Canada (0–5 yrs), Greater Toronto Area",
@@ -104,7 +104,7 @@
         }
       ],
       "n_periods": 16,
-      "retrieved_at": "2026-08-16T11:19:39.090Z"
+      "retrieved_at": "2026-08-18T11:25:39.614Z"
     },
     "credit": {
       "source": "Statistics Canada — Web Data Service (WDS)",
@@ -202,7 +202,7 @@
         }
       ],
       "n_periods": 16,
-      "retrieved_at": "2026-08-16T11:19:39.143Z"
+      "retrieved_at": "2026-08-18T11:25:39.638Z"
     },
     "cpi": {
       "source": "Statistics Canada — Web Data Service (WDS)",
@@ -213,16 +213,11 @@
       "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=18100004",
       "vector_id": 41690973,
       "latest": {
-        "ref_period": "2026-06-01",
-        "value": 169,
-        "release_time": "2026-07-20T08:30"
+        "ref_period": "2026-07-01",
+        "value": 169.9,
+        "release_time": "2026-08-17T08:30"
       },
       "trend": [
-        {
-          "ref_period": "2023-03-01",
-          "value": 155.3,
-          "release_time": "2023-04-18T08:30"
-        },
         {
           "ref_period": "2023-04-01",
           "value": 156.4,
@@ -417,10 +412,15 @@
           "ref_period": "2026-06-01",
           "value": 169,
           "release_time": "2026-07-20T08:30"
+        },
+        {
+          "ref_period": "2026-07-01",
+          "value": 169.9,
+          "release_time": "2026-08-17T08:30"
         }
       ],
       "n_periods": 40,
-      "retrieved_at": "2026-08-16T11:19:39.066Z"
+      "retrieved_at": "2026-08-18T11:25:39.582Z"
     },
     "rent2br": {
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
@@ -484,7 +484,7 @@
           "release_time": "2025-12-17T08:30"
         }
       ],
-      "retrieved_at": "2026-08-16T11:19:39.139Z"
+      "retrieved_at": "2026-08-18T11:25:39.691Z"
     },
     "vacancy": {
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
@@ -540,7 +540,7 @@
           "release_time": "2025-12-17T08:30"
         }
       ],
-      "retrieved_at": "2026-08-16T11:19:39.204Z"
+      "retrieved_at": "2026-08-18T11:25:39.668Z"
     },
     "policy": {
       "source": "Bank of Canada — Valet API",
@@ -548,20 +548,20 @@
       "label": "Target for the overnight rate (%)",
       "url": "https://www.bankofcanada.ca/valet/observations/V39079",
       "latest": {
-        "date": "2026-08-12",
+        "date": "2026-08-13",
         "value": 2.25
       },
       "observations": [
         {
-          "date": "2026-08-13",
+          "date": "2026-08-14",
           "value": 2.25
         },
         {
-          "date": "2026-08-12",
+          "date": "2026-08-13",
           "value": 2.25
         }
       ],
-      "retrieved_at": "2026-08-16T11:19:38.313Z"
+      "retrieved_at": "2026-08-18T11:25:39.139Z"
     },
     "prime": {
       "source": "Bank of Canada — Valet API",
@@ -582,7 +582,7 @@
           "value": 4.45
         }
       ],
-      "retrieved_at": "2026-08-16T11:19:38.372Z"
+      "retrieved_at": "2026-08-18T11:25:39.262Z"
     },
     "mtg5": {
       "source": "Bank of Canada — Valet API",
@@ -603,7 +603,7 @@
           "value": 6.09
         }
       ],
-      "retrieved_at": "2026-08-16T11:19:38.392Z"
+      "retrieved_at": "2026-08-18T11:25:39.215Z"
     }
   }
 }
