@@ -98,7 +98,7 @@ regulatory advice; and low-evidence outputs flag themselves rather than bluffing
 | 4 | **Structural completeness** | brief carries all 4 mandated sections + a *Financial Services Implication* in each | met on the live brief | manual + template |
 | 5 | **Confidence guardrail** | any series with < 3 yrs baseline is flagged *Low Confidence* in `memory.md` + console | enforced | `npm run check` (AC-M4) |
 | 6 | **Safety guardrail** | no rate forecasts / no legal-regulatory advice in output | enforced by prompt + explicit brief disclaimer | manual review |
-| 7 | **Deterministic core logic** | metric math, coordinate resolution, and file/matrix writes are unit-tested | **26/26 passing** | `npm run check` |
+| 7 | **Deterministic core logic** | metric math, coordinate resolution, and file/matrix writes are unit-tested | **31/31 passing** | `npm run check` |
 | 8 | **Self-serve web generation** | every one of 13 × 7 × 6 selections composes a complete, hole-free brief client-side | all 42 demographic×product combos verified; live in browser | `npm run check` (AC-W2), hosted demo |
 
 **Not yet measured (honest gaps).** The brief's **narrative reasoning** (e.g. "newcomers
@@ -155,7 +155,7 @@ writes a finished brief).
 | [**Orchestrator SOP**](#orchestrator-sop) | 6-step workflow: identify gaps → gather → derive → confidence check → synthesize → persist | `src/orchestrator.js` |
 | [**Adapters & tools**](#adapters-and-tools) | Normalize StatCan/CMHC/BoC into cited data; compile the brief + matrix | `src/mcp/adapters`, `src/mcp/tools` |
 | [**Run it**](#run-it) | `npm run brief`, `npm run mcp`, `npm run smoke`, `npm run check` | `package.json` |
-| [**Test cases**](#test-cases-and-acceptance-criteria) | 26 offline unit-acceptance tests + a live integration smoke | `scripts/check.js`, `scripts/smoke.js` |
+| [**Test cases**](#test-cases-and-acceptance-criteria) | 31 offline unit-acceptance tests + a live integration smoke | `scripts/check.js`, `scripts/smoke.js` |
 
 **Navigate:** [See it live](#see-it-live) · [Architecture](#architecture) · [Web generator](#web-generator-github-pages) · [Orchestrator SOP](#orchestrator-sop) · [Adapters & tools](#adapters-and-tools) · [MCP tools](#mcp-tools) · [Run it](#run-it) · [Test cases](#test-cases-and-acceptance-criteria) · [Repo structure](#repo-structure) · [Tools & services](#tools-and-services) · [Lessons learned](#lessons-learned) · [Gaps & roadmap](#gaps-and-roadmap)
 
@@ -211,13 +211,15 @@ to consume live (served from Pages with `Access-Control-Allow-Origin: *`). A dai
 indicators, regenerates the snapshot and deploys Pages — no secrets, since the sources are
 keyless — so the Studio always sees the latest figures.
 
-Beyond the indicators (each with `value`, `source`, `trend`, and per-series `retrievedAt` /
-`nPeriods`), executive summary and recommendations, the snapshot carries an **honest
-`observability` block** derived only from the provenance data: source/indicator counts,
-when data was last pulled (`dataRetrievedAt`), how current the underlying data is
-(`sourceDataAsOf`, the stalest series), and its inherent reporting lag (`sourceDataLagDays`).
-It **deliberately omits latency/cost/error** — this agent is a static data pull with no
-request telemetry, so inventing runtime metrics would be dishonest.
+Beyond the indicators (each with `value`, `source`, `trend`, per-series `retrievedAt` /
+`nPeriods`, and a forecast-free `delta` + `sparkline` — R6), executive summary and
+recommendations, the snapshot carries an **honest `observability` block** derived only
+from the provenance data: source/indicator counts, when data was last pulled
+(`dataRetrievedAt`), how current the underlying data is (`sourceDataAsOf`, the stalest
+series), its inherent reporting lag (`sourceDataLagDays`), and the **freshness-SLA** roll-up
+(`seriesWithinSla` / `staleSeries` — R4). It **deliberately omits latency/cost/error** —
+this agent is a static data pull with no request telemetry, so inventing runtime metrics
+would be dishonest.
 
 **Controls (the "any brief" matrix).** Province → filters City (13 CMAs); Rent basis
 (1/2/3-bedroom); Demographic group (7 cohorts); Brief type / product focus (6 lines) —
@@ -315,7 +317,7 @@ included:
 npm install
 
 npm run smoke     # live: verify all 8 data pulls against StatCan/CMHC/BoC
-npm run check     # offline: 26 unit-acceptance tests (node --test)
+npm run check     # offline: 31 unit-acceptance tests (node --test)
 npm run brief     # run the SOP → writes data/briefs/*.md + master_index.md + memory.md
 npm run mcp       # start the MCP server on stdio (for an MCP client)
 ```
@@ -362,9 +364,14 @@ API keys; `node --test`). Each test asserts one acceptance criterion:
 | `AC-G1` gallery validation | valid gallery entry accepted; bad city/demographic/product/bedroom rejected | ✅ |
 | `AC-G2` gallery label + sanitize | unknown `confidence` is dropped (not fatal); `briefLabel` is human-readable | ✅ |
 | `AC-G3` gallery db surface | the gallery query module exports all expected helpers | ✅ |
+| `AC-F1` freshness SLA | `assessFreshness` flags within-SLA vs stale (generous, cadence-aware), null-safe | ✅ |
+| `AC-F2` freshness roll-up | `summarizeFreshness` counts + stale keys; every series key has a cadence | ✅ |
+| `AC-D1` trend delta | `periodDelta` gives forecast-free direction + %, null-safe; `deltaArrow` maps it | ✅ |
+| `AC-D2` sparkline | `sparkline` scales min→max, degenerate/flat/empty-safe | ✅ |
+| `AC-D3` delta/sparkline parity | `web/js/metrics.js` matches `src/lib/metrics.js` for the R6 helpers | ✅ |
 
 ```
-ℹ tests 26   ℹ pass 26   ℹ fail 0
+ℹ tests 31   ℹ pass 31   ℹ fail 0
 ```
 
 **`npm run smoke`** — live integration acceptance against the real APIs (read-only):
@@ -407,7 +414,7 @@ Financial-Intelligence-Strategy-Agent/
 │       └── app.js                ← DOM wiring: generate/download/copy/subscribe/gallery
 ├── src/
 │   ├── orchestrator.js           ← runs the 6-step SOP → one brief
-│   ├── lib/{http.js, metrics.js, apply-schema.js} ← fetch+retry · figures · Neon migrator
+│   ├── lib/{http.js, metrics.js, freshness.js, apply-schema.js} ← fetch · figures+deltas · freshness SLA · migrator
 │   ├── email/                    ← R9 scheduled delivery — shared by Worker + cron
 │   │   ├── subscription.js       ← validation + next-run schedule (pure)
 │   │   ├── template.js           ← confirm + brief email HTML (pure)
@@ -504,9 +511,9 @@ delivery** via scheduled email, [R9, shipped](#gaps-and-roadmap).)*
 | R1 | **Cohort vectors** | Register verified StatCan newcomer/age/income-decile vectors in `CONCEPT_VECTORS`; segment briefs by real cohort data | ≥ 5 cohort indicators per brief; 0 national-proxy figures where a cohort series exists |
 | R2 | **Gap-driven autonomy** | Have the orchestrator pick the next brief from `master_index` coverage holes, not a hard-coded target | briefs generated unattended; matrix coverage across N demographics × M products |
 | R3 | **Narrative grounding check** | LLM-judge pass that flags any quantitative claim in the prose without a backing figure in the snapshot | hallucinated-claim rate → target 0; measured on a labeled sample |
-| R4 | **Freshness SLA** | Track each source's last-release date; warn when a series is stale | 100% of figures within one release cycle of source; staleness surfaced in `memory.md` |
+| **R4 ✅ SHIPPED** | **Freshness SLA** — live 2026-08-19 | Per-series cadence registry + `assessFreshness` ([`src/lib/freshness.js`](src/lib/freshness.js)); the orchestrator flags any series beyond one release cycle in `memory.md` + console, and the Studio snapshot's `observability` carries deterministic `seriesWithinSla`/`staleSeries`. Cadence-aware thresholds avoid false-flagging inherent lag. `AC-F1/F2` tested | staleness surfaced in memory.md + observability — **8/8 within SLA today** |
 | R5 | **Brief eval harness** | A rubric-scored set (completeness, sourcing, actionability) run over a batch of briefs | mean rubric score + variance across ≥ 20 briefs; regression-gated in CI |
-| R6 | **Trend & forecast-free deltas** | Add QoQ/YoY deltas and multi-year sparklines per indicator (still no forecasting) | every headline figure shows a directional delta with its own citation |
+| **R6 ✅ SHIPPED** | **Trend & forecast-free deltas** — live 2026-08-19 | Every indicator shows a directional period-over-period delta (▲/▼/▬ + %) and a unicode sparkline — in the web brief's new **Trend** column (sharing each row's citation) and per-indicator in the Studio snapshot (`delta` + `sparkline`). Descriptive only, no forecasting; BoC history bumped 2→13 for real rate sparklines. `AC-D1/D2/D3` tested | directional delta + multi-year sparkline on every headline figure — **verified live** |
 | R7 | **More sources** | Add StatCan SFS (net worth), CRA/FCAC where public, provincial housing starts | coverage of assets *and* liabilities, not just leverage + shelter |
 | **R8 ✅ SHIPPED** | **Shared brief gallery** *(reuses the R9 Worker + Neon)* — live 2026-07-19 | "Add to gallery" saves a generated brief's selection; a **Community gallery** shows recent entries (click to reload + regenerate) + usage stats (total, top city/product). A `briefs` table + `POST/GET /api/briefs` on the **existing** Worker — no new infra, still **$0**. `AC-G1…G3` tested | recent-briefs feed + aggregate stats — **verified in production** |
 | **R9 ✅ SHIPPED** | **Scheduled email delivery** *([design + runbook](docs/EMAIL-DELIVERY-PLAN.md))* — live 2026-07-19 | Subscribe an email to a chosen brief on the site; a **Cloudflare Worker** + **Neon** store it (double opt-in), and a **GitHub Actions cron** generates a fresh brief and sends it weekly/monthly via **Resend** with one-click unsubscribe. `AC-E1…E6` tested | opt-in → confirmed → delivered on schedule — **verified in production at $0/mo** |
