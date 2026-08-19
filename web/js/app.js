@@ -73,7 +73,8 @@ async function generate() {
     $('output').hidden = false;
     $('confidence').textContent = confidence;
     $('confidence').className = 'badge ' + (confidence === 'High' ? 'ok' : 'warn');
-    if (API_BASE) { $('add-gallery').hidden = false; $('add-gallery').disabled = false; $('add-gallery').textContent = '📌 Add to gallery'; }
+    const ag = $('add-gallery');
+    if (API_BASE && ag) { ag.hidden = false; ag.disabled = false; ag.textContent = '📌 Add to gallery'; }
     galleryAddStatus('');
     status(`Generated from live data · confidence: ${confidence}`, 'ok');
     $('output').scrollIntoView({ behavior: 'smooth', block: 'start' });
@@ -136,8 +137,9 @@ async function subscribe() {
 }
 
 function initSubscribe() {
-  if (!API_BASE) { $('sub-form').hidden = true; $('sub-disabled').hidden = false; return; }
-  $('subscribe-btn').addEventListener('click', subscribe);
+  const form = $('sub-form'), disabled = $('sub-disabled'), btn = $('subscribe-btn');
+  if (!API_BASE) { if (form) form.hidden = true; if (disabled) disabled.hidden = false; return; }
+  if (btn) btn.addEventListener('click', subscribe);
 }
 
 // --- Community gallery (R8) --------------------------------------------------
@@ -152,8 +154,8 @@ const timeAgo = (iso) => {
 };
 
 async function addToGallery() {
-  if (!lastSelection) return;
   const btn = $('add-gallery');
+  if (!lastSelection || !btn) return;
   btn.disabled = true; btn.textContent = 'Adding…';
   try {
     const res = await fetch(api('/api/briefs'), {
@@ -175,16 +177,16 @@ async function addToGallery() {
 
 async function loadGallery() {
   if (!API_BASE) return;
+  const statsEl = $('gallery-stats'), list = $('gallery-list'), section = $('gallery');
+  if (!statsEl || !list || !section) return; // enhancement DOM missing → skip, never throw
   try {
     const res = await fetch(api('/api/briefs?limit=24'));
     if (!res.ok) return; // routes not deployed yet → leave gallery hidden
     const { items, stats } = await res.json();
     if (!items || !items.length) return;
-    const catLabel = (o) => `${CMAS[o.cma_key]?.label ?? o.cma_key}`;
-    $('gallery-stats').textContent =
+    statsEl.textContent =
       `${stats.total} generated · top city: ${stats.top_city ? (CMAS[stats.top_city]?.label ?? stats.top_city) : '—'}` +
       `${stats.top_product ? ` · top product: ${PRODUCTS[stats.top_product]?.label ?? stats.top_product}` : ''}`;
-    const list = $('gallery-list');
     list.innerHTML = '';
     for (const it of items) {
       const card = document.createElement('button');
@@ -195,7 +197,7 @@ async function loadGallery() {
       card.addEventListener('click', () => applyGallerySelection(it));
       list.appendChild(card);
     }
-    $('gallery').hidden = false;
+    section.hidden = false;
   } catch { /* network/CORS — keep gallery hidden */ }
 }
 
@@ -211,7 +213,8 @@ function applyGallerySelection(it) {
 
 function initGallery() {
   if (!API_BASE) return;
-  $('add-gallery').addEventListener('click', addToGallery);
+  const ag = $('add-gallery');
+  if (ag) ag.addEventListener('click', addToGallery);
   loadGallery();
 }
 
