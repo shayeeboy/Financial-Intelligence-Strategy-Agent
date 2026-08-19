@@ -16,6 +16,7 @@ import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import { assessFreshness, summarizeFreshness } from "../src/lib/freshness.js";
+import { periodDelta, sparkline } from "../src/lib/metrics.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -26,8 +27,13 @@ const OUT = path.join(ROOT, "web/studio-snapshot.json");
 // Display units per indicator key in the provenance snapshot.
 const UNITS = { debt: "%", credit: "%", cpi: "index", rent2br: "CAD/mo", vacancy: "%", policy: "%", prime: "%", mtg5: "%" };
 
-function trendPoints(v) {
-  return (v.trend || []).slice(-8).map((p) => ({ period: p.ref_period || p.date, value: p.value }));
+// Normalize a series' history to ascending order (oldest → newest). StatCan uses
+// `trend` (ascending); Bank of Canada uses `observations` (newest-first) — sorting
+// by period makes sparkline/delta direction correct for both.
+function normTrend(v) {
+  return (v.trend || v.observations || [])
+    .map((p) => ({ period: p.ref_period || p.date, value: p.value }))
+    .sort((a, b) => String(a.period).localeCompare(String(b.period)));
 }
 
 // Pull the text of a "## <header>" section up to the next "## " header.
@@ -49,6 +55,9 @@ function main() {
 
   const indicators = Object.entries(snap.data).map(([key, v]) => {
     const latest = v.latest || {};
+    const norm = normTrend(v);
+    // R6 — forecast-free directional delta (latest vs prior period) + a sparkline.
+    const d = periodDelta(norm);
     return {
       key,
       label: v.label || key,
@@ -59,7 +68,9 @@ function main() {
       refPeriod: latest.ref_period || latest.date || null,
       retrievedAt: v.retrieved_at ?? null,
       nPeriods: v.n_periods ?? null,
-      trend: trendPoints(v),
+      trend: norm.slice(-8),
+      delta: d ? { direction: d.direction, pct: d.pct } : null,
+      sparkline: sparkline(norm.slice(-16).map((p) => p.value)),
     };
   });
 

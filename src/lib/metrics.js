@@ -45,3 +45,30 @@ export function baselineYears(points) {
   if (!first || !last) return 0;
   return Number(last.slice(0, 4)) - Number(first.slice(0, 4));
 }
+
+/**
+ * Period-over-period delta (latest vs previous point) — forecast-free, always
+ * defined with ≥2 points. Returns { abs, pct, direction } or null.
+ */
+export function periodDelta(points) {
+  if (!Array.isArray(points) || points.length < 2) return null;
+  const latest = points.at(-1), prev = points.at(-2);
+  if (!latest || !prev || latest.value == null || prev.value == null) return null;
+  const abs = latest.value - prev.value;
+  const pct = prev.value !== 0 ? (abs / prev.value) * 100 : null;
+  return { abs, pct, direction: abs > 0 ? 'up' : abs < 0 ? 'down' : 'flat' };
+}
+
+const SPARK_TICKS = '▁▂▃▄▅▆▇█';
+/** Unicode block sparkline of a numeric series (min→max scaled). '' if <2 values. */
+export function sparkline(values) {
+  const nums = (Array.isArray(values) ? values : []).map(Number).filter((n) => !Number.isNaN(n));
+  if (nums.length < 2) return '';
+  const min = Math.min(...nums), max = Math.max(...nums), range = max - min;
+  return nums
+    .map((n) => SPARK_TICKS[range === 0 ? 0 : Math.min(SPARK_TICKS.length - 1, Math.floor(((n - min) / range) * (SPARK_TICKS.length - 1)))])
+    .join('');
+}
+
+/** Directional arrow for a delta direction (↑/↓/→ style), safe default '·'. */
+export const deltaArrow = (dir) => (dir === 'up' ? '▲' : dir === 'down' ? '▼' : dir === 'flat' ? '▬' : '·');

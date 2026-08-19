@@ -41,9 +41,9 @@ async function main() {
     queryFinancialBehaviour({ concept: 'cpi_all_items', latestN: 40 }),
     fetchHousingInsight({ cma_zone: TARGET.cma, metric: 'rental_affordability', bedroom: 'Two bedroom', latestN: 6 }),
     fetchHousingInsight({ cma_zone: TARGET.cma, metric: 'vacancy_rate', bedroom: 'Total', latestN: 6 }),
-    fetchSeries('policy_rate', 2),
-    fetchSeries('prime_rate', 2),
-    fetchSeries('5yr_mortgage', 2),
+    fetchSeries('policy_rate', 13),
+    fetchSeries('prime_rate', 13),
+    fetchSeries('5yr_mortgage', 13),
   ]);
 
   // Persist a raw snapshot for provenance / reproducibility.

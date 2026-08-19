@@ -8,7 +8,7 @@ import { promises as fs } from 'node:fs';
 import os from 'node:os';
 import path from 'node:path';
 
-import { pct, money, yoy, annualize, requiredIncome, baselineYears } from '../src/lib/metrics.js';
+import { pct, money, yoy, annualize, requiredIncome, baselineYears, periodDelta, sparkline, deltaArrow } from '../src/lib/metrics.js';
 import { resolveCoordinate, CONCEPT_VECTORS, GEO_ALIASES } from '../src/mcp/adapters/statcan.js';
 import { BOC_SERIES } from '../src/mcp/adapters/bankofcanada.js';
 import { compileStrategyBrief } from '../src/mcp/tools/compile_strategy_brief.js';
@@ -366,4 +366,34 @@ test('AC-F2: summarizeFreshness rolls up counts + stale keys; cadence map comple
   for (const k of ['debt','credit','cpi','rent2br','vacancy','policy','prime','mtg5']) {
     assert.ok(SOURCE_CADENCE[k]?.maxAgeDays > 0, `${k} has a cadence`);
   }
+});
+
+// ============================================================================
+// R6 — trend deltas + sparklines (src/lib/metrics.js) + web parity
+// ============================================================================
+test('AC-D1: periodDelta gives forecast-free direction + pct, null-safe', () => {
+  const up = periodDelta([{ value: 100 }, { value: 110 }]);
+  assert.equal(up.direction, 'up');
+  assert.ok(Math.abs(up.pct - 10) < 1e-9);
+  assert.equal(periodDelta([{ value: 5 }, { value: 4 }]).direction, 'down');
+  assert.equal(periodDelta([{ value: 7 }, { value: 7 }]).direction, 'flat');
+  assert.equal(periodDelta([{ value: 1 }]), null);            // <2 points
+  assert.equal(periodDelta([{ value: null }, { value: 2 }]), null);
+  assert.equal(deltaArrow('up'), '▲');
+  assert.equal(deltaArrow('down'), '▼');
+});
+
+test('AC-D2: sparkline scales min→max, degenerate-safe', () => {
+  assert.equal(sparkline([1, 2, 3, 4, 5, 6, 7, 8]), '▁▂▃▄▅▆▇█');
+  assert.equal([...sparkline([1, 2, 3])].length, 3);
+  assert.equal(sparkline([5, 5, 5]), '▁▁▁');   // flat → lowest tick, not NaN
+  assert.equal(sparkline([9]), '');             // <2 values
+  assert.equal(sparkline([]), '');
+});
+
+test('AC-D3: web metrics stay in parity for the R6 helpers', () => {
+  const trend = [{ value: 100 }, { value: 90 }];
+  assert.deepEqual(webMetrics.periodDelta(trend), periodDelta(trend));
+  assert.equal(webMetrics.sparkline([3, 1, 4, 1, 5]), sparkline([3, 1, 4, 1, 5]));
+  assert.equal(webMetrics.deltaArrow('flat'), deltaArrow('flat'));
 });

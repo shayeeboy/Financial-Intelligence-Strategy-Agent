@@ -54,7 +54,12 @@
           "period": "2026-01-01",
           "value": 179.55
         }
-      ]
+      ],
+      "delta": {
+        "direction": "up",
+        "pct": 0.481280429794624
+      },
+      "sparkline": "▇█▅▆▅▄▃▃▂▁▁▁▂▂▃▃"
     },
     {
       "key": "credit",
@@ -99,7 +104,12 @@
           "period": "2026-01-01",
           "value": 171.15
         }
-      ]
+      ],
+      "delta": {
+        "direction": "up",
+        "pct": 0.37534455457158805
+      },
+      "sparkline": "▇█▅▆▅▄▃▃▂▁▁▁▂▂▃▃"
     },
     {
       "key": "cpi",
@@ -144,7 +154,12 @@
           "period": "2026-07-01",
           "value": 169.9
         }
-      ]
+      ],
+      "delta": {
+        "direction": "up",
+        "pct": 0.5325443786982282
+      },
+      "sparkline": "▁▁▂▂▂▂▃▃▂▂▃▅▅▇▇█"
     },
     {
       "key": "rent2br",
@@ -181,7 +196,12 @@
           "period": "2025-01-01",
           "value": 2045
         }
-      ]
+      ],
+      "delta": {
+        "direction": "up",
+        "pct": 3.701825557809331
+      },
+      "sparkline": "▁▁▃▆▆█"
     },
     {
       "key": "vacancy",
@@ -218,7 +238,12 @@
           "period": "2025-01-01",
           "value": 3
         }
-      ]
+      ],
+      "delta": {
+        "direction": "up",
+        "pct": 20
+      },
+      "sparkline": "▅█▁▁▃▄"
     },
     {
       "key": "policy",
@@ -230,7 +255,21 @@
       "refPeriod": "2026-08-14",
       "retrievedAt": "2026-08-19T11:24:58.558Z",
       "nPeriods": null,
-      "trend": []
+      "trend": [
+        {
+          "period": "2026-08-14",
+          "value": 2.25
+        },
+        {
+          "period": "2026-08-17",
+          "value": 2.25
+        }
+      ],
+      "delta": {
+        "direction": "flat",
+        "pct": 0
+      },
+      "sparkline": "▁▁"
     },
     {
       "key": "prime",
@@ -242,7 +281,21 @@
       "refPeriod": "2026-08-05",
       "retrievedAt": "2026-08-19T11:24:58.830Z",
       "nPeriods": null,
-      "trend": []
+      "trend": [
+        {
+          "period": "2026-08-05",
+          "value": 4.45
+        },
+        {
+          "period": "2026-08-12",
+          "value": 4.45
+        }
+      ],
+      "delta": {
+        "direction": "flat",
+        "pct": 0
+      },
+      "sparkline": "▁▁"
     },
     {
       "key": "mtg5",
@@ -254,7 +307,21 @@
       "refPeriod": "2026-08-05",
       "retrievedAt": "2026-08-19T11:24:58.728Z",
       "nPeriods": null,
-      "trend": []
+      "trend": [
+        {
+          "period": "2026-08-05",
+          "value": 6.09
+        },
+        {
+          "period": "2026-08-12",
+          "value": 6.09
+        }
+      ],
+      "delta": {
+        "direction": "flat",
+        "pct": 0
+      },
+      "sparkline": "▁▁"
     }
   ],
   "observability": {

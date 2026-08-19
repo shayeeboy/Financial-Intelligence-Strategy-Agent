@@ -40,9 +40,9 @@ async function gatherData(sel) {
     statcanVector(VEC.cpi_all_items, 40),
     statcanCoord(RENT_PID, rentCoord, 6),
     statcanCoord(VACANCY_PID, cma.vacancyCoord, 6),
-    bocSeries(BOC_ID.policy_rate, 2),
-    bocSeries(BOC_ID.prime_rate, 2),
-    bocSeries(BOC_ID.mortgage_5yr, 2),
+    bocSeries(BOC_ID.policy_rate, 13),
+    bocSeries(BOC_ID.prime_rate, 13),
+    bocSeries(BOC_ID.mortgage_5yr, 13),
   ]);
   return { debt, credit, cpi, rent, vacancy, policy, prime, mtg5 };
 }

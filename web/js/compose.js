@@ -2,7 +2,21 @@
 // No network, no DOM — imported by the app (browser) and by scripts/check.js (Node).
 
 import { CMAS, DEMOGRAPHICS, PRODUCTS } from './catalog.js';
-import { pct, money, yoy, annualize, requiredIncome, baselineYears } from './metrics.js';
+import { pct, money, yoy, annualize, requiredIncome, baselineYears, periodDelta, sparkline, deltaArrow } from './metrics.js';
+
+// R6 — a forecast-free "Trend" cell: directional period-over-period delta + a
+// unicode sparkline, derived from the same series (so it shares the row's citation).
+function trendCell(series) {
+  // StatCan points are ascending; BoC observations can be newest-first — sort so
+  // the delta (latest vs prior) and sparkline direction are always correct.
+  const pts = [...(series.points || series.observations || [])].sort((a, b) =>
+    String(a.ref_period || a.date).localeCompare(String(b.ref_period || b.date)));
+  const d = periodDelta(pts);
+  const spark = sparkline(pts.map((p) => p.value));
+  if (!d) return spark || '—';
+  const pctStr = d.pct == null ? '' : ` ${d.pct >= 0 ? '+' : ''}${d.pct.toFixed(1)}%`;
+  return `${deltaArrow(d.direction)}${pctStr} \`${spark}\``.trim();
+}
 
 /**
  * @param {object} sel  { cmaKey, bedroom, demographicKey, productKey }
@@ -56,16 +70,18 @@ With the Bank of Canada overnight target at **${pct(policy.latest.value)}** and 
 
 ## Demographic Profile & Financial Status (Data-backed)
 
-| Indicator | Value | As of | Source |
-| --- | --- | --- | --- |
-| Household credit-market debt ÷ disposable income | **${pct(debt.latest.value)}** | ${debt.latest.ref_period} | [StatCan WDS](${statcanUrl('38100238')}) |
-| Consumer credit + mortgage ÷ disposable income | **${pct(credit.latest.value)}** | ${credit.latest.ref_period} | [StatCan WDS](${statcanUrl('38100238')}) |
-| CPI, all-items (YoY) | **${cpiYoY == null ? 'n/a' : cpiYoY.toFixed(1) + '%'}** | ${cpi.latest.ref_period} | [StatCan WDS](${statcanUrl('18100004')}) |
-| ${cma.label} — avg ${bedroom.toLowerCase()} rent | **${money(rent.latest.value)}/mo** (${rentYoY == null ? 'n/a' : rentYoY.toFixed(1) + '% YoY'}) | ${rperiod} | [CMHC via StatCan](${statcanUrl('34100133')}) |
-| ${cma.label} — rental vacancy rate | **${pct(vacancy.latest.value)}** | ${vacancy.latest.ref_period} | [CMHC via StatCan](${statcanUrl('34100127')}) |
-| Bank of Canada overnight target | **${pct(policy.latest.value)}** | ${policy.latest.date} | [BoC Valet](https://www.bankofcanada.ca/valet/observations/V39079) |
-| Chartered-bank prime rate | **${pct(prime.latest.value)}** | ${prime.latest.date} | [BoC Valet](https://www.bankofcanada.ca/valet/observations/V80691311) |
-| Conventional 5-year mortgage rate | **${pct(mtg5.latest.value)}** | ${mtg5.latest.date} | [BoC Valet](https://www.bankofcanada.ca/valet/observations/V80691335) |
+| Indicator | Value | Trend (Δ vs prior · history) | As of | Source |
+| --- | --- | --- | --- | --- |
+| Household credit-market debt ÷ disposable income | **${pct(debt.latest.value)}** | ${trendCell(debt)} | ${debt.latest.ref_period} | [StatCan WDS](${statcanUrl('38100238')}) |
+| Consumer credit + mortgage ÷ disposable income | **${pct(credit.latest.value)}** | ${trendCell(credit)} | ${credit.latest.ref_period} | [StatCan WDS](${statcanUrl('38100238')}) |
+| CPI, all-items (YoY) | **${cpiYoY == null ? 'n/a' : cpiYoY.toFixed(1) + '%'}** | ${trendCell(cpi)} | ${cpi.latest.ref_period} | [StatCan WDS](${statcanUrl('18100004')}) |
+| ${cma.label} — avg ${bedroom.toLowerCase()} rent | **${money(rent.latest.value)}/mo** (${rentYoY == null ? 'n/a' : rentYoY.toFixed(1) + '% YoY'}) | ${trendCell(rent)} | ${rperiod} | [CMHC via StatCan](${statcanUrl('34100133')}) |
+| ${cma.label} — rental vacancy rate | **${pct(vacancy.latest.value)}** | ${trendCell(vacancy)} | ${vacancy.latest.ref_period} | [CMHC via StatCan](${statcanUrl('34100127')}) |
+| Bank of Canada overnight target | **${pct(policy.latest.value)}** | ${trendCell(policy)} | ${policy.latest.date} | [BoC Valet](https://www.bankofcanada.ca/valet/observations/V39079) |
+| Chartered-bank prime rate | **${pct(prime.latest.value)}** | ${trendCell(prime)} | ${prime.latest.date} | [BoC Valet](https://www.bankofcanada.ca/valet/observations/V80691311) |
+| Conventional 5-year mortgage rate | **${pct(mtg5.latest.value)}** | ${trendCell(mtg5)} | ${mtg5.latest.date} | [BoC Valet](https://www.bankofcanada.ca/valet/observations/V80691335) |
+
+*Trend shows the change vs the prior period (▲ up · ▼ down · ▬ flat) and a sparkline of recent history — descriptive only, not a forecast.*
 
 **Reading the data.** National household leverage near **${pct(debt.latest.value)}** shows the incumbent base has little unused borrowing headroom — growth must come from *new* relationships. In ${cma.label}, ${demo.label.toLowerCase()} ${demo.profile}.
 
