@@ -17,6 +17,7 @@ import { fetchHousingInsight } from './mcp/adapters/cmhc.js';
 import { fetchSeries } from './mcp/adapters/bankofcanada.js';
 import { compileStrategyBrief, ROOT } from './mcp/tools/compile_strategy_brief.js';
 import { pct, money, yoy, annualize, requiredIncome, baselineYears } from './lib/metrics.js';
+import { assessFreshness, summarizeFreshness } from './lib/freshness.js';
 
 const RAW_DIR = path.join(ROOT, 'data', 'raw');
 const MEMORY_PATH = path.join(ROOT, 'memory.md');
@@ -64,6 +65,20 @@ async function main() {
     console.error(`[orchestrator] ⚠️ LOW CONFIDENCE — <3yr baseline: ${lowConf.map((r) => r.label).join('; ')}`);
   }
 
+  // --- R4 Freshness SLA: is each series within one release cycle of its source? --
+  const nowInstant = new Date();
+  const freshnessEntries = [
+    ['debt', debt], ['credit', credit], ['cpi', cpi], ['rent2br', rent2br],
+    ['vacancy', vacancy], ['policy', policy], ['prime', prime], ['mtg5', mtg5],
+  ].map(([key, r]) => ({
+    ...assessFreshness(key, r.latest?.ref_period || r.latest?.date, nowInstant),
+    label: r.label,
+  }));
+  const freshness = summarizeFreshness(freshnessEntries);
+  if (freshness.stale.length) {
+    console.error(`[orchestrator] ⚠️ FRESHNESS SLA — ${freshness.stale.length} series beyond release cycle: ${freshness.stale.join(', ')}`);
+  }
+
   // --- Step 4: strategic synthesis ------------------------------------------
   const body = composeBrief({ debt, credit, cpi, rent2br, vacancy, policy, prime, mtg5, cpiYoY, rentYoY, annualRent, incomeToAfford, confidence });
 
@@ -79,7 +94,7 @@ async function main() {
   console.error(`[orchestrator] wrote ${res.written} (${res.bytes} bytes) and updated ${res.index}`);
 
   // --- Step 6: update memory.md ---------------------------------------------
-  await updateMemory({ debt, cpi, rent2br, vacancy, policy, confidence, snapPath, res });
+  await updateMemory({ debt, cpi, rent2br, vacancy, policy, confidence, snapPath, res, freshnessEntries, freshness });
   console.error('[orchestrator] memory.md updated. Done.');
 }
 
@@ -169,9 +184,12 @@ All figures are pulled live from public APIs at generation time and snapshotted 
 }
 
 // ---------------------------------------------------------------------------
-async function updateMemory({ debt, cpi, rent2br, vacancy, policy, confidence, snapPath, res }) {
+async function updateMemory({ debt, cpi, rent2br, vacancy, policy, confidence, snapPath, res, freshnessEntries = [], freshness = { total: 0, withinSla: 0, stale: [] } }) {
   const now = new Date().toISOString().replace('T', ' ').slice(0, 16) + ' UTC';
   const rel = (p) => path.relative(ROOT, p).replace(/\\/g, '/');
+  const freshnessLines = freshnessEntries
+    .map((e) => `- ${e.withinSla === false ? '⚠️' : '[x]'} ${e.key} (${e.cadence}): ${e.ageDays ?? '?'}d old · SLA ${e.maxAgeDays ?? '?'}d${e.withinSla === false ? ' — STALE, check for a newer release' : ''}`)
+    .join('\n');
   const md = `# Financial-Demographic-Strategist — Running State Log
 
 Last Execution: ${now}
@@ -191,6 +209,10 @@ Last Execution: ${now}
 
 ## Confidence / Escalation
 - Baseline check: ${confidence === 'Low Confidence' ? '⚠️ LOW CONFIDENCE — one or more series had <3yr baseline; verify before circulation.' : 'OK — all series carry ≥3yr baseline.'}
+
+## Freshness SLA
+- Within SLA: **${freshness.withinSla}/${freshness.total}** series inside one release cycle of their source.${freshness.stale.length ? ` ⚠️ STALE: ${freshness.stale.join(', ')} — a newer release may be available.` : ' All current.'}
+${freshnessLines}
 
 ## Immediate Backlog Priority
 - Cross-reference Gen Z digital-payment behaviours with credit-union membership data in British Columbia.

@@ -15,6 +15,7 @@
 import fs from "node:fs";
 import path from "node:path";
 import { fileURLToPath } from "node:url";
+import { assessFreshness, summarizeFreshness } from "../src/lib/freshness.js";
 
 const __dirname = path.dirname(fileURLToPath(import.meta.url));
 const ROOT = path.resolve(__dirname, "..");
@@ -90,6 +91,13 @@ function main() {
   const sourceDataLagDays = asOfMs != null && !Number.isNaN(runMs)
     ? Math.max(0, Math.floor((runMs - asOfMs) / 86_400_000)) : null;
 
+  // R4 Freshness SLA — deterministic (measured against snap.run_at, not Date.now,
+  // so an unchanged upstream still yields a byte-identical file). Flags only clear
+  // staleness (source ≥2 cycles behind), never inherent annual lag.
+  const freshnessEntries = Object.entries(snap.data || {}).map(([key, v]) =>
+    assessFreshness(key, (v.latest || {}).ref_period || (v.latest || {}).date, snap.run_at));
+  const fresh = summarizeFreshness(freshnessEntries);
+
   const observability = {
     sourceCount: sources.length || null,
     indicatorCount: indicators.length || null,
@@ -97,6 +105,9 @@ function main() {
     sourceDataAsOf,       // freshest underlying data point (ref period)
     sourceDataLagDays,    // inherent reporting lag: run − data date
     historyPeriods,       // deepest series history pulled
+    seriesWithinSla: fresh.total ? fresh.withinSla : null, // series inside their release-cycle SLA
+    seriesTracked: fresh.total || null,
+    staleSeries: fresh.stale,                              // keys beyond SLA (behind a release / stalled refresh)
   };
 
   const out = {

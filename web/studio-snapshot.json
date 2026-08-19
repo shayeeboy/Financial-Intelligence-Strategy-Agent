@@ -263,7 +263,10 @@
     "dataRetrievedAt": "2026-08-19T11:24:59.290Z",
     "sourceDataAsOf": "2025-01-01",
     "sourceDataLagDays": 595,
-    "historyPeriods": 40
+    "historyPeriods": 40,
+    "seriesWithinSla": 8,
+    "seriesTracked": 8,
+    "staleSeries": []
   },
   "executiveSummary": "Canadian households remain among the most leveraged in the G7: credit-market debt sat at **179.55% of disposable income** as of 2026-01-01, with consumer-credit-plus-mortgage liabilities at **171.15%**. Against that backdrop, GTA shelter costs are the binding constraint on newcomer financial bandwidth — an average two-bedroom apartment in the Toronto CMA runs **$2,045/month** (2025-01-01), or roughly **$24,540/year**. On the standard 30%-of-income affordability rule, a household would need about **$82,000/year in gross income** to carry that unit alone — well above what most households earn in their first years in Canada.",
   "strategicRecommendations": [

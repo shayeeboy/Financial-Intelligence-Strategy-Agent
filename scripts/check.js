@@ -329,3 +329,41 @@ test('AC-G3: gallery db module exports the expected helpers', () => {
     assert.equal(typeof galleryDb[fn], 'function', `gallery db.${fn} exported`);
   }
 });
+
+// ============================================================================
+// R4 — Freshness SLA (src/lib/freshness.js)
+// ============================================================================
+import { assessFreshness, summarizeFreshness, SOURCE_CADENCE } from '../src/lib/freshness.js';
+
+test('AC-F1: assessFreshness flags within-SLA vs stale, null-safe', () => {
+  const asOf = new Date('2026-08-19T00:00:00Z');
+  // CPI monthly (maxAge 75): 30 days old → within SLA
+  const fresh = assessFreshness('cpi', '2026-07-20', asOf);
+  assert.equal(fresh.withinSla, true);
+  assert.ok(fresh.ageDays >= 29 && fresh.ageDays <= 31);
+  // CPI 200 days old → beyond the 75-day SLA → stale
+  assert.equal(assessFreshness('cpi', '2026-01-01', asOf).withinSla, false);
+  // Annual CMHC at ~595 days is still within its generous 730-day SLA (not false-flagged)
+  assert.equal(assessFreshness('rent2br', '2025-01-01', asOf).withinSla, true);
+  // Unknown key or missing date → withinSla null (unknown, never a guess)
+  assert.equal(assessFreshness('mystery', '2026-01-01', asOf).withinSla, null);
+  assert.equal(assessFreshness('cpi', null, asOf).withinSla, null);
+});
+
+test('AC-F2: summarizeFreshness rolls up counts + stale keys; cadence map complete', () => {
+  const asOf = new Date('2026-08-19T00:00:00Z');
+  const entries = [
+    assessFreshness('cpi', '2026-07-20', asOf),   // fresh
+    assessFreshness('debt', '2026-06-01', asOf),  // fresh (quarterly, ~79d < 200)
+    assessFreshness('mtg5', '2026-01-01', asOf),  // stale (weekly, 230d > 45)
+    assessFreshness('bogus', '2026-01-01', asOf), // unscored (unknown key)
+  ];
+  const s = summarizeFreshness(entries);
+  assert.equal(s.total, 3);            // bogus excluded
+  assert.equal(s.withinSla, 2);
+  assert.deepEqual(s.stale, ['mtg5']);
+  // every orchestrator/snapshot key has a cadence
+  for (const k of ['debt','credit','cpi','rent2br','vacancy','policy','prime','mtg5']) {
+    assert.ok(SOURCE_CADENCE[k]?.maxAgeDays > 0, `${k} has a cadence`);
+  }
+});
