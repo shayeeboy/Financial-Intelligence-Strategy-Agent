@@ -19,6 +19,8 @@
       "source": "Statistics Canada — Web Data Service (WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=38100238",
       "refPeriod": "2026-01-01",
+      "retrievedAt": "2026-08-19T11:24:59.122Z",
+      "nPeriods": 16,
       "trend": [
         {
           "period": "2024-04-01",
@@ -62,6 +64,8 @@
       "source": "Statistics Canada — Web Data Service (WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=38100238",
       "refPeriod": "2026-01-01",
+      "retrievedAt": "2026-08-19T11:24:59.159Z",
+      "nPeriods": 16,
       "trend": [
         {
           "period": "2024-04-01",
@@ -105,6 +109,8 @@
       "source": "Statistics Canada — Web Data Service (WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=18100004",
       "refPeriod": "2026-07-01",
+      "retrievedAt": "2026-08-19T11:24:59.189Z",
+      "nPeriods": 40,
       "trend": [
         {
           "period": "2025-12-01",
@@ -148,6 +154,8 @@
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100133",
       "refPeriod": "2025-01-01",
+      "retrievedAt": "2026-08-19T11:24:59.290Z",
+      "nPeriods": null,
       "trend": [
         {
           "period": "2020-01-01",
@@ -183,6 +191,8 @@
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100127",
       "refPeriod": "2025-01-01",
+      "retrievedAt": "2026-08-19T11:24:59.249Z",
+      "nPeriods": null,
       "trend": [
         {
           "period": "2020-01-01",
@@ -218,6 +228,8 @@
       "source": "Bank of Canada — Valet API",
       "sourceUrl": "",
       "refPeriod": "2026-08-14",
+      "retrievedAt": "2026-08-19T11:24:58.558Z",
+      "nPeriods": null,
       "trend": []
     },
     {
@@ -228,6 +240,8 @@
       "source": "Bank of Canada — Valet API",
       "sourceUrl": "",
       "refPeriod": "2026-08-05",
+      "retrievedAt": "2026-08-19T11:24:58.830Z",
+      "nPeriods": null,
       "trend": []
     },
     {
@@ -238,9 +252,19 @@
       "source": "Bank of Canada — Valet API",
       "sourceUrl": "",
       "refPeriod": "2026-08-05",
+      "retrievedAt": "2026-08-19T11:24:58.728Z",
+      "nPeriods": null,
       "trend": []
     }
   ],
+  "observability": {
+    "sourceCount": 3,
+    "indicatorCount": 8,
+    "dataRetrievedAt": "2026-08-19T11:24:59.290Z",
+    "sourceDataAsOf": "2025-01-01",
+    "sourceDataLagDays": 595,
+    "historyPeriods": 40
+  },
   "executiveSummary": "Canadian households remain among the most leveraged in the G7: credit-market debt sat at **179.55% of disposable income** as of 2026-01-01, with consumer-credit-plus-mortgage liabilities at **171.15%**. Against that backdrop, GTA shelter costs are the binding constraint on newcomer financial bandwidth — an average two-bedroom apartment in the Toronto CMA runs **$2,045/month** (2025-01-01), or roughly **$24,540/year**. On the standard 30%-of-income affordability rule, a household would need about **$82,000/year in gross income** to carry that unit alone — well above what most households earn in their first years in Canada.",
   "strategicRecommendations": [
     "Secured / credit-builder card with graduation logic.",

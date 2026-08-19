@@ -56,6 +56,8 @@ function main() {
       source: v.source || "",
       sourceUrl: v.source_url || "",
       refPeriod: latest.ref_period || latest.date || null,
+      retrievedAt: v.retrieved_at ?? null,
+      nPeriods: v.n_periods ?? null,
       trend: trendPoints(v),
     };
   });
@@ -69,6 +71,34 @@ function main() {
   // Strategic recommendations = the bolded product-opportunity headlines in the brief.
   const recs = [...brief.matchAll(/^-\s+\*\*(.+?)\*\*/gm)].map((m) => m[1].trim()).slice(0, 6);
 
+  // Observability, derived from the real provenance snapshot only. This agent is a
+  // static data pull with no request telemetry, so there is NO latency/cost/error —
+  // don't fabricate any. What IS honest: how many sources/indicators, when data was
+  // pulled, how fresh the underlying data is, and its inherent reporting lag.
+  const series = Object.values(snap.data || {});
+  const sources = [...new Set(series.map((v) => v.source).filter(Boolean))];
+  const refPeriods = series.map((v) => (v.latest || {}).ref_period).filter(Boolean).sort();
+  // STALEST series (oldest ref period) — the conservative "data is only current to"
+  // bound. Series update on different cadences (daily BoC rates vs quarterly StatCan
+  // ratios); the oldest limits how current the strategic picture really is.
+  const sourceDataAsOf = refPeriods.length ? refPeriods[0] : null;
+  const retrievedAts = series.map((v) => v.retrieved_at).filter(Boolean).sort();
+  const dataRetrievedAt = retrievedAts.length ? retrievedAts[retrievedAts.length - 1] : null;
+  const historyPeriods = Math.max(0, ...series.map((v) => v.n_periods || (v.trend || []).length || 0)) || null;
+  const runMs = Date.parse(snap.run_at);
+  const asOfMs = sourceDataAsOf ? Date.parse(sourceDataAsOf) : null;
+  const sourceDataLagDays = asOfMs != null && !Number.isNaN(runMs)
+    ? Math.max(0, Math.floor((runMs - asOfMs) / 86_400_000)) : null;
+
+  const observability = {
+    sourceCount: sources.length || null,
+    indicatorCount: indicators.length || null,
+    dataRetrievedAt,      // when the agent last pulled live data
+    sourceDataAsOf,       // freshest underlying data point (ref period)
+    sourceDataLagDays,    // inherent reporting lag: run − data date
+    historyPeriods,       // deepest series history pulled
+  };
+
   const out = {
     productId: "financial-intelligence",
     target: snap.target,
@@ -77,6 +107,7 @@ function main() {
     provenance:
       "live: Statistics Canada WDS · CMHC (via StatCan) · Bank of Canada Valet — from committed provenance snapshot",
     indicators,
+    observability,
     executiveSummary,
     strategicRecommendations: recs.length ? recs : ["See the full strategic brief."],
     decisionTraces: [
@@ -90,7 +121,7 @@ function main() {
   fs.mkdirSync(path.dirname(OUT), { recursive: true });
   fs.writeFileSync(OUT, JSON.stringify(out, null, 2));
   console.log(
-    `Wrote ${path.relative(ROOT, OUT)} — ${indicators.length} indicators, ${out.strategicRecommendations.length} recommendations.`
+    `Wrote ${path.relative(ROOT, OUT)} — ${indicators.length} indicators, ${sources.length} sources, ${out.strategicRecommendations.length} recommendations.`
   );
 }
 
