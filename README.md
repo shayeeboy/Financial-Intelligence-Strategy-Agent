@@ -211,6 +211,14 @@ to consume live (served from Pages with `Access-Control-Allow-Origin: *`). A dai
 indicators, regenerates the snapshot and deploys Pages — no secrets, since the sources are
 keyless — so the Studio always sees the latest figures.
 
+Beyond the indicators (each with `value`, `source`, `trend`, and per-series `retrievedAt` /
+`nPeriods`), executive summary and recommendations, the snapshot carries an **honest
+`observability` block** derived only from the provenance data: source/indicator counts,
+when data was last pulled (`dataRetrievedAt`), how current the underlying data is
+(`sourceDataAsOf`, the stalest series), and its inherent reporting lag (`sourceDataLagDays`).
+It **deliberately omits latency/cost/error** — this agent is a static data pull with no
+request telemetry, so inventing runtime metrics would be dishonest.
+
 **Controls (the "any brief" matrix).** Province → filters City (13 CMAs); Rent basis
 (1/2/3-bedroom); Demographic group (7 cohorts); Brief type / product focus (6 lines) —
 **42 demographic×product combinations per city**.
