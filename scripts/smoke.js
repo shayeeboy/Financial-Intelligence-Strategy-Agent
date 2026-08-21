@@ -3,6 +3,8 @@
 import { fetchSeries, fetchRateEnvironment } from '../src/mcp/adapters/bankofcanada.js';
 import { queryFinancialBehaviour, CONCEPT_VECTORS } from '../src/mcp/adapters/statcan.js';
 import { fetchHousingInsight } from '../src/mcp/adapters/cmhc.js';
+import { COHORT_BANDS } from '../web/js/catalog.js';
+import { fetchCohortProfile } from '../web/js/sources.js';
 
 const line = (s) => console.log(s);
 let fails = 0;
@@ -42,6 +44,16 @@ const vac = await check('CMHC vacancy Toronto', () =>
   fetchHousingInsight({ cma_zone: 'Toronto', metric: 'vacancy_rate', bedroom: 'Total' })
 );
 if (vac) line(`   Toronto vacancy: ${vac.latest?.value}% @ ${vac.latest?.ref_period}`);
+
+line('\n=== StatCan DHEA cohort profiles (R1) ===');
+for (const key of Object.keys(COHORT_BANDS)) {
+  const c = await check(`Cohort ${key} (${COHORT_BANDS[key].label})`, async () => {
+    const p = await fetchCohortProfile(COHORT_BANDS[key]);
+    if (p?.netWorth == null || p?.disposableIncome == null) throw new Error('null cohort figures');
+    return p;
+  });
+  if (c) line(`   net worth $${(c.netWorth / 1000).toFixed(0)}k · DTI ${c.debtToIncome?.toFixed(0)}% @ ${c.asOf}`);
+}
 
 line(`\n${fails === 0 ? '🎉 ALL PASSED' : `⚠️  ${fails} check(s) failed`}`);
 process.exit(fails === 0 ? 0 : 1);

@@ -66,3 +66,28 @@ export const BOC_ID = {
 };
 export const RENT_PID = '34100133';
 export const VACANCY_PID = '34100127';
+
+// R1 — fetch a cohort's real financial position (StatCan DHEA) for a mapped age band.
+import { DHEA, dheaCoord } from './catalog.js';
+
+export async function fetchCohortProfile(band) {
+  if (!band) return null;
+  const [nw, debt, mort, di] = await Promise.all([
+    statcanCoord(DHEA.wealthPid, dheaCoord(band.wealthChar, DHEA.wealth.netWorth), 1),
+    statcanCoord(DHEA.wealthPid, dheaCoord(band.wealthChar, DHEA.wealth.totalDebt), 1),
+    statcanCoord(DHEA.wealthPid, dheaCoord(band.wealthChar, DHEA.wealth.mortgageDebt), 1),
+    statcanCoord(DHEA.incomePid, dheaCoord(band.incomeChar, 1), 1), // disposable income = member id 1
+  ]);
+  const netWorth = nw.latest?.value ?? null;
+  const totalDebt = debt.latest?.value ?? null;
+  const mortgageDebt = mort.latest?.value ?? null;
+  const disposableIncome = di.latest?.value ?? null;
+  return {
+    band: band.label,
+    netWorth, totalDebt, mortgageDebt, disposableIncome,
+    debtToIncome: totalDebt != null && disposableIncome ? (totalDebt / disposableIncome) * 100 : null,
+    asOf: nw.latest?.ref_period ?? null,
+    incomeAsOf: di.latest?.ref_period ?? null,
+    wealthUrl: DHEA.wealthUrl, incomeUrl: DHEA.incomeUrl,
+  };
+}

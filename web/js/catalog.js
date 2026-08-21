@@ -158,3 +158,29 @@ export const PRODUCTS = {
     ],
   },
 };
+
+// R1 — Cohort (age-band) financial data from StatCan Distributions of Household
+// Economic Accounts (DHEA). Generations ARE age cohorts, so an age band is genuine
+// cohort data (not a proxy). Newcomers/students/families are NOT age-defined → no
+// cohort here (they keep the national picture, honestly labelled). Precomputed
+// coordinates (Geography=Canada, Statistics="Value per household") so the browser
+// calls getDataFromCubePidCoord directly. Member ids differ per cube (verified live).
+export const DHEA = {
+  wealthPid: '36100660',  // wealth, quarterly — net worth, liabilities, mortgage
+  incomePid: '36100587',  // income, annual — household disposable income
+  wealth: { netWorth: 11, totalDebt: 8, mortgageDebt: 9 }, // dim4 member ids
+  wealthUrl: 'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610066001',
+  incomeUrl: 'https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610058701',
+};
+
+// demographic key → age band. wealthChar/incomeChar are the (different) member ids
+// for that band in each cube. Only the four clear generations map.
+export const COHORT_BANDS = {
+  genz:        { label: 'under 35', wealthChar: 9,  incomeChar: 17 },
+  millennials: { label: '35–44',    wealthChar: 10, incomeChar: 18 },
+  genx:        { label: '45–54',    wealthChar: 11, incomeChar: 19 },
+  boomers:     { label: '55–64',    wealthChar: 12, incomeChar: 20 },
+};
+
+/** Coordinate builder for a DHEA figure. char = age member id in that cube. */
+export const dheaCoord = (char, member) => `1.3.${char}.${member}.0.0.0.0.0.0`;

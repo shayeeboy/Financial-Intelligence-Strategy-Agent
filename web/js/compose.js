@@ -18,6 +18,27 @@ function trendCell(series) {
   return `${deltaArrow(d.direction)}${pctStr} \`${spark}\``.trim();
 }
 
+// R1 — real age-cohort financial position (StatCan DHEA), contrasted with national.
+function cohortSection(c, demo, debtNat) {
+  const natDti = debtNat?.latest?.value ?? null;
+  const lever = c.debtToIncome == null || natDti == null ? 'comparable to'
+    : c.debtToIncome > natDti + 3 ? 'more leveraged than'
+    : c.debtToIncome < natDti - 3 ? 'less leveraged than' : 'in line with';
+  return `**Cohort financial position — households aged ${c.band}** *(Statistics Canada [DHEA](${c.wealthUrl}), per household — the real cohort behind "${demo.label}", not a national proxy; wealth @ ${c.asOf}, income @ ${c.incomeAsOf})*
+
+| Cohort indicator (per household) | ${c.band} households |
+| --- | --- |
+| Net worth | ${money(c.netWorth)} |
+| Total debt (liabilities) | ${money(c.totalDebt)} |
+| Mortgage debt | ${money(c.mortgageDebt)} |
+| Disposable income | ${money(c.disposableIncome)} |
+| Debt-to-disposable-income | ${pct(c.debtToIncome)} · national ${pct(natDti)} |
+
+**Financial Services Implication:** This cohort is **${lever}** the national average (${pct(c.debtToIncome)} vs ${pct(natDti)} debt-to-income) and holds ${money(c.netWorth)} in net worth — price and design to the cohort's *actual* balance sheet, not the national aggregate.
+
+`;
+}
+
 /**
  * @param {object} sel  { cmaKey, bedroom, demographicKey, productKey }
  * @param {object} data { debt, credit, cpi, rent, vacancy, policy, prime, mtg5 }
@@ -30,8 +51,12 @@ export function composeBrief(sel, data) {
   const prod = PRODUCTS[sel.productKey];
   if (!cma || !demo || !prod) throw new Error('composeBrief: unknown cma/demographic/product key');
 
-  const { debt, credit, cpi, rent, vacancy, policy, prime, mtg5 } = data;
+  const { debt, credit, cpi, rent, vacancy, policy, prime, mtg5, cohort = null } = data;
   const bedroom = sel.bedroom || 'Two bedroom';
+
+  // R1 — cohort financial position block (real age-cohort data, when the demographic
+  // is age-defined). For non-age demographics `cohort` is null and this is omitted.
+  const cohortBlock = cohort ? cohortSection(cohort, demo, debt) : '';
 
   // Derived figures.
   const cpiYoY = yoy(cpi.points);
@@ -87,7 +112,7 @@ With the Bank of Canada overnight target at **${pct(policy.latest.value)}** and 
 
 **Financial Services Implication:** Segment economics favour products matched to this cohort's ${demo.posture} — priced on real cash flow, not on assumptions that don't hold for them.
 
----
+${cohortBlock}---
 
 ## Structural Impediments & Lifestyle Choices
 
@@ -116,7 +141,7 @@ All figures are pulled live from public APIs at generation time, directly in the
 - **CMHC Rental Market Survey (via StatCan WDS):** average rents (34-10-0133), vacancy (34-10-0127).
 - **Bank of Canada — Valet API:** overnight target, prime, conventional 5-year mortgage rate.
 
-*Derived figures* (YoY, annualized rent, 30%-rule income) are computed from the above. Household leverage and CPI are **national**; rent and vacancy are **${cma.label}-specific**. Demographic and product framing is qualitative segment analysis, not cohort micro-data. Confidence: **${confidence}**.
+*Derived figures* (YoY, annualized rent, 30%-rule income) are computed from the above. Household leverage and CPI are **national**; rent and vacancy are **${cma.label}-specific**. ${cohort ? `Cohort figures (net worth, debt, income, DTI for age ${cohort.band}) are **real StatCan DHEA micro-data** for this generation. Product framing is qualitative.` : 'This demographic has no clean age-cohort series, so its figures are national/metro proxies with qualitative framing.'} Confidence: **${confidence}**.
 `;
 
   const filename = `${sel.cmaKey}_${sel.demographicKey}_${sel.productKey}.md`;

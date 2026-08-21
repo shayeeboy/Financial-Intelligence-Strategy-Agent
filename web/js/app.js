@@ -1,8 +1,8 @@
 // Browser controller: wires the controls, runs the live fetch, composes + renders
 // the brief. No backend — every figure is fetched client-side from the public APIs.
 
-import { PROVINCES, CMAS, BEDROOMS, DEMOGRAPHICS, PRODUCTS } from './catalog.js';
-import { statcanVector, statcanCoord, bocSeries, VEC, BOC_ID, RENT_PID, VACANCY_PID } from './sources.js';
+import { PROVINCES, CMAS, BEDROOMS, DEMOGRAPHICS, PRODUCTS, COHORT_BANDS } from './catalog.js';
+import { statcanVector, statcanCoord, bocSeries, fetchCohortProfile, VEC, BOC_ID, RENT_PID, VACANCY_PID } from './sources.js';
 import { composeBrief } from './compose.js';
 import { renderMarkdown } from './markdown.js';
 import { API_BASE } from './config.js';
@@ -44,7 +44,10 @@ async function gatherData(sel) {
     bocSeries(BOC_ID.prime_rate, 13),
     bocSeries(BOC_ID.mortgage_5yr, 13),
   ]);
-  return { debt, credit, cpi, rent, vacancy, policy, prime, mtg5 };
+  // R1 — real cohort financial position when the demographic maps to an age band.
+  const band = COHORT_BANDS[sel.demographicKey] || null;
+  const cohort = band ? await fetchCohortProfile(band).catch(() => null) : null;
+  return { debt, credit, cpi, rent, vacancy, policy, prime, mtg5, cohort };
 }
 
 // --- Generate flow -----------------------------------------------------------

@@ -9,9 +9,9 @@ import { client, dueSubscriptions, markSent, markError } from '../src/email/db.j
 import { computeNextRun, describeSelection } from '../src/email/subscription.js';
 import { buildBriefEmail } from '../src/email/template.js';
 import { sendEmail } from '../src/email/send.js';
-import { CMAS } from '../web/js/catalog.js';
+import { CMAS, COHORT_BANDS } from '../web/js/catalog.js';
 import { composeBrief } from '../web/js/compose.js';
-import { statcanVector, statcanCoord, bocSeries, VEC, BOC_ID, RENT_PID, VACANCY_PID } from '../web/js/sources.js';
+import { statcanVector, statcanCoord, bocSeries, fetchCohortProfile, VEC, BOC_ID, RENT_PID, VACANCY_PID } from '../web/js/sources.js';
 
 const { DATABASE_URL, RESEND_API_KEY, MAIL_FROM, PUBLIC_API_BASE } = process.env;
 
@@ -34,7 +34,9 @@ async function gatherData(sub) {
     bocSeries(BOC_ID.prime_rate, 13),
     bocSeries(BOC_ID.mortgage_5yr, 13),
   ]);
-  return { debt, credit, cpi, rent, vacancy, policy, prime, mtg5 };
+  const band = COHORT_BANDS[sub.demographic] || null;
+  const cohort = band ? await fetchCohortProfile(band).catch(() => null) : null;
+  return { debt, credit, cpi, rent, vacancy, policy, prime, mtg5, cohort };
 }
 
 async function main() {

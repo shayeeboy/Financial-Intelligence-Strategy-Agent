@@ -150,7 +150,7 @@ test('AC-B3: re-compiling the same filename de-duplicates the matrix row', async
 // ============================================================================
 // Web brief generator (browser modules under web/js) — pure logic, Node-testable
 // ============================================================================
-import { CMAS, PROVINCES, DEMOGRAPHICS, PRODUCTS, BEDROOMS } from '../web/js/catalog.js';
+import { CMAS, PROVINCES, DEMOGRAPHICS, PRODUCTS, BEDROOMS, COHORT_BANDS, DHEA, dheaCoord } from '../web/js/catalog.js';
 import { composeBrief } from '../web/js/compose.js';
 import { renderMarkdown } from '../web/js/markdown.js';
 import * as webMetrics from '../web/js/metrics.js';
@@ -396,4 +396,38 @@ test('AC-D3: web metrics stay in parity for the R6 helpers', () => {
   assert.deepEqual(webMetrics.periodDelta(trend), periodDelta(trend));
   assert.equal(webMetrics.sparkline([3, 1, 4, 1, 5]), sparkline([3, 1, 4, 1, 5]));
   assert.equal(webMetrics.deltaArrow('flat'), deltaArrow('flat'));
+});
+
+// ============================================================================
+// R1 — cohort (age-band) financial data (web/js/catalog.js + compose.js)
+// ============================================================================
+test('AC-CH1: cohort registry maps only the 4 age-defined generations, well-formed', () => {
+  assert.deepEqual(Object.keys(COHORT_BANDS).sort(), ['boomers', 'genx', 'genz', 'millennials']);
+  for (const [k, b] of Object.entries(COHORT_BANDS)) {
+    assert.ok(b.label && Number.isInteger(b.wealthChar) && Number.isInteger(b.incomeChar), `${k} well-formed`);
+    assert.ok(DEMOGRAPHICS[k], `${k} is a real demographic`);
+  }
+  // non-age demographics must NOT have a cohort (they keep national figures)
+  for (const k of ['newcomers', 'students', 'families']) assert.equal(COHORT_BANDS[k], undefined);
+  assert.equal(dheaCoord(10, 11), '1.3.10.11.0.0.0.0.0.0');   // Canada · per-household · 35-44 · net worth
+  assert.ok(DHEA.wealthPid === '36100660' && DHEA.incomePid === '36100587');
+});
+
+test('AC-CH2: composeBrief injects a cohort block with real figures when cohort present, omits otherwise', () => {
+  const cohort = { band: '35–44', netWorth: 780000, totalDebt: 307000, mortgageDebt: 247000,
+    disposableIncome: 120000, debtToIncome: 255.8, asOf: '2025-10-01', incomeAsOf: '2025-01-01',
+    wealthUrl: 'https://x', incomeUrl: 'https://y' };
+  const withCohort = composeBrief(
+    { cmaKey: 'toronto', bedroom: 'Two bedroom', demographicKey: 'millennials', productKey: 'mortgages' },
+    { ...MOCK, cohort });
+  assert.match(withCohort.markdown, /Cohort financial position — households aged 35–44/);
+  assert.match(withCohort.markdown, /\$780,000/);                 // real net worth rendered
+  assert.match(withCohort.markdown, /255\.80% · national 179\.55%/); // cohort DTI vs national
+  assert.match(withCohort.markdown, /real StatCan DHEA micro-data/); // methodology updated
+  // no cohort → block omitted, honest proxy caveat instead
+  const noCohort = composeBrief(
+    { cmaKey: 'toronto', bedroom: 'Two bedroom', demographicKey: 'newcomers', productKey: 'newcomer_credit' },
+    { ...MOCK, cohort: null });
+  assert.doesNotMatch(noCohort.markdown, /Cohort financial position/);
+  assert.match(noCohort.markdown, /no clean age-cohort series/);
 });
