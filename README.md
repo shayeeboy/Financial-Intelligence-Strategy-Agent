@@ -98,15 +98,15 @@ regulatory advice; and low-evidence outputs flag themselves rather than bluffing
 | 4 | **Structural completeness** | brief carries all 4 mandated sections + a *Financial Services Implication* in each | met on the live brief | manual + template |
 | 5 | **Confidence guardrail** | any series with < 3 yrs baseline is flagged *Low Confidence* in `memory.md` + console | enforced | `npm run check` (AC-M4) |
 | 6 | **Safety guardrail** | no rate forecasts / no legal-regulatory advice in output | enforced by prompt + explicit brief disclaimer | manual review |
-| 7 | **Deterministic core logic** | metric math, coordinate resolution, and file/matrix writes are unit-tested | **31/31 passing** | `npm run check` |
+| 7 | **Deterministic core logic** | metric math, coordinate resolution, and file/matrix writes are unit-tested | **33/33 passing** | `npm run check` |
 | 8 | **Self-serve web generation** | every one of 13 × 7 × 6 selections composes a complete, hole-free brief client-side | all 42 demographic×product combos verified; live in browser | `npm run check` (AC-W2), hosted demo |
 
 **Not yet measured (honest gaps).** The brief's **narrative reasoning** (e.g. "newcomers
 are thin-file, not low-capacity") is presented as qualitative segment analysis, **not**
-auto-validated against cohort micro-data — there is no automated fact-check of the prose.
-Figures are **national or metro-level proxies**, not newcomer-*specific* cohort series
-(StatCan has those; wiring verified cohort vectors is roadmap item R1). CMHC data is
-**annual**, so intra-year shifts aren't captured. And while the app now generates many
+auto-validated against the figures — there is no automated fact-check of the prose.
+Generational briefs now carry **real age-cohort micro-data** (R1, shipped); the *non-age*
+demographics (newcomers, students, families) still use national/metro proxies. CMHC data
+is **annual**, so intra-year shifts aren't captured. And while the app now generates many
 briefs on demand, their **quality isn't systematically evaluated** — cross-brief
 consistency and analyst-usefulness need a rubric/eval harness (roadmap item R5). See
 [Gaps & roadmap](#gaps-and-roadmap).
@@ -155,7 +155,7 @@ writes a finished brief).
 | [**Orchestrator SOP**](#orchestrator-sop) | 6-step workflow: identify gaps → gather → derive → confidence check → synthesize → persist | `src/orchestrator.js` |
 | [**Adapters & tools**](#adapters-and-tools) | Normalize StatCan/CMHC/BoC into cited data; compile the brief + matrix | `src/mcp/adapters`, `src/mcp/tools` |
 | [**Run it**](#run-it) | `npm run brief`, `npm run mcp`, `npm run smoke`, `npm run check` | `package.json` |
-| [**Test cases**](#test-cases-and-acceptance-criteria) | 31 offline unit-acceptance tests + a live integration smoke | `scripts/check.js`, `scripts/smoke.js` |
+| [**Test cases**](#test-cases-and-acceptance-criteria) | 33 offline unit-acceptance tests + a live integration smoke | `scripts/check.js`, `scripts/smoke.js` |
 
 **Navigate:** [See it live](#see-it-live) · [Architecture](#architecture) · [Web generator](#web-generator-github-pages) · [Orchestrator SOP](#orchestrator-sop) · [Adapters & tools](#adapters-and-tools) · [MCP tools](#mcp-tools) · [Run it](#run-it) · [Test cases](#test-cases-and-acceptance-criteria) · [Repo structure](#repo-structure) · [Tools & services](#tools-and-services) · [Lessons learned](#lessons-learned) · [Gaps & roadmap](#gaps-and-roadmap)
 
@@ -317,7 +317,7 @@ included:
 npm install
 
 npm run smoke     # live: verify all 8 data pulls against StatCan/CMHC/BoC
-npm run check     # offline: 31 unit-acceptance tests (node --test)
+npm run check     # offline: 33 unit-acceptance tests (node --test)
 npm run brief     # run the SOP → writes data/briefs/*.md + master_index.md + memory.md
 npm run mcp       # start the MCP server on stdio (for an MCP client)
 ```
@@ -369,9 +369,11 @@ API keys; `node --test`). Each test asserts one acceptance criterion:
 | `AC-D1` trend delta | `periodDelta` gives forecast-free direction + %, null-safe; `deltaArrow` maps it | ✅ |
 | `AC-D2` sparkline | `sparkline` scales min→max, degenerate/flat/empty-safe | ✅ |
 | `AC-D3` delta/sparkline parity | `web/js/metrics.js` matches `src/lib/metrics.js` for the R6 helpers | ✅ |
+| `AC-CH1` cohort registry | only the 4 age-defined generations map to a band; coord builder + DHEA pids correct | ✅ |
+| `AC-CH2` cohort brief block | `composeBrief` injects real cohort figures + cohort-vs-national DTI when present; omits + labels proxy otherwise | ✅ |
 
 ```
-ℹ tests 31   ℹ pass 31   ℹ fail 0
+ℹ tests 33   ℹ pass 33   ℹ fail 0
 ```
 
 **`npm run smoke`** — live integration acceptance against the real APIs (read-only):
@@ -488,10 +490,11 @@ Honest about what this is (a solid, live-data, well-tested agent generating brie
 gallery live) and what would make it genuinely production-grade.
 
 **Qualitative gaps**
-- **Cohort specificity.** The brief targets "GTA newcomers" but is backed by *national*
-  leverage + *metro* shelter data, with newcomer-specific claims made as qualitative
-  reasoning. Real cohort micro-data exists in StatCan (immigration, age, income deciles)
-  and isn't wired in yet.
+- **Cohort specificity — mostly closed (R1).** Generational briefs now carry **real
+  age-cohort figures** (net worth, debt, income, DTI) from StatCan DHEA. Remaining gap:
+  the *non-age* demographics (newcomers, students, families) still use national/metro
+  proxies — StatCan has immigration/income-decile micro-data that a future pass (income
+  quintile is in the same DHEA cube) could wire in for those.
 - **No narrative fact-check.** Figures are sourced; the *prose* isn't automatically
   validated against data. A confidently-worded but unsupported sentence could slip
   through.
@@ -508,7 +511,7 @@ delivery** via scheduled email, [R9, shipped](#gaps-and-roadmap).)*
 
 | # | Item | Concept | How we'd measure "better" |
 |---|---|---|---|
-| R1 | **Cohort vectors** | Register verified StatCan newcomer/age/income-decile vectors in `CONCEPT_VECTORS`; segment briefs by real cohort data | ≥ 5 cohort indicators per brief; 0 national-proxy figures where a cohort series exists |
+| **R1 ✅ SHIPPED** | **Cohort financial data** — live 2026-08-19 | Real age-cohort figures from StatCan DHEA (36-10-0660 wealth, 36-10-0587 income): net worth, total/mortgage debt, disposable income, + derived DTI, **per generation** (genz→<35, millennials→35-44, genx→45-54, boomers→55-64). Injected as a "Cohort financial position" block with cohort-vs-national DTI; non-age demographics stay national, honestly labelled. `AC-CH1/CH2` + live smoke | **5 cohort indicators** per generational brief; 0 national proxies where a cohort series exists — verified live (Millennials: $780k net worth, 255% DTI vs national 180%) |
 | R2 | **Gap-driven autonomy** | Have the orchestrator pick the next brief from `master_index` coverage holes, not a hard-coded target | briefs generated unattended; matrix coverage across N demographics × M products |
 | R3 | **Narrative grounding check** | LLM-judge pass that flags any quantitative claim in the prose without a backing figure in the snapshot | hallucinated-claim rate → target 0; measured on a labeled sample |
 | **R4 ✅ SHIPPED** | **Freshness SLA** — live 2026-08-19 | Per-series cadence registry + `assessFreshness` ([`src/lib/freshness.js`](src/lib/freshness.js)); the orchestrator flags any series beyond one release cycle in `memory.md` + console, and the Studio snapshot's `observability` carries deterministic `seriesWithinSla`/`staleSeries`. Cadence-aware thresholds avoid false-flagging inherent lag. `AC-F1/F2` tested | staleness surfaced in memory.md + observability — **8/8 within SLA today** |

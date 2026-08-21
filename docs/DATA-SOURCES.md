@@ -24,6 +24,24 @@ trade-off — see the README's *Key decisions*.
 | CMHC (via StatCan WDS) | [34-10-0133](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410013301) | Average rents, areas 10,000+ | `cmhc.js` |
 | CMHC (via StatCan WDS) | [34-10-0127](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3410012701) | Rental vacancy rates | `cmhc.js` |
 | Bank of Canada Valet | `V39079`, `V80691311`, `V80691335`, `FXUSDCAD` | Overnight target, prime, conventional 5-yr mortgage, USD/CAD | `bankofcanada.js` |
+| Statistics Canada WDS | [36-10-0660](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610066001) (DHEA wealth) | **Cohort** net worth, total/mortgage liabilities per household, by age band | `web/js/sources.js` (R1) |
+| Statistics Canada WDS | [36-10-0587](https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=3610058701) (DHEA income) | **Cohort** household disposable income per household, by age band | `web/js/sources.js` (R1) |
+
+### Cohort (age-band) data — R1
+
+The **Distributions of Household Economic Accounts (DHEA)** give real financial position
+by **age of the household** — genuine cohort data, since generations *are* age cohorts.
+Mapping (`web/js/catalog.js` `COHORT_BANDS`): `genz→<35 · millennials→35-44 · genx→45-54 ·
+boomers→55-64`. Newcomers/students/families are **not** age-defined, so they keep national
+figures (honestly labelled).
+
+Coordinate shape: `Geography(1=Canada) . Statistics(3=Value per household) . age-member .
+concept-member . 0…`. **Gotcha:** the age-band member IDs differ between the two cubes —
+wealth (36-10-0660): `<35=9, 35-44=10, 45-54=11, 55-64=12, 65+=13`; income (36-10-0587):
+`<35=17, 35-44=18, 45-54=19, 55-64=20, 65+=21` — verified live. Wealth concepts: net worth=11,
+total liabilities=8, mortgage=9. Income disposable-income member=1. `debtToIncome` is derived
+(total liabilities ÷ disposable income). Add more cohort indicators by extending
+`DHEA.wealth` in the catalog and `fetchCohortProfile`.
 
 ## Two ways the StatCan adapter resolves data
 
