@@ -1,6 +1,6 @@
 # Financial-Demographic-Strategist — Running State Log
 
-Last Execution: 2026-08-28 21:19 UTC
+Last Execution: 2026-08-29 15:30 UTC
 
 ## Active Ingestion Vectors
 - [x] StatCan Table 38-10-0238: Household credit-market debt to disposable income → 179.55% @ 2026-01-01
@@ -20,14 +20,14 @@ Last Execution: 2026-08-28 21:19 UTC
 
 ## Freshness SLA
 - Within SLA: **7/8** series inside one release cycle of their source. ⚠️ STALE: mtg5 — a newer release may be available.
-- [x] debt (quarterly): 239d old · SLA 280d
-- [x] credit (quarterly): 239d old · SLA 280d
-- [x] cpi (monthly): 58d old · SLA 95d
-- [x] rent2br (annual (CMHC RMS)): 604d old · SLA 730d
-- [x] vacancy (annual (CMHC RMS)): 604d old · SLA 730d
-- [x] policy (as-announced): 17d old · SLA 120d
-- [x] prime (as-announced): 86d old · SLA 120d
-- ⚠️ mtg5 (weekly): 86d old · SLA 45d — STALE, check for a newer release
+- [x] debt (quarterly): 240d old · SLA 280d
+- [x] credit (quarterly): 240d old · SLA 280d
+- [x] cpi (monthly): 59d old · SLA 95d
+- [x] rent2br (annual (CMHC RMS)): 605d old · SLA 730d
+- [x] vacancy (annual (CMHC RMS)): 605d old · SLA 730d
+- [x] policy (as-announced): 18d old · SLA 120d
+- [x] prime (as-announced): 87d old · SLA 120d
+- ⚠️ mtg5 (weekly): 87d old · SLA 45d — STALE, check for a newer release
 
 ## Immediate Backlog Priority
 - Cross-reference Gen Z digital-payment behaviours with credit-union membership data in British Columbia.
