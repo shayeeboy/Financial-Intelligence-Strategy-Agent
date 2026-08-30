@@ -5,4 +5,4 @@ product category. Generated and maintained by the Financial-Demographic-Strategi
 
 | Date (UTC) | Demographic Group | Product Category | Geography | Confidence | Brief |
 | --- | --- | --- | --- | --- | --- |
-| 2026-08-29 | Newcomers to Canada (0–5 yrs), Greater Toronto Area | Newcomer Credit & Daily Banking | ON — Toronto CMA | High | [gta_newcomer_credit_opportunity.md](./gta_newcomer_credit_opportunity.md) |
+| 2026-08-30 | Newcomers to Canada (0–5 yrs), Greater Toronto Area | Newcomer Credit & Daily Banking | ON — Toronto CMA | High | [gta_newcomer_credit_opportunity.md](./gta_newcomer_credit_opportunity.md) |
