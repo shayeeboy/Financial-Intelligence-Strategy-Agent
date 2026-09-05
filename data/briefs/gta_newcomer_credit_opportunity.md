@@ -2,7 +2,7 @@
 
 **Demographic Group:** Newcomers to Canada (0–5 years since landing), Greater Toronto Area (Toronto CMA)
 **Financial Product Category:** Newcomer Credit (secured cards, credit-builder lines) & Daily Banking (chequing, digital remittances)
-**Prepared:** 2026-09-04 · **Confidence:** High · **Data vintage:** live pull from StatCan WDS, CMHC (via StatCan) & Bank of Canada Valet
+**Prepared:** 2026-09-05 · **Confidence:** High · **Data vintage:** live pull from StatCan WDS, CMHC (via StatCan) & Bank of Canada Valet
 
 > **Guardrail note:** This brief reports empirical trend realities only. It contains no interest-rate forecasts, no market-crash predictions, and no legal, compliance, or FINTRAC/Bank Act regulatory advice. Product ideas are strategic, not regulatory guarantees.
 
