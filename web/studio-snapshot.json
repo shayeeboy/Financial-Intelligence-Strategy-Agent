@@ -7,25 +7,21 @@
     "geography": "ON — Toronto CMA",
     "cma": "Toronto"
   },
-  "runAt": "2026-09-10T14:52:24.350Z",
-  "lastUpdated": "2026-09-10T14:52:24.350Z",
+  "runAt": "2026-09-11T14:51:37.457Z",
+  "lastUpdated": "2026-09-11T14:51:37.457Z",
   "provenance": "live: Statistics Canada WDS · CMHC (via StatCan) · Bank of Canada Valet — from committed provenance snapshot",
   "indicators": [
     {
       "key": "debt",
       "label": "Household credit market debt to disposable income (%)",
-      "value": 179.55,
+      "value": 176.37,
       "unit": "%",
       "source": "Statistics Canada — Web Data Service (WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=38100238",
-      "refPeriod": "2026-01-01",
-      "retrievedAt": "2026-09-10T14:52:24.242Z",
+      "refPeriod": "2026-04-01",
+      "retrievedAt": "2026-09-11T14:51:37.115Z",
       "nPeriods": 16,
       "trend": [
-        {
-          "period": "2024-04-01",
-          "value": 176.77
-        },
         {
           "period": "2024-07-01",
           "value": 174.13
@@ -52,30 +48,30 @@
         },
         {
           "period": "2026-01-01",
-          "value": 179.55
+          "value": 178.55
+        },
+        {
+          "period": "2026-04-01",
+          "value": 176.37
         }
       ],
       "delta": {
-        "direction": "up",
-        "pct": 0.481280429794624
+        "direction": "down",
+        "pct": -1.2209465135816335
       },
-      "sparkline": "▇█▅▆▅▄▃▃▂▁▁▁▂▂▃▃"
+      "sparkline": "█▅▆▅▄▃▃▂▁▁▁▂▂▃▃▂"
     },
     {
       "key": "credit",
       "label": "Consumer credit and mortgage liabilities to disposable income (%)",
-      "value": 171.15,
+      "value": 168.02,
       "unit": "%",
       "source": "Statistics Canada — Web Data Service (WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=38100238",
-      "refPeriod": "2026-01-01",
-      "retrievedAt": "2026-09-10T14:52:24.187Z",
+      "refPeriod": "2026-04-01",
+      "retrievedAt": "2026-09-11T14:51:37.092Z",
       "nPeriods": 16,
       "trend": [
-        {
-          "period": "2024-04-01",
-          "value": 168.61
-        },
         {
           "period": "2024-07-01",
           "value": 166.04
@@ -102,14 +98,18 @@
         },
         {
           "period": "2026-01-01",
-          "value": 171.15
+          "value": 170.18
+        },
+        {
+          "period": "2026-04-01",
+          "value": 168.02
         }
       ],
       "delta": {
-        "direction": "up",
-        "pct": 0.37534455457158805
+        "direction": "down",
+        "pct": -1.269244329533433
       },
-      "sparkline": "▇█▅▆▅▄▃▃▂▁▁▁▂▂▃▃"
+      "sparkline": "█▅▆▅▄▃▃▂▁▁▁▂▂▃▃▂"
     },
     {
       "key": "cpi",
@@ -119,7 +119,7 @@
       "source": "Statistics Canada — Web Data Service (WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=18100004",
       "refPeriod": "2026-07-01",
-      "retrievedAt": "2026-09-10T14:52:24.211Z",
+      "retrievedAt": "2026-09-11T14:51:37.170Z",
       "nPeriods": 40,
       "trend": [
         {
@@ -169,7 +169,7 @@
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100133",
       "refPeriod": "2025-01-01",
-      "retrievedAt": "2026-09-10T14:52:24.337Z",
+      "retrievedAt": "2026-09-11T14:51:37.229Z",
       "nPeriods": null,
       "trend": [
         {
@@ -211,7 +211,7 @@
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100127",
       "refPeriod": "2025-01-01",
-      "retrievedAt": "2026-09-10T14:52:24.350Z",
+      "retrievedAt": "2026-09-11T14:51:37.457Z",
       "nPeriods": null,
       "trend": [
         {
@@ -253,7 +253,7 @@
       "source": "Bank of Canada — Valet API",
       "sourceUrl": "",
       "refPeriod": "2026-08-21",
-      "retrievedAt": "2026-09-10T14:52:23.891Z",
+      "retrievedAt": "2026-09-11T14:51:36.767Z",
       "nPeriods": null,
       "trend": [
         {
@@ -303,7 +303,7 @@
       "source": "Bank of Canada — Valet API",
       "sourceUrl": "",
       "refPeriod": "2026-06-17",
-      "retrievedAt": "2026-09-10T14:52:24.040Z",
+      "retrievedAt": "2026-09-11T14:51:36.916Z",
       "nPeriods": null,
       "trend": [
         {
@@ -353,7 +353,7 @@
       "source": "Bank of Canada — Valet API",
       "sourceUrl": "",
       "refPeriod": "2026-06-17",
-      "retrievedAt": "2026-09-10T14:52:23.761Z",
+      "retrievedAt": "2026-09-11T14:51:36.780Z",
       "nPeriods": null,
       "trend": [
         {
@@ -399,9 +399,9 @@
   "observability": {
     "sourceCount": 3,
     "indicatorCount": 8,
-    "dataRetrievedAt": "2026-09-10T14:52:24.350Z",
+    "dataRetrievedAt": "2026-09-11T14:51:37.457Z",
     "sourceDataAsOf": "2025-01-01",
-    "sourceDataLagDays": 617,
+    "sourceDataLagDays": 618,
     "historyPeriods": 40,
     "seriesWithinSla": 7,
     "seriesTracked": 8,
@@ -409,7 +409,7 @@
       "mtg5"
     ]
   },
-  "executiveSummary": "Canadian households remain among the most leveraged in the G7: credit-market debt sat at **179.55% of disposable income** as of 2026-01-01, with consumer-credit-plus-mortgage liabilities at **171.15%**. Against that backdrop, GTA shelter costs are the binding constraint on newcomer financial bandwidth — an average two-bedroom apartment in the Toronto CMA runs **$2,045/month** (2025-01-01), or roughly **$24,540/year**. On the standard 30%-of-income affordability rule, a household would need about **$82,000/year in gross income** to carry that unit alone — well above what most households earn in their first years in Canada.",
+  "executiveSummary": "Canadian households remain among the most leveraged in the G7: credit-market debt sat at **176.37% of disposable income** as of 2026-04-01, with consumer-credit-plus-mortgage liabilities at **168.02%**. Against that backdrop, GTA shelter costs are the binding constraint on newcomer financial bandwidth — an average two-bedroom apartment in the Toronto CMA runs **$2,045/month** (2025-01-01), or roughly **$24,540/year**. On the standard 30%-of-income affordability rule, a household would need about **$82,000/year in gross income** to carry that unit alone — well above what most households earn in their first years in Canada.",
   "strategicRecommendations": [
     "Secured / credit-builder card with graduation logic.",
     "Rent-reporting credit formation.",
@@ -425,7 +425,7 @@
     },
     {
       "step": "Data vintage",
-      "rationale": "Live pull from StatCan / CMHC / Bank of Canada; snapshot 2026-09-10T14:52:24.350Z."
+      "rationale": "Live pull from StatCan / CMHC / Bank of Canada; snapshot 2026-09-11T14:51:37.457Z."
     }
   ],
   "briefUrl": "https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/blob/main/data/briefs/gta_newcomer_credit_opportunity.md"

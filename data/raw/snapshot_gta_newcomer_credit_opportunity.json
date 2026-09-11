@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-09-10T14:52:24.350Z",
+  "run_at": "2026-09-11T14:51:37.457Z",
   "target": {
     "filename": "gta_newcomer_credit_opportunity.md",
     "demographic": "Newcomers to Canada (0–5 yrs), Greater Toronto Area",
@@ -17,16 +17,11 @@
       "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=38100238",
       "vector_id": 1038036698,
       "latest": {
-        "ref_period": "2026-01-01",
-        "value": 179.55,
-        "release_time": "2026-06-12T08:30"
+        "ref_period": "2026-04-01",
+        "value": 176.37,
+        "release_time": "2026-09-11T08:30"
       },
       "trend": [
-        {
-          "ref_period": "2022-04-01",
-          "value": 187.68,
-          "release_time": "2026-03-16T08:30"
-        },
         {
           "ref_period": "2022-07-01",
           "value": 188.22,
@@ -99,12 +94,17 @@
         },
         {
           "ref_period": "2026-01-01",
-          "value": 179.55,
-          "release_time": "2026-06-12T08:30"
+          "value": 178.55,
+          "release_time": "2026-09-11T08:30"
+        },
+        {
+          "ref_period": "2026-04-01",
+          "value": 176.37,
+          "release_time": "2026-09-11T08:30"
         }
       ],
       "n_periods": 16,
-      "retrieved_at": "2026-09-10T14:52:24.242Z"
+      "retrieved_at": "2026-09-11T14:51:37.115Z"
     },
     "credit": {
       "source": "Statistics Canada — Web Data Service (WDS)",
@@ -115,16 +115,11 @@
       "source_url": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=38100238",
       "vector_id": 1038036699,
       "latest": {
-        "ref_period": "2026-01-01",
-        "value": 171.15,
-        "release_time": "2026-06-12T08:30"
+        "ref_period": "2026-04-01",
+        "value": 168.02,
+        "release_time": "2026-09-11T08:30"
       },
       "trend": [
-        {
-          "ref_period": "2022-04-01",
-          "value": 178.97,
-          "release_time": "2026-03-16T08:30"
-        },
         {
           "ref_period": "2022-07-01",
           "value": 179.56,
@@ -197,12 +192,17 @@
         },
         {
           "ref_period": "2026-01-01",
-          "value": 171.15,
-          "release_time": "2026-06-12T08:30"
+          "value": 170.18,
+          "release_time": "2026-09-11T08:30"
+        },
+        {
+          "ref_period": "2026-04-01",
+          "value": 168.02,
+          "release_time": "2026-09-11T08:30"
         }
       ],
       "n_periods": 16,
-      "retrieved_at": "2026-09-10T14:52:24.187Z"
+      "retrieved_at": "2026-09-11T14:51:37.092Z"
     },
     "cpi": {
       "source": "Statistics Canada — Web Data Service (WDS)",
@@ -420,7 +420,7 @@
         }
       ],
       "n_periods": 40,
-      "retrieved_at": "2026-09-10T14:52:24.211Z"
+      "retrieved_at": "2026-09-11T14:51:37.170Z"
     },
     "rent2br": {
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
@@ -484,7 +484,7 @@
           "release_time": "2025-12-17T08:30"
         }
       ],
-      "retrieved_at": "2026-09-10T14:52:24.337Z"
+      "retrieved_at": "2026-09-11T14:51:37.229Z"
     },
     "vacancy": {
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
@@ -540,7 +540,7 @@
           "release_time": "2025-12-17T08:30"
         }
       ],
-      "retrieved_at": "2026-09-10T14:52:24.350Z"
+      "retrieved_at": "2026-09-11T14:51:37.457Z"
     },
     "policy": {
       "source": "Bank of Canada — Valet API",
@@ -605,7 +605,7 @@
           "value": 2.25
         }
       ],
-      "retrieved_at": "2026-09-10T14:52:23.891Z"
+      "retrieved_at": "2026-09-11T14:51:36.767Z"
     },
     "prime": {
       "source": "Bank of Canada — Valet API",
@@ -670,7 +670,7 @@
           "value": 4.45
         }
       ],
-      "retrieved_at": "2026-09-10T14:52:24.040Z"
+      "retrieved_at": "2026-09-11T14:51:36.916Z"
     },
     "mtg5": {
       "source": "Bank of Canada — Valet API",
@@ -735,7 +735,7 @@
           "value": 6.09
         }
       ],
-      "retrieved_at": "2026-09-10T14:52:23.761Z"
+      "retrieved_at": "2026-09-11T14:51:36.780Z"
     }
   }
 }

@@ -1,9 +1,9 @@
 # Financial-Demographic-Strategist — Running State Log
 
-Last Execution: 2026-09-10 14:52 UTC
+Last Execution: 2026-09-11 14:51 UTC
 
 ## Active Ingestion Vectors
-- [x] StatCan Table 38-10-0238: Household credit-market debt to disposable income → 179.55% @ 2026-01-01
+- [x] StatCan Table 38-10-0238: Household credit-market debt to disposable income → 176.37% @ 2026-04-01
 - [x] StatCan Table 18-10-0004: CPI all-items → 169.9 @ 2026-07-01
 - [x] CMHC Table 34-10-0133 (via StatCan): Toronto avg 2BR rent → $2,045 @ 2025-01-01
 - [x] CMHC Table 34-10-0127 (via StatCan): Toronto vacancy → 3.00% @ 2025-01-01
@@ -20,14 +20,14 @@ Last Execution: 2026-09-10 14:52 UTC
 
 ## Freshness SLA
 - Within SLA: **7/8** series inside one release cycle of their source. ⚠️ STALE: mtg5 — a newer release may be available.
-- [x] debt (quarterly): 252d old · SLA 280d
-- [x] credit (quarterly): 252d old · SLA 280d
-- [x] cpi (monthly): 71d old · SLA 95d
-- [x] rent2br (annual (CMHC RMS)): 617d old · SLA 730d
-- [x] vacancy (annual (CMHC RMS)): 617d old · SLA 730d
-- [x] policy (as-announced): 20d old · SLA 120d
-- [x] prime (as-announced): 85d old · SLA 120d
-- ⚠️ mtg5 (weekly): 85d old · SLA 45d — STALE, check for a newer release
+- [x] debt (quarterly): 163d old · SLA 280d
+- [x] credit (quarterly): 163d old · SLA 280d
+- [x] cpi (monthly): 72d old · SLA 95d
+- [x] rent2br (annual (CMHC RMS)): 618d old · SLA 730d
+- [x] vacancy (annual (CMHC RMS)): 618d old · SLA 730d
+- [x] policy (as-announced): 21d old · SLA 120d
+- [x] prime (as-announced): 86d old · SLA 120d
+- ⚠️ mtg5 (weekly): 86d old · SLA 45d — STALE, check for a newer release
 
 ## Immediate Backlog Priority
 - Cross-reference Gen Z digital-payment behaviours with credit-union membership data in British Columbia.
