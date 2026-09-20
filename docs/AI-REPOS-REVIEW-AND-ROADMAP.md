@@ -1,235 +1,231 @@
-# Top-12 AI Repos — Portfolio Review & Learning Roadmap
+# Top-12 AI Repos — **Portfolio-Wide** Review & Learning Roadmap
 
-> **What this is.** A review of the *"Top 12 AI GitHub Repositories"* list against **my
-> current AI portfolio**, a ranked read of what's genuinely worth leveraging (and what
-> isn't), the benefits and concerns of each, and a phased roadmap of what to **learn** and
-> **utilize** — written to extend the existing [README roadmap](../README.md#gaps-and-roadmap)
-> (which already ships R1, R4, R6, R8, R9 and lists R2, R3, R5, R7 as open).
+> **Scope.** A review of the *"Top 12 AI GitHub Repositories"* list against the **entire AI
+> portfolio** — all five AI repos, not just this one — with per-repo verdicts, a capability
+> coverage matrix, the genuinely net-new things worth leveraging, deliberate non-adopts
+> (with rationale), and a portfolio-level roadmap.
 >
-> **Reviewed:** 2026-09-20 · **Scope:** the 12 repos below, mapped onto
-> [Financial-Intelligence-Strategy-Agent](../README.md) and its sibling repos
-> (AI-Native Team Diagnostic, Enterprise RAG Assistant, AI Product & Leadership Studio).
+> **Reviewed:** 2026-09-20 · **Authored in** this repo because that's where the working
+> branch lives; the artifact is portfolio-wide and its natural long-term home is the
+> [AI Product & Leadership Studio](https://github.com/shayeeboy/AI-Product-Leadership-Studio)
+> or [shayzone-ai-os](https://github.com/shayeeboy/shayzone-ai-os).
+>
+> **Supersedes** the initial single-repo pass of this document: that version judged only the
+> Financial-Intelligence-Strategy-Agent (which is deliberately LLM-light) and therefore
+> recommended adding local LLM inference, an LLM-judge, and agents — all of which, seen
+> **portfolio-wide, already exist** in the RAG assistant and shayzone-ai-os. The corrected
+> thesis is below.
 
 ---
 
-## TL;DR
+## TL;DR — the honest headline
 
-- **The portfolio's defining trait is that it is deliberately LLM-*light*.** Briefs are
-  composed by **deterministic templates over live, cited public data** — there is no model
-  inference on the hot path, no API key, no vector store, and the whole generator runs
-  **client-side at $0**. That is a feature (reproducible, forecast-free, no hallucination
-  surface), and it is the lens for judging every repo below.
-- **The biggest *unclaimed* capabilities in these 12 are:** (1) **local/open-weight LLM
-  inference** to add an *optional, grounded* narrative layer at **still-$0** and fully
-  private (Ollama, DeepSeek-V3, Open WebUI); (2) **an eval / LLM-judge harness** to close
-  the two already-planned quality gaps R3 and R5 (LangChain evals, RAGFlow's grounding
-  ideas, CrewAI patterns); (3) **explicit agent orchestration** to finally ship R2
-  gap-driven autonomy (CrewAI / LangChain / LangGraph); and (4) **workflow-as-config**
-  thinking for the delivery/cron pipeline (n8n, Langflow, Dify).
-- **The trap to avoid:** bolting a chatty LLM onto the synthesis step would trade away the
-  portfolio's whole credibility story (cited, deterministic, $0). Every LLM adoption below
-  is therefore gated behind the **R3 grounding check** and kept on **local/open models**,
-  so the guarantees survive.
-- **Adopt now (learn + use): Ollama, DeepSeek-V3, an eval harness (LangChain/CrewAI
-  patterns), CrewAI.** **Learn / borrow patterns: LangChain, RAGFlow, Langflow, n8n,
-  Dify, Gemini CLI, Open WebUI.** **Already using: Claude Code.** No item is a pure "skip."
+**Your portfolio has already independently out-built most of this top-12 list**, and in
+several places to a *higher* standard than the tools themselves imply. Concretely, across
+the five repos you already run: **local open-weight LLM inference (Ollama, as the RAG
+assistant's default provider), local embeddings (`@xenova/transformers`), a pgvector store,
+a full production RAG pipeline (hybrid retrieve → rerank → rewrite → NLI-grounded guardrails
+→ gate), a deterministic cross-model LLM-as-judge, an eval + golden-set + gate loop,
+observability + a cost ledger, a five-role agent crew (orchestrator / researcher /
+strategist / critic / executive-synthesizer), an MCP tool server, a governance spine (risk
+tiers, approval matrix, data classification, ADR log), and a portfolio-integration layer
+with RICE/WSJF/ROI scoring.**
+
+So the useful output of this exercise is **not** "adopt these 12." It is:
+
+1. **Validation / positioning** — you converged on the same architecture as the leading OSS
+   tools, by hand, at ~$0. That is a *stronger* Director/VP-of-AI proof than using them.
+2. **Consolidation** — the same capability is re-implemented per repo. The leverage is to
+   promote the best implementation into **shayzone-ai-os as the shared standard** and have
+   the others consume it (this is already the OS's stated purpose).
+3. **A short list of genuinely net-new adds** — DeepSeek-V3 as a model option, RAGFlow-grade
+   deep-document parsing for the RAG assistant, Gemini CLI as a second free judge model, and
+   Open WebUI as a local cockpit over the Ollama you *already* run.
+4. **Deliberate, documented non-adopts** — LangChain, LangGraph, CrewAI, Dify, n8n, Langflow
+   and OpenClaw as runtime dependencies, because they'd fight the portfolio's proven
+   "code-native, $0, *the product is the system, not the framework*" ethos. Knowing what to
+   **reject** is itself the leadership signal.
 
 ---
 
-## 1. Current portfolio at a glance (the baseline to compare against)
+## 1. The portfolio you're actually comparing against
 
-| Capability | Status today | Where |
+| Repo | What it is | AI capabilities it already ships |
 |---|---|---|
-| Live data adapters (StatCan, CMHC, Bank of Canada) | ✅ shipped, cited, retry/backoff | `src/mcp/adapters/` |
-| **MCP tool server** (4 tools over stdio) | ✅ shipped | `src/mcp/server.js` |
-| Orchestrator SOP (gather → derive → confidence → synthesize → persist) | ✅ shipped | `src/orchestrator.js` |
-| Static client-side web generator ($0, no backend on hot path) | ✅ shipped (GitHub Pages) | `web/` |
-| Serverless backend (Cloudflare Worker + Neon) for email + gallery | ✅ shipped, $0/mo | `server/`, `src/email/`, `src/gallery/` |
-| Freshness SLA, forecast-free trend deltas, cohort micro-data | ✅ R4 / R6 / R1 | `src/lib/` |
-| **LLM inference anywhere in the product** | ❌ **none** — synthesis is string templating | — |
-| **Vector store / RAG in *this* repo** | ❌ none (lives in the sibling Enterprise RAG Assistant) | — |
-| **Agent framework / multi-step planning loop** | ❌ none — the "orchestrator" is a hard-coded sequence | — |
-| **Eval / LLM-judge / grounding check** | ❌ open as **R3** and **R5** | roadmap |
-| **Gap-driven autonomy** (pick next brief from coverage holes) | ❌ open as **R2** | roadmap |
+| **Enterprise-RAG-Assistant** | Production-shaped RAG over a real corpus | **Ollama local LLM (default provider, provider-agnostic)**, local embeddings (`@xenova/transformers`), **pgvector/Neon**, hybrid retrieval, **rerank**, query **rewrite**, **NLI-grounded** faithfulness (`nli.js`), refusal **guardrails** + **gate**, **deterministic cross-model LLM-judge** (`judge.js`), nightly **eval** + golden set, **observability** + per-request cost/latency. `src/rag/*` |
+| **shayzone-ai-os** | Private, Claude-Code-native "AI operating system" for the studio | **5-role agent crew** (`.claude/agents/`: orchestrator, researcher, strategist, critic, executive-synthesizer), **skills** + **hooks**, **eval-and-gate** loop (`eval/` + golden), **governance spine** (`governance/`: risk-tiers, approval-matrix, data-classification, ADR log), **context layer**, **observability + economics** (cost ledger), **portfolio contracts** + freshness. Phases 0–8 done; one governed vertical slice, 5 approved runs. |
+| **AI-Product-Leadership-Studio** | Executive platform to govern/fund/evaluate the *portfolio* | React 18/Vite 5/TS, **live integration** of the three engines via snapshot endpoints, **RICE/WSJF/ROI/opportunity/maturity scoring** (`src/lib/scoring.ts`), governance + responsible-AI, Vitest + Playwright, $0 static. |
+| **Financial-Intelligence-Strategy-Agent** | Autonomous BI agent → cited banking strategy briefs | **MCP tool server** (4 tools), live StatCan/CMHC/BoC adapters, deterministic template synthesis, freshness SLA, forecast-free trends, email + gallery. **Deliberately LLM-light.** |
+| **ai-native-diagnostic** | Self-scoring AI-native readiness assessment (v1→v3) | Static + thin Express/Neon; scored diagnostic + 90-day plan; feeds the shayzone-ai-os vertical slice. |
 
-**Read of the baseline:** strong on data provenance, delivery, and $0 economics; thin on
-*anything model-driven* and on *automated quality measurement*. That is exactly the shape
-of the opportunity in the 12 repos.
+**Read:** four execution engines + one meta-OS + one executive layer. The portfolio is
+*already* organized the way the 12 repos, taken together, imply an AI org should be.
 
 ---
 
-## 2. The 12 repos — one-line verdicts
+## 2. Capability coverage matrix — the 12 repos vs. what you already have
 
-Verdict key: **ADOPT** (learn *and* wire in) · **LEARN** (borrow patterns / evaluate, no
-hard dependency yet) · **USING** (already in the stack).
+Verdict key: **HAVE** (already shipped somewhere in the portfolio) · **NET-NEW** (a real
+gap worth a small, targeted add) · **SKIP** (deliberate non-adopt as a runtime dependency).
 
-| # | Repo | What it is | Fit to *this* portfolio | Verdict |
+| # | Repo | Core capability it represents | Already in your portfolio? | Verdict |
 |---|---|---|---|---|
-| 1 | **OpenClaw** | "Personal AI agent that lives on your device" (local-first personal agent) | Low direct fit — it's a personal-assistant shell, not a data-synthesis engine. Borrow the *local-first / on-device privacy* posture only. | LEARN |
-| 2 | **n8n** | Visual workflow automation with native AI nodes | The email cron + snapshot refresh are already "workflows." n8n is the reference model for expressing them as inspectable graphs; likely overkill to *host*. | LEARN |
-| 3 | **Ollama** | Run open-weight LLMs locally | **High.** The clean way to add an *optional* narrative/judge layer at **$0 and fully private** — no API key, no data leaving the box. | **ADOPT** |
-| 4 | **Langflow** | Drag-and-drop visual agent builder | Good for *prototyping* an autonomy/eval flow before hand-coding it in Node. Not a runtime dependency for a $0 static product. | LEARN |
-| 5 | **Dify** | Full-stack, prod-ready platform for building LLM apps | Reference architecture for prompt/versioning/observability if the portfolio ever needs a hosted LLM app. Heavy to self-host for now. | LEARN |
-| 6 | **LangChain** | Foundational agent/LLM framework | **High as a pattern source** — its eval + LLM-judge + retriever abstractions map directly onto R3/R5. Adopt *patterns*, resist pulling the whole dependency into a lean ESM repo. | ADOPT (patterns) |
-| 7 | **Open WebUI** | Self-hosted, offline ChatGPT alternative | Pairs with Ollama as the local "cockpit" for iterating on brief-narrative prompts privately. Dev-tool, not a shipped dependency. | LEARN |
-| 8 | **DeepSeek-V3** | Open-weight frontier-class LLM | **High.** The open model to run *via Ollama* for grounded narrative + as the R3/R5 judge — capable, permissively licensed, $0. | **ADOPT** |
-| 9 | **Gemini CLI** | Google's open-source CLI to drive Gemini | Multi-model dev ergonomics + a generous free tier; a cheap *second opinion* model for eval cross-checking. Complements Claude Code. | LEARN |
-| 10 | **RAGFlow** | Enterprise-grade RAG engine (deep-doc parsing, grounded citation) | **High relevance to the sibling Enterprise RAG Assistant**, and its *citation-grounding* discipline is exactly the R3 bar. Borrow the grounding method here; consider the engine there. | ADOPT (patterns) |
-| 11 | **Claude Code** | Agentic coding tool that understands the whole codebase | **Already the build tool for this work.** Lever it harder: eval scaffolding, adapter generation, CI review. | **USING** |
-| 12 | **CrewAI** | Lightweight library to assemble a *team* of agents | **High.** The lightest credible path to R2: a small crew (Gap-Scout → Data-Gatherer → Synthesist → Critic) that picks and QAs the next brief. | **ADOPT** |
+| 3 | **Ollama** | Run open-weight LLMs locally, free | **Yes** — RAG assistant's *default* `LLM_PROVIDER=ollama` (`src/rag/config.js`, `llm.js`) | **HAVE** → standardize |
+| 8 | **DeepSeek-V3** | Strong open-weight reasoning model | Partly — you run Ollama but don't name DeepSeek; trivial to add as a model | **NET-NEW** (minor) |
+| 10 | **RAGFlow** | Enterprise RAG w/ deep-document parsing | Partly — you have a *full RAG pipeline*, but text-level ingestion, not layout/table/OCR-aware parsing | **NET-NEW** (RAG ingestion) |
+| 6 | **LangChain** | LLM/agent framework, evals, retrievers | Equivalent built by hand (`judge.js`, `retrieve/rerank/rewrite`, agent crew) | **SKIP** as dep; borrow concepts |
+| 12 | **CrewAI** | Assemble a team of role-based agents | **Yes** — 5-role crew in `shayzone-ai-os/.claude/agents/` | **HAVE** |
+| 11 | **Claude Code** | Agentic coding over the whole repo | **Yes** — shayzone-ai-os is "Claude Code-native"; this build uses it | **HAVE** → use harder |
+| 9 | **Gemini CLI** | Google model via CLI, free tier | No — but the judge already *cross-judges with a second model*; Gemini strengthens that | **NET-NEW** (eval + dev) |
+| 7 | **Open WebUI** | Self-hosted chat cockpit over local models | No — yet you already run Ollama; a natural local dev/demo surface | **NET-NEW** (dev tool) |
+| 2 | **n8n** | Visual workflow automation w/ AI nodes | No — orchestration is code (hooks) + GitHub Actions cron | **SKIP** as runtime; niche use for no-code external integrations |
+| 4 | **Langflow** | Drag-and-drop agent builder | No — agents are code-native | **SKIP** as dep; use to *prototype* only |
+| 5 | **Dify** | Full-stack LLMOps platform | No — you have equivalent seams (eval, gov, observability) spread across repos | **SKIP** as dep; reference architecture |
+| 1 | **OpenClaw** | Local-first personal AI agent | No — not the portfolio's shape | **SKIP** / watch |
 
-> **Note on #1 "OpenClaw":** this name isn't a widely-established AI project; the card's own
-> description ("personal AI agent that lives on your device") is what's reviewed here. Verify
-> the exact repo before depending on it — treat it as representative of the *local-first
-> personal-agent* category, not a specific pinned dependency.
+**Score:** ~**5 already HAVE**, **4 NET-NEW (all small/targeted)**, **~4 deliberate SKIP.**
+There is no capability in this list your portfolio is fundamentally missing.
 
 ---
 
-## 3. Top things to leverage that are **not** in the portfolio today
+## 3. The genuinely net-new things worth leveraging (ranked)
 
-Ranked by leverage-for-effort against *this* codebase.
+### ① RAGFlow-grade **deep-document parsing** → Enterprise-RAG-Assistant
+**The one real capability gap.** Your RAG pipeline is excellent at *retrieval, grounding and
+eval*, but ingestion is text-level. RAGFlow's differentiator is **layout/table/OCR-aware
+document parsing** — exactly what you'd need to point the same pipeline at *financial* PDFs
+(rate sheets, disclosure tables, annual reports) or enterprise policy docs with structure.
+Borrow the parsing approach (or run RAGFlow purely as an *ingestion* stage feeding your
+existing pgvector + judge + guardrails). *Highest signal, because it extends the portfolio
+into structured-document corpora it can't cleanly handle today.*
 
-### ① A **local, open-weight LLM narrative + judge layer** — Ollama + DeepSeek-V3
-**Gap it fills:** the product has zero model inference; synthesis is pure templating. That's
-great for numbers but means the prose is fixed. A *local* model unlocks (a) an optional
-richer narrative and (b) the **LLM-judge for R3/R5** — **without** breaking the $0 or
-privacy story, because nothing leaves the machine and there's no API bill.
-- **Use it two ways:** as an **offline judge** in CI (score/flag briefs, detect any
-  quantitative claim not backed by a snapshot figure — this *is* R3) and, optionally, as a
-  **grounded rewrite** of template prose where every number is still injected from data.
-- **Why local specifically:** preserves "**API cost: $0 (public data)**" and adds "**no
-  PII/data egress**" — a genuinely differentiating, honest claim for a financial-services
-  audience.
+### ② **DeepSeek-V3 as a named Ollama model option** → RAG assistant + shayzone-ai-os
+Your Ollama provider is model-agnostic; add DeepSeek-V3 (a quantized/distilled variant
+locally, or its openai-compatible endpoint) as a **stronger open reasoning model** for the
+generator *and* as a **judge-diversity** option. Near-zero effort, keeps $0/private, and
+gives a concrete "frontier-class open model" line to your model roster.
 
-### ② An **eval / grounding harness** — LangChain eval patterns + RAGFlow's citation discipline
-**Gap it fills:** R3 (narrative grounding check) and R5 (rubric-scored brief eval) are both
-*open* and are the portfolio's most credible next quality story. These repos supply the
-**method**, not necessarily the dependency: labeled sample → rubric (completeness, sourcing,
-actionability) → judge model → scored, CI-gated report with variance.
-- Borrow LangChain's **LLM-as-judge / criteria-eval** structure and RAGFlow's rule that
-  **every asserted fact must resolve to a cited source span** — apply it to "every number in
-  the prose must resolve to a series in the snapshot."
+### ③ **Gemini CLI as a second free judge model + dev aid** → RAG eval, shayzone eval-gate
+`judge.js` already cross-judges with a different model to reduce self-preference bias. A
+**third independent model (Gemini free tier)** turns that into a stronger *panel* and
+sharpens the shayzone-ai-os gate. Also a cheap second coding assistant alongside Claude
+Code. Keep it dev/eval-only; never send sensitive data given free-tier terms.
 
-### ③ **Explicit multi-agent orchestration** — CrewAI (and LangGraph concepts)
-**Gap it fills:** R2 gap-driven autonomy. Today `orchestrator.js` runs a *hard-coded target*.
-A small **role-based crew** — Gap-Scout (reads `master_index` coverage holes) → Data-Gatherer
-(existing adapters) → Synthesist (composer) → Critic (the R3 judge) — turns the SOP into a
-**planning loop** that picks its own next brief and self-QAs before writing.
-- CrewAI is the lightest fit; you don't have to adopt its runtime — the **role/handoff/critic
-  pattern** can be implemented in plain Node to keep the lean-ESM ethos.
+### ④ **Open WebUI as a local cockpit** over the Ollama you already run
+A private, self-hosted chat UI for iterating on prompts (RAG answer prompt, judge rubric,
+brief-narrative experiments) and for **demoing** the local-model story in advisory
+conversations. Dev tool, never a shipped dependency.
 
-### ④ **Workflow-as-inspectable-graph** thinking — n8n / Langflow / Dify
-**Gap it fills:** the delivery cron, snapshot refresh, and (future) autonomy loop are
-*implicit* in scripts + YAML. These tools model such pipelines as **explicit graphs** with
-retries, branching, and observability. **Borrow the mental model** (and maybe Langflow for
-*prototyping* the autonomy/eval flow) rather than hosting a heavy platform — a $0 static
-product shouldn't take on a stateful workflow server it doesn't need.
-
-### ⑤ **A cheap second-opinion model + sharper dev loop** — Gemini CLI + Claude Code + Open WebUI
-**Gap it fills:** eval robustness and build velocity. A **second judge model** (Gemini free
-tier, or a second local model in Open WebUI) makes R3/R5 scores more trustworthy via
-cross-model agreement. **Claude Code** (already in use) should be pushed harder on eval
-scaffolding, adapter generation, and CI review.
+### ⑤ (Consolidation, not a repo) **Promote the best implementations into shayzone-ai-os**
+The largest actual leverage isn't a new tool — it's that Ollama config, the LLM-judge, the
+eval/golden harness, observability and the cost ledger exist in **both** the RAG assistant
+**and** shayzone-ai-os in parallel. Extract the canonical version into the OS as a **shared
+skill/contract** the other repos consume. This is literally what "the product is the system"
+promises; finishing it is worth more than any item above.
 
 ---
 
-## 4. Benefits & concerns (for the items actually recommended)
+## 4. Benefits & concerns (net-new items only)
 
-| Item | Concrete benefit here | Concerns / risks to manage |
+| Item | Benefit here | Concerns to manage |
 |---|---|---|
-| **Ollama (local runtime)** | $0, private, offline LLM judge + optional narrative; no key, no egress | Local compute/RAM cost; model output non-determinism → **must** stay behind the R3 grounding gate; adds an optional (not required) dependency — keep it off the static hot path |
-| **DeepSeek-V3 (open model)** | Frontier-ish quality at $0; permissive open weights; good judge | Large footprint for full weights (use a quantized/distilled variant locally); verify license terms for any redistribution; still hallucinates → gated by grounding check |
-| **LLM-judge / eval harness (LangChain/RAGFlow patterns)** | Ships R3 + R5; CI-gated quality regression; honest, measurable metric | Judge can be wrong → need a labeled gold set + cross-model check; risk of "eval theater" if the rubric isn't tied to real analyst usefulness |
-| **CrewAI / agent loop** | Ships R2 autonomy; self-QA before publish; less manual targeting | Over-engineering risk vs. a plain Node loop; non-determinism & cost if it calls models per step — cap steps, prefer local model, keep adapters deterministic |
-| **RAGFlow (patterns; engine in sibling repo)** | Citation-grounding rigor; directly upgrades the Enterprise RAG Assistant | Heavy to self-host (DB + parsing services); scope it to the RAG sibling, not this $0 repo |
-| **n8n / Langflow / Dify (patterns / prototyping)** | Clearer, observable pipelines; fast visual prototyping | Self-hosting = servers, state, ops cost — **contradicts the $0 static ethos** if adopted as runtime; keep as design reference / local prototyping only |
-| **Gemini CLI (second model)** | Cheap cross-check for eval; multi-model ergonomics | Free-tier quota + data-handling terms (don't send anything sensitive); keep as a dev/eval aid, not a shipped dependency |
-| **Open WebUI (local cockpit)** | Private prompt-iteration UI over Ollama | Self-hosted surface to maintain; dev-only, never in the delivered product |
-| **Claude Code (in use)** | Whole-repo agentic edits, eval scaffolding, CI review | Keep human review on generated adapters/evals; never let generated prose bypass the grounding gate |
+| **RAGFlow deep parsing** | Unlocks structured-doc corpora (financial PDFs, tables) the current ingester mangles; keeps your superior grounding/eval downstream | Heavy to self-host (DB + parser services + Docker); scope it to an *ingestion stage*, don't swap out your pipeline; license/ops review |
+| **DeepSeek-V3 model** | Stronger open reasoning at $0/local; judge diversity | Large full weights → use quantized/distilled; confirm license for any redistribution; still gated by your NLI/judge checks |
+| **Gemini CLI (2nd/3rd judge)** | Cheaper, more robust eval via a model *panel*; extra dev assistant | Free-tier quota + data-handling terms — dev/eval only, no sensitive data; don't let it become a runtime dependency |
+| **Open WebUI cockpit** | Private prompt-iteration + a tangible local-model demo | One more self-hosted surface to maintain; dev-only, off the shipped path |
+| **Consolidation into shayzone-ai-os** | One canonical judge/eval/observability standard; less drift; cleaner portfolio story | Refactor risk across repos; do it behind the existing contracts so each engine swaps source, not screens (as the Studio already proved with its adapter contract) |
 
-**Cross-cutting concerns to hold the line on:**
-1. **Don't lose the $0 / static / cited identity.** Anything requiring an always-on server,
-   a paid API on the hot path, or un-cited prose is a regression, not a feature.
-2. **Hallucination surface.** The moment an LLM writes prose, R3 (grounding check) stops
-   being optional — it becomes a **release gate**.
-3. **Determinism of numbers.** Models may shape *words*; **every figure stays injected from
-   the deterministic adapters + snapshot**. No model-authored numbers, ever.
-4. **Licensing & data egress.** Prefer local/open models; verify weights' licenses; keep
-   financial/PII data on-box.
-5. **Maintenance budget.** A solo portfolio can't operate n8n + Dify + RAGFlow servers.
-   Favor **patterns and local tools** over hosted platforms.
+**Cross-cutting principles the portfolio already lives by — keep them:** $0 / free-tier
+first; local & private by default (Ollama, local embeddings); *everything cited*;
+grounding/faithfulness gated (NLI + judge) before anything ships; own/synthetic/public data
+only (the client-data bright line); governance with human approval on real runs.
 
 ---
 
-## 5. The roadmap — what to learn & utilize (phased)
+## 5. Deliberate non-adopts (the leadership signal)
 
-Continues the README's numbering (R1–R9 exist). Each item keeps the repo's convention of a
-crisp acceptance signal. Phases are ordered by *leverage ÷ risk*, and every LLM item is
-gated by the grounding check.
+Documenting what you **won't** adopt, and why, is as valuable as the adds — it shows the
+judgment a portfolio owner is hired for.
 
-### Phase 0 — Learn (time-boxed spikes, no shipped dependency)
-- **Stand up Ollama + a DeepSeek-V3 (quantized) model locally**; drive it from **Open WebUI**.
-  Goal: prove a local model can *judge* an existing brief (flag any number not in the
-  snapshot) at $0. *Signal:* one brief scored locally, offline, key-free.
-- **Read the eval playbooks:** LangChain criteria/LLM-judge evals + RAGFlow's citation
-  grounding. Write a one-page rubric (completeness · sourcing · actionability). *Signal:*
-  rubric committed to `docs/`.
-- **Prototype the autonomy loop in Langflow** (Gap-Scout → Gather → Synthesize → Critic) to
-  validate the shape before coding it in Node. *Signal:* a screenshot + a decision note.
-
-### Phase 1 — Ship the quality gates (closes the two open LLM roadmap items)
-- **R3 — Narrative grounding check (LLM-judge).** A CI/offline pass (local Ollama model)
-  that flags any quantitative claim in brief prose lacking a backing figure in the snapshot.
-  *Signal (from README):* hallucinated-claim rate → target 0 on a labeled sample; **$0,
-  offline, gated in CI.**
-- **R5 — Brief eval harness.** Rubric-scored run over ≥20 briefs; mean score + variance;
-  **regression-gated in CI**. Add a **second-model cross-check** (Gemini CLI free tier or a
-  second local model) to reduce single-judge bias. *Signal:* CI fails if mean rubric score
-  regresses.
-
-### Phase 2 — Autonomy (ships the last big open item)
-- **R2 — Gap-driven autonomy via a lightweight crew.** Implement the Gap-Scout → Gatherer →
-  Synthesist → **Critic (R3 judge)** loop (CrewAI patterns, plain-Node runtime). The
-  orchestrator picks its next brief from `master_index` coverage holes and **self-QAs before
-  writing**. *Signal (from README):* briefs generated unattended; matrix coverage across N
-  demographics × M products, with each publish having passed the grounding gate.
-
-### Phase 3 — Optional model-shaped narrative (only after gates are green)
-- **R10 (new) — Optional grounded narrative layer.** A local model may *rephrase* template
-  prose for readability; **all numbers stay injected**, and output must pass R3 or it's
-  discarded and the deterministic template is kept. Ships **off by default**, `$0`, private.
-  *Signal:* narrative variant that never introduces an un-cited number (0 grounding failures
-  on the eval set), template remains the safe fallback.
-
-### Phase 4 — Sibling-repo leverage (spread the wins)
-- **R11 (new) — RAGFlow-grade grounding in the Enterprise RAG Assistant.** Bring RAGFlow's
-  deep-doc parsing + span-level citation discipline to the sibling repo; reuse the R3 judge
-  as its answer-grounding check. *Signal:* every RAG answer resolves to a cited source span.
-- **R12 (new) — Local-model option across the portfolio.** Offer Ollama/DeepSeek as the
-  drop-in local backend for the sibling agents (diagnostic, RAG), giving the whole portfolio
-  a **"runs private + offline + $0"** story. *Signal:* one sibling agent demonstrably runs
-  with no external API.
-
-### Non-goals (explicitly *not* on the roadmap)
-- Self-hosting n8n / Dify / RAGFlow **as runtime infra for this repo** — contradicts the $0
-  static ethos; kept as patterns/prototyping only.
-- Any **paid LLM API on the generation hot path** — would break the headline $0 guarantee.
-- **Model-authored numbers** — numbers are always deterministic-adapter output.
+- **LangChain / LangGraph** — you've hand-built the equivalent seams (retriever, rerank,
+  judge, agent loop) with less abstraction overhead. **Borrow concepts** (LangGraph's
+  explicit state-machine framing for the shayzone orchestrator; LangChain's eval taxonomy),
+  **not the dependency.** Pulling a heavy framework into lean ESM/Claude-Code-native repos is
+  a regression.
+- **CrewAI** — you already have a role-based crew (orchestrator/researcher/strategist/
+  critic/executive-synthesizer) on Claude Code subagents. CrewAI would *replace* a working,
+  lighter design with a Python runtime and lock-in. Skip.
+- **Dify / Langflow** — full LLMOps platforms and visual builders. Useful as **reference
+  architectures** and for **throwaway prototyping**, but self-hosting them contradicts the
+  proven $0/static/code-native model. Skip as runtime.
+- **n8n** — the one with a narrow *legitimate* future use: **no-code external integrations**
+  (wire the Studio to Slack/CRM/email without code). Even then, prefer your existing Worker +
+  GitHub Actions unless a non-dev genuinely needs to own a flow. Skip for now.
+- **OpenClaw** — a local-first *personal assistant* shape, not a portfolio-engine shape.
+  Watch the local-first/on-device privacy posture (which you already embody); don't adopt.
 
 ---
 
-## 6. Guardrails to preserve while adopting any of the above
+## 6. Portfolio roadmap — what to learn & utilize (phased)
 
-1. **Numbers are deterministic; only words may be model-shaped** — and only behind R3.
-2. **$0 and static-first stays the default path** — LLM features are optional, local, and
-   off the hot path.
-3. **Everything cited** — no claim ships without a resolvable source (the RAGFlow bar).
-4. **Forecast-free + no legal/FINTRAC advice** — unchanged; the model never gets to opine on
-   rates or compliance.
-5. **Privacy** — prefer local/open models so financial data never leaves the machine.
+Portfolio-level items are prefixed **P#** to avoid colliding with each repo's own R-series.
+
+### Phase A — Learn (time-boxed spikes, no shipped dependency)
+- **P1 — Stand up Open WebUI over your existing Ollama** and iterate the RAG answer prompt +
+  judge rubric in it. *Signal:* one prompt improvement validated locally, $0.
+- **P2 — Add DeepSeek-V3 to the model roster** (Ollama pull or openai-compatible endpoint);
+  run the RAG eval with it as generator, then as a judge-panel member. *Signal:* eval
+  numbers for DeepSeek recorded next to the current model.
+- **P3 — Spike RAGFlow purely as an ingestion stage** on a structured financial PDF; feed its
+  output into your existing pgvector + guardrails + judge. *Signal:* a decision note —
+  adopt-as-ingester / borrow-parsing-logic / drop.
+
+### Phase B — Net-new adds (small, targeted, keep $0 + grounding gates)
+- **P4 — Gemini CLI as a third judge-panel model** in `judge.js` / the shayzone eval-gate,
+  behind a config flag. *Signal:* judge agreement/variance reported across a 2–3 model panel;
+  no sensitive data leaves local.
+- **P5 — DeepSeek-V3 shipped as a selectable model option** in the RAG assistant (and offered
+  to the shayzone slice). *Signal:* switchable via `LLM_*` env, eval-gated, still $0/local.
+- **P6 — RAGFlow-informed ingestion** (adopt or reimplement layout/table parsing) so the RAG
+  assistant can index structured docs. *Signal:* a table-heavy PDF answered with correct
+  cited cells; grounding rate holds at/above current.
+
+### Phase C — Consolidation (the biggest leverage)
+- **P7 — Extract the canonical LLM-judge + eval/golden harness into shayzone-ai-os** as a
+  shared skill/contract; have the RAG assistant (and any future engine) consume it. *Signal:*
+  one judge/rubric of record; per-repo copies deleted or importing it.
+- **P8 — Unify observability + cost ledger** across the RAG assistant and shayzone-ai-os into
+  one economics contract the Studio reads live. *Signal:* the Studio's cost/ROI tiles source
+  from a single portfolio ledger.
+
+### Phase D — Positioning (turn the analysis into portfolio equity)
+- **P9 — Publish this matrix as a Studio module / one-pager**: "How my portfolio maps to the
+  top-12 OSS AI tools — adopted, out-built, and deliberately rejected." *Signal:* a reviewer
+  sees, per capability, where you already stand and the judgment behind each call. This is the
+  Director/VP-of-AI artifact the whole exercise is really for.
+
+### Non-goals (explicit)
+- Adopting **LangChain/CrewAI/Dify/n8n/Langflow** as **runtime dependencies** — documented
+  rejects (§5).
+- Any **paid LLM API** or **always-on paid infra** on a hot path — the portfolio's $0/free-tier
+  identity is a feature.
+- **Model-authored numbers** in the FI agent — numbers stay deterministic-adapter output.
+- Touching the **client-data bright line** — own/synthetic/public data only.
 
 ---
 
-*Companion to the [main README](../README.md) and its
-[Gaps & roadmap](../README.md#gaps-and-roadmap). This document is a review/plan — it adds no
-runtime dependencies by itself.*
+## 7. Principles to preserve while adopting any of the above
+
+1. **$0 / free-tier / local-first by default** — every add above holds this.
+2. **Grounded or it doesn't ship** — NLI + judge + gate stay release gates, not options.
+3. **Everything cited** — no claim without a resolvable source.
+4. **Code-native, "the product is the system"** — prefer patterns/contracts over frameworks.
+5. **Governance + human approval on real runs; client-data bright line intact.**
+
+---
+
+*Companion to each repo's own README/roadmap. This document adds no runtime dependencies by
+itself; it is a review + plan. Its recommended long-term home is the
+[AI Product & Leadership Studio](https://github.com/shayeeboy/AI-Product-Leadership-Studio)
+(as the §P9 positioning module) or [shayzone-ai-os](https://github.com/shayeeboy/shayzone-ai-os)
+(as the §P7/P8 shared standards).*
