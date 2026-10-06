@@ -1,5 +1,5 @@
 {
-  "run_at": "2026-10-05T19:36:21.192Z",
+  "run_at": "2026-10-06T17:03:16.107Z",
   "target": {
     "filename": "gta_newcomer_credit_opportunity.md",
     "demographic": "Newcomers to Canada (0–5 yrs), Greater Toronto Area",
@@ -104,7 +104,7 @@
         }
       ],
       "n_periods": 16,
-      "retrieved_at": "2026-10-05T19:36:20.942Z"
+      "retrieved_at": "2026-10-06T17:03:16.107Z"
     },
     "credit": {
       "source": "Statistics Canada — Web Data Service (WDS)",
@@ -202,7 +202,7 @@
         }
       ],
       "n_periods": 16,
-      "retrieved_at": "2026-10-05T19:36:20.916Z"
+      "retrieved_at": "2026-10-06T17:03:15.870Z"
     },
     "cpi": {
       "source": "Statistics Canada — Web Data Service (WDS)",
@@ -420,7 +420,7 @@
         }
       ],
       "n_periods": 40,
-      "retrieved_at": "2026-10-05T19:36:20.998Z"
+      "retrieved_at": "2026-10-06T17:03:15.728Z"
     },
     "rent2br": {
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
@@ -484,7 +484,7 @@
           "release_time": "2025-12-17T08:30"
         }
       ],
-      "retrieved_at": "2026-10-05T19:36:21.122Z"
+      "retrieved_at": "2026-10-06T17:03:15.849Z"
     },
     "vacancy": {
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
@@ -540,7 +540,7 @@
           "release_time": "2025-12-17T08:30"
         }
       ],
-      "retrieved_at": "2026-10-05T19:36:21.192Z"
+      "retrieved_at": "2026-10-06T17:03:15.868Z"
     },
     "policy": {
       "source": "Bank of Canada — Valet API",
@@ -548,10 +548,14 @@
       "label": "Target for the overnight rate (%)",
       "url": "https://www.bankofcanada.ca/valet/observations/V39079",
       "latest": {
-        "date": "2026-09-16",
+        "date": "2026-09-17",
         "value": 2.25
       },
       "observations": [
+        {
+          "date": "2026-10-05",
+          "value": 2.25
+        },
         {
           "date": "2026-10-02",
           "value": 2.25
@@ -599,13 +603,9 @@
         {
           "date": "2026-09-17",
           "value": 2.25
-        },
-        {
-          "date": "2026-09-16",
-          "value": 2.25
         }
       ],
-      "retrieved_at": "2026-10-05T19:36:20.519Z"
+      "retrieved_at": "2026-10-06T17:03:15.347Z"
     },
     "prime": {
       "source": "Bank of Canada — Valet API",
@@ -670,7 +670,7 @@
           "value": 4.45
         }
       ],
-      "retrieved_at": "2026-10-05T19:36:20.467Z"
+      "retrieved_at": "2026-10-06T17:03:15.314Z"
     },
     "mtg5": {
       "source": "Bank of Canada — Valet API",
@@ -735,7 +735,7 @@
           "value": 6.09
         }
       ],
-      "retrieved_at": "2026-10-05T19:36:20.466Z"
+      "retrieved_at": "2026-10-06T17:03:15.422Z"
     }
   }
 }
