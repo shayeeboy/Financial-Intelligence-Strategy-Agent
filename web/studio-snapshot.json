@@ -7,8 +7,8 @@
     "geography": "ON — Toronto CMA",
     "cma": "Toronto"
   },
-  "runAt": "2026-11-05T18:32:23.858Z",
-  "lastUpdated": "2026-11-05T18:32:23.858Z",
+  "runAt": "2026-11-06T17:49:14.063Z",
+  "lastUpdated": "2026-11-06T17:49:14.063Z",
   "provenance": "live: Statistics Canada WDS · CMHC (via StatCan) · Bank of Canada Valet — from committed provenance snapshot",
   "indicators": [
     {
@@ -19,7 +19,7 @@
       "source": "Statistics Canada — Web Data Service (WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=38100238",
       "refPeriod": "2026-04-01",
-      "retrievedAt": "2026-11-05T18:32:23.704Z",
+      "retrievedAt": "2026-11-06T17:49:13.948Z",
       "nPeriods": 16,
       "trend": [
         {
@@ -69,7 +69,7 @@
       "source": "Statistics Canada — Web Data Service (WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=38100238",
       "refPeriod": "2026-04-01",
-      "retrievedAt": "2026-11-05T18:32:23.704Z",
+      "retrievedAt": "2026-11-06T17:49:13.876Z",
       "nPeriods": 16,
       "trend": [
         {
@@ -119,7 +119,7 @@
       "source": "Statistics Canada — Web Data Service (WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=18100004",
       "refPeriod": "2026-09-01",
-      "retrievedAt": "2026-11-05T18:32:23.764Z",
+      "retrievedAt": "2026-11-06T17:49:13.971Z",
       "nPeriods": 40,
       "trend": [
         {
@@ -169,7 +169,7 @@
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100133",
       "refPeriod": "2025-01-01",
-      "retrievedAt": "2026-11-05T18:32:23.819Z",
+      "retrievedAt": "2026-11-06T17:49:14.063Z",
       "nPeriods": null,
       "trend": [
         {
@@ -211,7 +211,7 @@
       "source": "CMHC Rental Market Survey (via Statistics Canada WDS)",
       "sourceUrl": "https://www150.statcan.gc.ca/t1/tbl1/en/tv.action?pid=34100127",
       "refPeriod": "2025-01-01",
-      "retrievedAt": "2026-11-05T18:32:23.858Z",
+      "retrievedAt": "2026-11-06T17:49:14.023Z",
       "nPeriods": null,
       "trend": [
         {
@@ -252,14 +252,10 @@
       "unit": "%",
       "source": "Bank of Canada — Valet API",
       "sourceUrl": "",
-      "refPeriod": "2026-10-19",
-      "retrievedAt": "2026-11-05T18:32:23.668Z",
+      "refPeriod": "2026-10-20",
+      "retrievedAt": "2026-11-06T17:49:13.949Z",
       "nPeriods": null,
       "trend": [
-        {
-          "period": "2026-10-26",
-          "value": 2.25
-        },
         {
           "period": "2026-10-27",
           "value": 2.25
@@ -287,13 +283,17 @@
         {
           "period": "2026-11-04",
           "value": 2.5
+        },
+        {
+          "period": "2026-11-05",
+          "value": 2.5
         }
       ],
       "delta": {
         "direction": "flat",
         "pct": 0
       },
-      "sparkline": "▁▁▁▁▁▁▁▁█████"
+      "sparkline": "▁▁▁▁▁▁▁██████"
     },
     {
       "key": "prime",
@@ -303,7 +303,7 @@
       "source": "Bank of Canada — Valet API",
       "sourceUrl": "",
       "refPeriod": "2026-08-12",
-      "retrievedAt": "2026-11-05T18:32:23.622Z",
+      "retrievedAt": "2026-11-06T17:49:13.922Z",
       "nPeriods": null,
       "trend": [
         {
@@ -353,7 +353,7 @@
       "source": "Bank of Canada — Valet API",
       "sourceUrl": "",
       "refPeriod": "2026-08-12",
-      "retrievedAt": "2026-11-05T18:32:23.627Z",
+      "retrievedAt": "2026-11-06T17:49:13.646Z",
       "nPeriods": null,
       "trend": [
         {
@@ -399,9 +399,9 @@
   "observability": {
     "sourceCount": 3,
     "indicatorCount": 8,
-    "dataRetrievedAt": "2026-11-05T18:32:23.858Z",
+    "dataRetrievedAt": "2026-11-06T17:49:14.063Z",
     "sourceDataAsOf": "2025-01-01",
-    "sourceDataLagDays": 673,
+    "sourceDataLagDays": 674,
     "historyPeriods": 40,
     "seriesWithinSla": 7,
     "seriesTracked": 8,
@@ -425,7 +425,7 @@
     },
     {
       "step": "Data vintage",
-      "rationale": "Live pull from StatCan / CMHC / Bank of Canada; snapshot 2026-11-05T18:32:23.858Z."
+      "rationale": "Live pull from StatCan / CMHC / Bank of Canada; snapshot 2026-11-06T17:49:14.063Z."
     }
   ],
   "briefUrl": "https://github.com/shayeeboy/Financial-Intelligence-Strategy-Agent/blob/main/data/briefs/gta_newcomer_credit_opportunity.md"
